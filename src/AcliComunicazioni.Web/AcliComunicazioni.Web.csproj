@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AcliComunicazioni.Application\AcliComunicazioni.Application.csproj" />
+    <ProjectReference Include="..\AcliComunicazioni.Infrastructure\AcliComunicazioni.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>

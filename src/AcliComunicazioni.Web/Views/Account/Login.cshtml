@@ -1,0 +1,61 @@
+@model AcliComunicazioni.Web.Models.Account.LoginViewModel
+@{
+    ViewData["Title"] = "Accesso";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accesso - AcliComunicazioni</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="login-page">
+    <main class="login-shell">
+        <section class="login-panel" aria-labelledby="login-title">
+            <div class="login-brand">
+                <span class="brand-mark">AC</span>
+                <div>
+                    <strong>AcliComunicazioni</strong>
+                    <span>Piattaforma interna</span>
+                </div>
+            </div>
+
+            <div class="login-heading">
+                <span class="eyebrow">Area riservata</span>
+                <h1 id="login-title">Bentornato</h1>
+                <p>Accedi per utilizzare i servizi interni.</p>
+            </div>
+
+            <form asp-action="Login" method="post" class="login-form">
+                @Html.AntiForgeryToken()
+                <input asp-for="ReturnUrl" type="hidden" />
+
+                <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+                <div class="form-field">
+                    <label asp-for="Username"></label>
+                    <input asp-for="Username" autocomplete="username" autofocus />
+                    <span asp-validation-for="Username" class="field-error"></span>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" autocomplete="current-password" />
+                    <span asp-validation-for="Password" class="field-error"></span>
+                </div>
+
+                <label class="remember-row">
+                    <input asp-for="RememberMe" />
+                    <span>Resta connesso su questo dispositivo</span>
+                </label>
+
+                <button type="submit" class="primary-button">Accedi</button>
+            </form>
+
+            <p class="login-note">Accesso riservato al personale autorizzato.</p>
+        </section>
+    </main>
+</body>
+</html>
