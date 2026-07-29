@@ -1,4 +1,5 @@
 using System.Data;
+using System.Data.Common;
 using AcliComunicazioni.Application.Mileage;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -78,7 +79,7 @@ public sealed class DatabaseMileageService : IMileageService
         command.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
         command.Parameters.Add("@Id", SqlDbType.Int).Value = id;
 
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+        await using DbDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
 
         return await reader.ReadAsync(cancellationToken)
             ? ReadEntry(reader)
@@ -109,33 +110,14 @@ public sealed class DatabaseMileageService : IMileageService
         await using var connection = new SqlConnection(_connectionString);
         await connection.OpenAsync(cancellationToken);
 
-        const string latestSql = """
-            SELECT TOP (1) KmArrivo
-            FROM dbo.Percorrenze
-            ORDER BY DataPercorrenza DESC, Id DESC;
-            """;
-
-        await using (var latestCommand = new SqlCommand(latestSql, connection))
-        {
-            var latestValue = await latestCommand.ExecuteScalarAsync(cancellationToken);
-
-            if (latestValue is not null &&
-                latestValue is not DBNull &&
-                startKilometers < Convert.ToInt32(latestValue))
-            {
-                throw new InvalidOperationException(
-                    "I chilometri iniziali non possono essere inferiori all'ultimo chilometraggio registrato del mezzo.");
-            }
-        }
-
-        const string insertSql = """
+        const string sql = """
             INSERT INTO dbo.Percorrenze
                 (IdUtente, DataPercorrenza, KmPartenza, KmArrivo, Tragitto, Descrizione, InseritoDa, DataCreazione)
             VALUES
                 (@UserId, @TripDate, @StartKilometers, @EndKilometers, @Route, @Description, @InsertedBy, SYSUTCDATETIME());
             """;
 
-        await using var command = new SqlCommand(insertSql, connection);
+        await using var command = new SqlCommand(sql, connection);
         AddWriteParameters(
             command,
             userId,
@@ -243,10 +225,9 @@ public sealed class DatabaseMileageService : IMileageService
             """;
 
         await using var command = new SqlCommand(sql, connection);
-
         var entries = new List<MileageEntry>();
 
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+        await using DbDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
 
         while (await reader.ReadAsync(cancellationToken))
         {
@@ -256,7 +237,7 @@ public sealed class DatabaseMileageService : IMileageService
         return entries;
     }
 
-    private static MileageEntry ReadEntry(SqlDataReader reader)
+    private static MileageEntry ReadEntry(DbDataReader reader)
     {
         var startKilometers = reader.GetInt32(reader.GetOrdinal("KmPartenza"));
         var previousEndKilometers = GetNullableInt32(reader, "KmArrivoPrecedente");
@@ -280,13 +261,13 @@ public sealed class DatabaseMileageService : IMileageService
             gapKilometers);
     }
 
-    private static int? GetNullableInt32(SqlDataReader reader, string columnName)
+    private static int? GetNullableInt32(DbDataReader reader, string columnName)
     {
         var ordinal = reader.GetOrdinal(columnName);
         return reader.IsDBNull(ordinal) ? null : reader.GetInt32(ordinal);
     }
 
-    private static string? GetNullableString(SqlDataReader reader, string columnName)
+    private static string? GetNullableString(DbDataReader reader, string columnName)
     {
         var ordinal = reader.GetOrdinal(columnName);
         return reader.IsDBNull(ordinal) ? null : reader.GetString(ordinal);
