@@ -1,0 +1,27 @@
+.driver-detail {
+    display: grid;
+    gap: 4px;
+    padding: 14px 16px;
+    border: 1px solid #dfe6eb;
+    border-radius: 12px;
+    background: #f7f9fa;
+}
+
+.driver-detail-label {
+    color: #6b7781;
+    font-size: .78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+.driver-detail strong {
+    font-size: 1rem;
+}
+
+.driver-detail small,
+.field-help {
+    color: #74808a;
+    font-size: .8rem;
+    line-height: 1.4;
+}
