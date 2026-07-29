@@ -24,10 +24,16 @@ public sealed class HomeController : Controller
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
         var userId = _currentUser.UserId;
-        if (userId is null)
-            return Challenge();
 
-        var dashboard = await _mileageService.GetDashboardAsync(userId.Value, cancellationToken);
+        if (userId is null)
+        {
+            return Challenge();
+        }
+
+        var dashboard = await _mileageService.GetDashboardAsync(
+            userId.Value,
+            cancellationToken);
+
         return View(dashboard);
     }
 
@@ -42,8 +48,11 @@ public sealed class HomeController : Controller
         CancellationToken cancellationToken)
     {
         var userId = _currentUser.UserId;
+
         if (userId is null)
+        {
             return Challenge();
+        }
 
         var insertedBy = User.FindFirst("display_name")?.Value
             ?? User.Identity?.Name
@@ -73,13 +82,22 @@ public sealed class HomeController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> EditMileage(int id, CancellationToken cancellationToken)
+    public async Task<IActionResult> EditMileage(
+        int id,
+        CancellationToken cancellationToken)
     {
         var userId = _currentUser.UserId;
-        if (userId is null)
-            return Challenge();
 
-        var entry = await _mileageService.GetByIdAsync(userId.Value, id, cancellationToken);
+        if (userId is null)
+        {
+            return Challenge();
+        }
+
+        var entry = await _mileageService.GetByIdAsync(
+            userId.Value,
+            id,
+            cancellationToken);
+
         return entry is null ? NotFound() : View(entry);
     }
 
@@ -95,8 +113,11 @@ public sealed class HomeController : Controller
         CancellationToken cancellationToken)
     {
         var userId = _currentUser.UserId;
+
         if (userId is null)
+        {
             return Challenge();
+        }
 
         try
         {
@@ -111,12 +132,14 @@ public sealed class HomeController : Controller
                 cancellationToken);
 
             TempData["MileageSuccess"] = "Percorrenza modificata correttamente.";
-            return RedirectToAction(nameof(Index), null, "latest-trips");
+
+            return Redirect($"{Url.Action(nameof(Index))}#latest-trips");
         }
         catch (Exception exception) when (
             exception is InvalidOperationException or ArgumentOutOfRangeException)
         {
             ModelState.AddModelError(string.Empty, exception.Message);
+
             var entry = new MileageEntry(
                 id,
                 startKilometers,
@@ -126,33 +149,50 @@ public sealed class HomeController : Controller
                 route,
                 description,
                 DateTime.UtcNow,
-                User.FindFirst("display_name")?.Value ?? User.Identity?.Name ?? "Utente",
+                User.FindFirst("display_name")?.Value
+                    ?? User.Identity?.Name
+                    ?? "Utente",
                 null,
                 0);
+
             return View(entry);
         }
     }
 
     [HttpGet]
-    public async Task<IActionResult> ExportMileage(string format, CancellationToken cancellationToken)
+    public async Task<IActionResult> ExportMileage(
+        string? format,
+        CancellationToken cancellationToken)
     {
         var userId = _currentUser.UserId;
+
         if (userId is null)
+        {
             return Challenge();
+        }
 
-        var entries = await _mileageService.GetAllAsync(userId.Value, cancellationToken);
+        var entries = await _mileageService.GetAllAsync(
+            userId.Value,
+            cancellationToken);
+
         var fileDate = DateTime.Today.ToString("yyyyMMdd");
+        var normalizedFormat = format?.Trim().ToLowerInvariant() ?? "csv";
 
-        return format.ToLowerInvariant() switch
+        return normalizedFormat switch
         {
             "json" => File(
-                Encoding.UTF8.GetBytes(JsonSerializer.Serialize(entries, new JsonSerializerOptions { WriteIndented = true })),
+                Encoding.UTF8.GetBytes(
+                    JsonSerializer.Serialize(
+                        entries,
+                        new JsonSerializerOptions { WriteIndented = true })),
                 "application/json",
                 $"percorrenze-{fileDate}.json"),
+
             "xml" => File(
                 Encoding.UTF8.GetBytes(CreateXml(entries).ToString()),
                 "application/xml",
                 $"percorrenze-{fileDate}.xml"),
+
             _ => File(
                 CreateCsv(entries),
                 "text/csv; charset=utf-8",
@@ -163,7 +203,8 @@ public sealed class HomeController : Controller
     private static byte[] CreateCsv(IEnumerable<MileageEntry> entries)
     {
         var builder = new StringBuilder();
-        builder.AppendLine("Data;Tragitto;Km partenza;Km arrivo;Km percorsi;Km non registrati;Inserito da;Descrizione");
+        builder.AppendLine(
+            "Data;Tragitto;Km iniziali;Km finali;Km percorsi;Km non registrati;Conducente;Dettaglio");
 
         foreach (var entry in entries)
         {
@@ -177,23 +218,27 @@ public sealed class HomeController : Controller
                 .Append(Csv(entry.Description ?? string.Empty)).AppendLine();
         }
 
-        return new UTF8Encoding(encoderShouldEmitUTF8Identifier: true).GetBytes(builder.ToString());
+        return new UTF8Encoding(encoderShouldEmitUTF8Identifier: true)
+            .GetBytes(builder.ToString());
     }
 
-    private static string Csv(string value) => $"\"{value.Replace("\"", "\"\"")}\"";
+    private static string Csv(string value) =>
+        $"\"{value.Replace("\"", "\"\"")}\"";
 
     private static XDocument CreateXml(IEnumerable<MileageEntry> entries) =>
         new(
-            new XElement("Percorrenze",
+            new XElement(
+                "Percorrenze",
                 entries.Select(entry =>
-                    new XElement("Percorrenza",
+                    new XElement(
+                        "Percorrenza",
                         new XAttribute("Id", entry.Id),
                         new XElement("Data", entry.TripDate.ToString("yyyy-MM-dd")),
                         new XElement("Tragitto", entry.Route),
-                        new XElement("KmPartenza", entry.StartKilometers),
-                        new XElement("KmArrivo", entry.EndKilometers),
+                        new XElement("KmIniziali", entry.StartKilometers),
+                        new XElement("KmFinali", entry.EndKilometers),
                         new XElement("KmPercorsi", entry.DistanceKilometers),
                         new XElement("KmNonRegistrati", entry.GapKilometers),
-                        new XElement("InseritoDa", entry.InsertedBy),
-                        new XElement("Descrizione", entry.Description ?? string.Empty)))));
+                        new XElement("Conducente", entry.InsertedBy),
+                        new XElement("Dettaglio", entry.Description ?? string.Empty)))));
 }
