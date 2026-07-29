@@ -171,14 +171,7 @@
                             <td data-label="Conducente"><span class="user-badge">@entry.InsertedBy</span></td>
                             <td data-label="Segnalazioni"><span class="no-gap">Registrata</span></td>
                             <td class="actions-column">
-                                <div class="row-actions">
-                                    <a class="table-action" asp-action="EditMileage" asp-route-id="@entry.Id" aria-label="Modifica @entry.Route">Modifica</a>
-                                    <form asp-action="DeleteMileage" method="post" class="delete-mileage-form" data-route="@entry.Route" data-date="@entry.TripDate.ToString("dd/MM/yyyy")" data-start="@entry.StartKilometers" data-end="@entry.EndKilometers">
-                                        @Html.AntiForgeryToken()
-                                        <input type="hidden" name="id" value="@entry.Id" />
-                                        <button class="table-action delete-action" type="submit" aria-label="Elimina @entry.Route">Elimina</button>
-                                    </form>
-                                </div>
+                                <a class="table-action" asp-action="EditMileage" asp-route-id="@entry.Id" aria-label="Modifica @entry.Route">Modifica</a>
                             </td>
                         </tr>
                     }
@@ -230,15 +223,6 @@
                     updateValues();
                     form.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     window.setTimeout(() => route.focus(), 450);
-                });
-            });
-
-            document.querySelectorAll('.delete-mileage-form').forEach(deleteForm => {
-                deleteForm.addEventListener('submit', event => {
-                    const message = `Eliminare questa percorrenza?\n\nData: ${deleteForm.dataset.date}\nTragitto: ${deleteForm.dataset.route}\nKm: ${formatter.format(Number(deleteForm.dataset.start))} → ${formatter.format(Number(deleteForm.dataset.end))}\n\nIl record resterà conservato nello storico del database.`;
-                    if (!window.confirm(message)) {
-                        event.preventDefault();
-                    }
                 });
             });
 
