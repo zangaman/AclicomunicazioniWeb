@@ -45,78 +45,47 @@
         </div>
 
         <dl class="vehicle-stats mileage-summary-stats">
-            <div>
-                <dt>Ultima percorrenza</dt>
-                <dd>@(Model.LastTripDate?.ToString("dd/MM/yyyy") ?? "Nessun dato")</dd>
-            </div>
-            <div>
-                <dt>Ultimo tragitto</dt>
-                <dd>@(Model.RecentEntries.FirstOrDefault()?.Route ?? "—")</dd>
-            </div>
-            <div>
-                <dt>Ultima distanza</dt>
-                <dd>@(Model.RecentEntries.FirstOrDefault()?.DistanceKilometers.ToString("N0", cultura) ?? "—") km</dd>
-            </div>
-            <div>
-                <dt>Ultimo conducente</dt>
-                <dd>@(Model.RecentEntries.FirstOrDefault()?.InsertedBy ?? "—")</dd>
-            </div>
+            <div><dt>Ultima percorrenza</dt><dd>@(Model.LastTripDate?.ToString("dd/MM/yyyy") ?? "Nessun dato")</dd></div>
+            <div><dt>Ultimo tragitto</dt><dd>@(Model.RecentEntries.FirstOrDefault()?.Route ?? "—")</dd></div>
+            <div><dt>Ultima distanza</dt><dd>@(Model.RecentEntries.FirstOrDefault()?.DistanceKilometers.ToString("N0", cultura) ?? "—") km</dd></div>
+            <div><dt>Ultimo conducente</dt><dd>@(Model.RecentEntries.FirstOrDefault()?.InsertedBy ?? "—")</dd></div>
         </dl>
     </article>
 
     <article class="dashboard-card" id="quick-entry">
-        <div class="card-heading-row">
-            <div>
-                <span class="card-kicker">Inserimento rapido</span>
-                <h2>Nuova percorrenza</h2>
-            </div>
-        </div>
+        <div class="card-heading-row"><div><span class="card-kicker">Inserimento rapido</span><h2>Nuova percorrenza</h2></div></div>
 
         <form asp-controller="Home" asp-action="AddMileage" method="post" class="quick-entry-form" id="mileage-form">
             @Html.AntiForgeryToken()
-
             <div class="form-row">
                 <div class="form-field">
                     <label for="tripDate">Data</label>
-                    <input id="tripDate" name="tripDate" type="date"
-                           max="@DateTime.Today.ToString("yyyy-MM-dd")"
-                           value="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+                    <input id="tripDate" name="tripDate" type="date" max="@DateTime.Today.ToString("yyyy-MM-dd")" value="@DateTime.Today.ToString("yyyy-MM-dd")" required />
                 </div>
-
                 <div class="form-field">
                     <label for="startKilometers">Km iniziali</label>
-                    <input id="startKilometers" name="startKilometers" type="number"
-                           min="0" step="1" value="@Model.CurrentKilometers" required />
+                    <input id="startKilometers" name="startKilometers" type="number" min="0" step="1" value="@Model.CurrentKilometers" required />
                     <small class="field-help">L’ultimo valore è proposto automaticamente, ma puoi modificarlo.</small>
                 </div>
             </div>
 
-            <div id="gap-warning" class="gap-warning" hidden>
-                <strong>Attenzione: possibile tratto non registrato</strong>
-                <span></span>
-            </div>
+            <div id="gap-warning" class="gap-warning" hidden><strong>Attenzione: possibile tratto non registrato</strong><span></span></div>
 
             <div class="form-field">
                 <label for="endKilometers">Km finali</label>
-                <input id="endKilometers" name="endKilometers" type="number"
-                       min="@(Model.CurrentKilometers ?? 0)" step="1" required />
+                <input id="endKilometers" name="endKilometers" type="number" min="@(Model.CurrentKilometers ?? 0)" step="1" required />
             </div>
 
-            <div class="distance-preview" id="distance-preview" aria-live="polite">
-                <span>Km percorsi</span>
-                <strong>—</strong>
-            </div>
+            <div class="distance-preview" id="distance-preview" aria-live="polite"><span>Km percorsi</span><strong>—</strong></div>
 
             <div class="form-field">
                 <label for="route">Tragitto</label>
-                <input id="route" name="route" type="text" maxlength="200"
-                       placeholder="es. Trento - Rovereto" required />
+                <input id="route" name="route" type="text" maxlength="200" placeholder="es. Trento - Rovereto" required />
             </div>
 
             <div class="form-field">
                 <label for="description">Dettaglio <span class="optional-label">facoltativo</span></label>
-                <textarea id="description" name="description" maxlength="500" rows="3"
-                          placeholder="Motivo della trasferta o note utili"></textarea>
+                <textarea id="description" name="description" maxlength="500" rows="3" placeholder="Motivo della trasferta o note utili"></textarea>
             </div>
 
             <div class="driver-detail" aria-label="Conducente della percorrenza">
@@ -154,20 +123,12 @@
 
     @if (gapsCount > 0)
     {
-        <div class="alert alert-error" role="alert">
-            Sono presenti @missingKilometers.ToString("N0", cultura) km non registrati in @gapsCount intervalli. Usa “Inserisci tratto” per completare lo storico.
-        </div>
+        <div class="alert alert-error" role="alert">Sono presenti @missingKilometers.ToString("N0", cultura) km non registrati in @gapsCount intervalli. Usa “Inserisci tratto” per completare lo storico.</div>
     }
 
     @if (Model.RecentEntries.Count == 0)
     {
-        <div class="empty-state">
-            <span class="empty-state-icon" aria-hidden="true">↗</span>
-            <div>
-                <h3>Nessuna percorrenza presente</h3>
-                <p>Inserisci la prima percorrenza dal modulo qui sopra.</p>
-            </div>
-        </div>
+        <div class="empty-state"><span class="empty-state-icon" aria-hidden="true">↗</span><div><h3>Nessuna percorrenza presente</h3><p>Inserisci la prima percorrenza dal modulo qui sopra.</p></div></div>
     }
     else
     {
@@ -175,14 +136,7 @@
             <table class="mileage-table">
                 <thead>
                     <tr>
-                        <th>Data</th>
-                        <th>Tragitto</th>
-                        <th class="numeric-column">Km iniziali</th>
-                        <th class="numeric-column">Km finali</th>
-                        <th class="numeric-column">Percorsi</th>
-                        <th>Conducente</th>
-                        <th>Segnalazioni</th>
-                        <th class="actions-column"><span class="visually-hidden">Azioni</span></th>
+                        <th>Data</th><th>Tragitto</th><th class="numeric-column">Km iniziali</th><th class="numeric-column">Km finali</th><th class="numeric-column">Percorsi</th><th>Conducente</th><th>Segnalazioni</th><th class="actions-column"><span class="visually-hidden">Azioni</span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -191,33 +145,14 @@
                         @if (entry.GapKilometers > 0 && entry.PreviousEndKilometers.HasValue)
                         {
                             <tr class="row-with-gap missing-mileage-row">
-                                <td data-label="Data">
-                                    <span title="Data da verificare">Da verificare</span>
-                                </td>
-                                <td data-label="Tragitto">
-                                    <strong class="route-name">⚠ Tratto non registrato</strong>
-                                    <small class="route-description">
-                                        Slot @entry.PreviousEndKilometers.Value.ToString("N0", cultura) – @entry.StartKilometers.ToString("N0", cultura)
-                                    </small>
-                                </td>
+                                <td data-label="Data"><span title="Data da verificare">Da verificare</span></td>
+                                <td data-label="Tragitto"><strong class="route-name">⚠ Tratto non registrato</strong><small class="route-description">Slot @entry.PreviousEndKilometers.Value.ToString("N0", cultura) – @entry.StartKilometers.ToString("N0", cultura)</small></td>
                                 <td data-label="Km iniziali" class="numeric-column">@entry.PreviousEndKilometers.Value.ToString("N0", cultura)</td>
                                 <td data-label="Km finali" class="numeric-column">@entry.StartKilometers.ToString("N0", cultura)</td>
-                                <td data-label="Percorsi" class="numeric-column">
-                                    <span class="gap-badge">@entry.GapKilometers.ToString("N0", cultura) km</span>
-                                </td>
+                                <td data-label="Percorsi" class="numeric-column"><span class="gap-badge">@entry.GapKilometers.ToString("N0", cultura) km</span></td>
                                 <td data-label="Conducente"><span class="user-badge">Da assegnare</span></td>
-                                <td data-label="Segnalazioni">
-                                    <span class="gap-badge">Percorrenza mancante</span>
-                                </td>
-                                <td class="actions-column">
-                                    <button type="button"
-                                            class="table-action fill-gap-button"
-                                            data-start="@entry.PreviousEndKilometers.Value"
-                                            data-end="@entry.StartKilometers"
-                                            data-date="@entry.TripDate.ToString("yyyy-MM-dd")">
-                                        Inserisci tratto
-                                    </button>
-                                </td>
+                                <td data-label="Segnalazioni"><span class="gap-badge">Percorrenza mancante</span></td>
+                                <td class="actions-column"><button type="button" class="table-action fill-gap-button" data-start="@entry.PreviousEndKilometers.Value" data-end="@entry.StartKilometers" data-date="@entry.TripDate.ToString("yyyy-MM-dd")">Inserisci tratto</button></td>
                             </tr>
                         }
 
@@ -236,7 +171,14 @@
                             <td data-label="Conducente"><span class="user-badge">@entry.InsertedBy</span></td>
                             <td data-label="Segnalazioni"><span class="no-gap">Registrata</span></td>
                             <td class="actions-column">
-                                <a class="table-action" asp-action="EditMileage" asp-route-id="@entry.Id" aria-label="Modifica @entry.Route">Modifica</a>
+                                <div class="row-actions">
+                                    <a class="table-action" asp-action="EditMileage" asp-route-id="@entry.Id" aria-label="Modifica @entry.Route">Modifica</a>
+                                    <form asp-action="DeleteMileage" method="post" class="delete-mileage-form" data-route="@entry.Route" data-date="@entry.TripDate.ToString("dd/MM/yyyy")" data-start="@entry.StartKilometers" data-end="@entry.EndKilometers">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@entry.Id" />
+                                        <button class="table-action delete-action" type="submit" aria-label="Elimina @entry.Route">Elimina</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     }
@@ -266,16 +208,12 @@
                 const startValue = Number(start.value);
                 const endValue = Number(end.value);
                 end.min = start.value || '0';
-
-                if (Number.isFinite(startValue) && Number.isFinite(endValue) && endValue >= startValue) {
-                    preview.textContent = formatter.format(endValue - startValue) + ' km';
-                } else {
-                    preview.textContent = '—';
-                }
+                preview.textContent = Number.isFinite(startValue) && Number.isFinite(endValue) && endValue >= startValue
+                    ? formatter.format(endValue - startValue) + ' km'
+                    : '—';
 
                 if (currentKilometers !== null && Number.isFinite(startValue) && startValue > currentKilometers) {
-                    const gap = startValue - currentKilometers;
-                    gapText.textContent = `Dall’ultima percorrenza risultano ${formatter.format(gap)} km senza registrazione. Puoi comunque salvare.`;
+                    gapText.textContent = `Dall’ultima percorrenza risultano ${formatter.format(startValue - currentKilometers)} km senza registrazione. Puoi comunque salvare.`;
                     gapWarning.hidden = false;
                 } else {
                     gapWarning.hidden = true;
@@ -292,6 +230,15 @@
                     updateValues();
                     form.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     window.setTimeout(() => route.focus(), 450);
+                });
+            });
+
+            document.querySelectorAll('.delete-mileage-form').forEach(deleteForm => {
+                deleteForm.addEventListener('submit', event => {
+                    const message = `Eliminare questa percorrenza?\n\nData: ${deleteForm.dataset.date}\nTragitto: ${deleteForm.dataset.route}\nKm: ${formatter.format(Number(deleteForm.dataset.start))} → ${formatter.format(Number(deleteForm.dataset.end))}\n\nIl record resterà conservato nello storico del database.`;
+                    if (!window.confirm(message)) {
+                        event.preventDefault();
+                    }
                 });
             });
 
