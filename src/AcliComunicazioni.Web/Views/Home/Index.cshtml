@@ -1,3 +1,5 @@
+@model AcliComunicazioni.Application.Mileage.MileageDashboard
+
 @{
     ViewData["Title"] = "Dashboard";
 
@@ -16,7 +18,7 @@
     <div>
         <span class="eyebrow">Piattaforma interna</span>
         <h1>Buongiorno, @firstName</h1>
-        <p>Da qui puoi gestire i mezzi, registrare i chilometri e controllare le attività più recenti.</p>
+        <p>Registra subito i chilometri del mezzo e consulta le ultime rilevazioni.</p>
     </div>
 
     <a class="primary-button dashboard-primary-action" href="#quick-entry">
@@ -25,7 +27,17 @@
     </a>
 </section>
 
-<section class="dashboard-grid" aria-label="Riepilogo gestione mezzi">
+@if (TempData["MileageSuccess"] is string successMessage)
+{
+    <div class="alert alert-success" role="status">@successMessage</div>
+}
+
+@if (TempData["MileageError"] is string errorMessage)
+{
+    <div class="alert alert-error" role="alert">@errorMessage</div>
+}
+
+<section class="dashboard-grid" aria-label="Riepilogo chilometri">
     <article class="dashboard-card vehicle-overview-card">
         <div class="card-heading-row">
             <div>
@@ -45,16 +57,12 @@
 
         <dl class="vehicle-stats">
             <div>
-                <dt>Ultima rilevazione</dt>
-                <dd>—</dd>
-            </div>
-            <div>
                 <dt>Chilometri attuali</dt>
-                <dd>— km</dd>
+                <dd>@(Model.CurrentKilometers?.ToString("N0", new System.Globalization.CultureInfo("it-IT")) ?? "—") km</dd>
             </div>
             <div>
-                <dt>Ultimo aggiornamento</dt>
-                <dd>Nessun dato</dd>
+                <dt>Ultima rilevazione</dt>
+                <dd>@(Model.LastReadingDate?.ToString("dd/MM/yyyy") ?? "Nessun dato")</dd>
             </div>
         </dl>
     </article>
@@ -65,21 +73,38 @@
                 <span class="card-kicker">Inserimento rapido</span>
                 <h2>Nuova rilevazione</h2>
             </div>
-            <span class="step-badge">1° passo</span>
         </div>
 
-        <p class="card-description">
-            La struttura è pronta. Nel prossimo passaggio collegheremo questo modulo al database.
-        </p>
+        <form asp-controller="Home" asp-action="AddMileage" method="post" class="quick-entry-form">
+            @Html.AntiForgeryToken()
 
-        <div class="quick-entry-preview">
-            <label for="mileage-preview">Chilometri attuali</label>
-            <div class="mileage-input-preview">
-                <input id="mileage-preview" type="text" inputmode="numeric" placeholder="es. 48.250" disabled />
-                <span>km</span>
+            <div class="form-field">
+                <label for="readingDate">Data</label>
+                <input id="readingDate"
+                       name="readingDate"
+                       type="date"
+                       value="@DateTime.Today.ToString("yyyy-MM-dd")"
+                       required />
             </div>
-            <button class="primary-button" type="button" disabled>Salva rilevazione</button>
-        </div>
+
+            <div class="form-field">
+                <label for="kilometers">Chilometri attuali</label>
+                <div class="mileage-input-preview">
+                    <input id="kilometers"
+                           name="kilometers"
+                           type="number"
+                           inputmode="numeric"
+                           min="1"
+                           step="1"
+                           placeholder="es. 48250"
+                           required
+                           autofocus />
+                    <span>km</span>
+                </div>
+            </div>
+
+            <button class="primary-button" type="submit">Salva rilevazione</button>
+        </form>
     </article>
 </section>
 
@@ -89,43 +114,31 @@
             <span class="card-kicker">Attività</span>
             <h2>Ultime registrazioni</h2>
         </div>
-        <span class="activity-count">0 elementi</span>
+        <span class="activity-count">@Model.RecentEntries.Count elementi</span>
     </div>
 
-    <div class="empty-state">
-        <span class="empty-state-icon" aria-hidden="true">↗</span>
-        <div>
-            <h3>Nessuna rilevazione presente</h3>
-            <p>Le registrazioni dei chilometri compariranno qui in ordine cronologico.</p>
+    @if (Model.RecentEntries.Count == 0)
+    {
+        <div class="empty-state">
+            <span class="empty-state-icon" aria-hidden="true">↗</span>
+            <div>
+                <h3>Nessuna rilevazione presente</h3>
+                <p>Inserisci qui sopra i chilometri attuali del mezzo.</p>
+            </div>
         </div>
-    </div>
-</section>
-
-<section class="next-modules" aria-label="Moduli futuri">
-    <article class="mini-module-card">
-        <span class="mini-module-icon" aria-hidden="true">⛽</span>
-        <div>
-            <h2>Rifornimenti</h2>
-            <p>Consumi, costi e storico carburante.</p>
+    }
+    else
+    {
+        <div class="mileage-list">
+            @foreach (var entry in Model.RecentEntries)
+            {
+                <article class="mileage-row">
+                    <div>
+                        <strong>@entry.Kilometers.ToString("N0", new System.Globalization.CultureInfo("it-IT")) km</strong>
+                        <span>@entry.ReadingDate.ToString("dd/MM/yyyy")</span>
+                    </div>
+                </article>
+            }
         </div>
-        <span class="future-label">In seguito</span>
-    </article>
-
-    <article class="mini-module-card">
-        <span class="mini-module-icon" aria-hidden="true">🛠</span>
-        <div>
-            <h2>Manutenzioni</h2>
-            <p>Scadenze, interventi e promemoria.</p>
-        </div>
-        <span class="future-label">In seguito</span>
-    </article>
-
-    <article class="mini-module-card">
-        <span class="mini-module-icon" aria-hidden="true">📄</span>
-        <div>
-            <h2>Documenti</h2>
-            <p>Assicurazione, revisione e allegati.</p>
-        </div>
-        <span class="future-label">In seguito</span>
-    </article>
+    }
 </section>
