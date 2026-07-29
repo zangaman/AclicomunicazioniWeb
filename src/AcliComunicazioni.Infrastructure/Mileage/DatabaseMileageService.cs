@@ -57,6 +57,7 @@ public sealed class DatabaseMileageService : IMileageService
                     InseritoDa,
                     LAG(KmArrivo) OVER (ORDER BY DataPercorrenza, Id) AS KmArrivoPrecedente
                 FROM dbo.Percorrenze
+                WHERE IsDeleted = 0
             )
             SELECT
                 Id,
@@ -159,7 +160,8 @@ public sealed class DatabaseMileageService : IMileageService
                 Tragitto = @Route,
                 Descrizione = @Description
             WHERE Id = @Id
-              AND IdUtente = @UserId;
+              AND IdUtente = @UserId
+              AND IsDeleted = 0;
             """;
 
         await using var command = new SqlCommand(sql, connection);
@@ -180,6 +182,43 @@ public sealed class DatabaseMileageService : IMileageService
         {
             throw new InvalidOperationException(
                 "Percorrenza non trovata o non modificabile dall'utente corrente.");
+        }
+    }
+
+    public async Task DeleteAsync(
+        int userId,
+        int id,
+        string deletedBy,
+        CancellationToken cancellationToken = default)
+    {
+        var normalizedDeletedBy = string.IsNullOrWhiteSpace(deletedBy)
+            ? $"Utente {userId}"
+            : deletedBy.Trim();
+
+        await using var connection = new SqlConnection(_connectionString);
+        await connection.OpenAsync(cancellationToken);
+
+        const string sql = """
+            UPDATE dbo.Percorrenze
+            SET IsDeleted = 1,
+                DeletedAt = SYSUTCDATETIME(),
+                DeletedBy = @DeletedBy
+            WHERE Id = @Id
+              AND IdUtente = @UserId
+              AND IsDeleted = 0;
+            """;
+
+        await using var command = new SqlCommand(sql, connection);
+        command.Parameters.Add("@Id", SqlDbType.Int).Value = id;
+        command.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
+        command.Parameters.Add("@DeletedBy", SqlDbType.NVarChar, 150).Value = normalizedDeletedBy;
+
+        var affectedRows = await command.ExecuteNonQueryAsync(cancellationToken);
+
+        if (affectedRows == 0)
+        {
+            throw new InvalidOperationException(
+                "Percorrenza non trovata o già eliminata.");
         }
     }
 
@@ -207,6 +246,7 @@ public sealed class DatabaseMileageService : IMileageService
                     InseritoDa,
                     LAG(KmArrivo) OVER (ORDER BY DataPercorrenza, Id) AS KmArrivoPrecedente
                 FROM dbo.Percorrenze
+                WHERE IsDeleted = 0
             )
             SELECT {topClause}
                 Id,
