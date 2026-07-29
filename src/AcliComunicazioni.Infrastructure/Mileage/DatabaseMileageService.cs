@@ -22,7 +22,6 @@ public sealed class DatabaseMileageService : IMileageService
     {
         await using var connection = new SqlConnection(_connectionString);
         await connection.OpenAsync(cancellationToken);
-        await EnsureTableAsync(connection, cancellationToken);
 
         const string sql = """
             SELECT TOP (10)
@@ -72,7 +71,6 @@ public sealed class DatabaseMileageService : IMileageService
 
         await using var connection = new SqlConnection(_connectionString);
         await connection.OpenAsync(cancellationToken);
-        await EnsureTableAsync(connection, cancellationToken);
 
         const string latestSql = """
             SELECT TOP (1) Kilometers
@@ -106,36 +104,6 @@ public sealed class DatabaseMileageService : IMileageService
         command.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
         command.Parameters.Add("@Kilometers", SqlDbType.Int).Value = kilometers;
         command.Parameters.Add("@ReadingDate", SqlDbType.DateTime2).Value = readingDate;
-        await command.ExecuteNonQueryAsync(cancellationToken);
-    }
-
-    private static async Task EnsureTableAsync(
-        SqlConnection connection,
-        CancellationToken cancellationToken)
-    {
-        const string sql = """
-            IF OBJECT_ID(N'dbo.MileageEntries', N'U') IS NULL
-            BEGIN
-                CREATE TABLE dbo.MileageEntries
-                (
-                    Id INT IDENTITY(1,1) NOT NULL
-                        CONSTRAINT PK_MileageEntries PRIMARY KEY,
-                    UserId INT NOT NULL,
-                    Kilometers INT NOT NULL,
-                    ReadingDate DATETIME2(0) NOT NULL,
-                    CreatedAt DATETIME2(0) NOT NULL
-                        CONSTRAINT DF_MileageEntries_CreatedAt
-                        DEFAULT SYSUTCDATETIME(),
-                    CONSTRAINT CK_MileageEntries_Kilometers
-                        CHECK (Kilometers > 0)
-                );
-
-                CREATE INDEX IX_MileageEntries_UserId_ReadingDate
-                    ON dbo.MileageEntries(UserId, ReadingDate DESC);
-            END;
-            """;
-
-        await using var command = new SqlCommand(sql, connection);
         await command.ExecuteNonQueryAsync(cancellationToken);
     }
 }
