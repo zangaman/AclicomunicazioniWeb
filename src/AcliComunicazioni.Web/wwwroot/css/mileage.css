@@ -25,3 +25,58 @@
     font-size: .8rem;
     line-height: 1.4;
 }
+
+/* Disposizione desktop: riepilogo orizzontale e modulo sotto, senza vuoti laterali. */
+@media (min-width: 901px) {
+    .mileage-dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+
+    .mileage-dashboard-grid .summary-card {
+        display: grid;
+        grid-template-columns: minmax(330px, .85fr) minmax(520px, 1.15fr);
+        grid-template-areas:
+            "heading heading"
+            "main stats";
+        align-items: stretch;
+        gap: 20px 26px;
+    }
+
+    .mileage-dashboard-grid .summary-card .card-heading-row {
+        grid-area: heading;
+    }
+
+    .mileage-dashboard-grid .summary-card .summary-main-value {
+        grid-area: main;
+        margin: 0;
+        min-height: 170px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .mileage-dashboard-grid .summary-card .mileage-summary-stats {
+        grid-area: stats;
+        align-self: stretch;
+    }
+
+    .mileage-dashboard-grid #quick-entry {
+        width: min(980px, 100%);
+        margin-inline: auto;
+    }
+}
+
+@media (max-width: 1100px) and (min-width: 901px) {
+    .mileage-dashboard-grid .summary-card {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "heading"
+            "main"
+            "stats";
+    }
+
+    .mileage-dashboard-grid .summary-card .summary-main-value {
+        min-height: 145px;
+    }
+}
