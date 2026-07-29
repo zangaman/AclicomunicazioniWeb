@@ -15,10 +15,12 @@ BEGIN TRY
         ADD InseritoDa NVARCHAR(150) NULL;
     END;
 
-    UPDATE dbo.Percorrenze
-    SET InseritoDa = CONCAT(N'Utente ', IdUtente)
-    WHERE InseritoDa IS NULL
-       OR LTRIM(RTRIM(InseritoDa)) = N'';
+    EXEC sys.sp_executesql N'
+        UPDATE dbo.Percorrenze
+        SET InseritoDa = CONCAT(N''Utente '', IdUtente)
+        WHERE InseritoDa IS NULL
+           OR LTRIM(RTRIM(InseritoDa)) = N'''';
+    ';
 
     COMMIT TRANSACTION;
 
