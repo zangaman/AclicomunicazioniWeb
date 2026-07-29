@@ -11,63 +11,52 @@ public sealed class HomeController : Controller
     private readonly IMileageService _mileageService;
     private readonly ICurrentUser _currentUser;
 
-    public HomeController(
-        IMileageService mileageService,
-        ICurrentUser currentUser)
+    public HomeController(IMileageService mileageService, ICurrentUser currentUser)
     {
         _mileageService = mileageService;
         _currentUser = currentUser;
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
         var userId = _currentUser.UserId;
         if (userId is null)
-        {
             return Challenge();
-        }
 
-        var dashboard = await _mileageService.GetDashboardAsync(
-            userId.Value,
-            cancellationToken);
-
+        var dashboard = await _mileageService.GetDashboardAsync(userId.Value, cancellationToken);
         return View(dashboard);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddMileage(
-        int kilometers,
-        DateTime readingDate,
+        int startKilometers,
+        int endKilometers,
+        DateTime tripDate,
+        string route,
+        string? description,
         CancellationToken cancellationToken)
     {
         var userId = _currentUser.UserId;
         if (userId is null)
-        {
             return Challenge();
-        }
-
-        if (kilometers <= 0)
-        {
-            TempData["MileageError"] =
-                "Inserisci un valore di chilometri valido.";
-            return RedirectToAction(nameof(Index));
-        }
 
         try
         {
             await _mileageService.AddAsync(
                 userId.Value,
-                kilometers,
-                readingDate == default ? DateTime.Today : readingDate,
+                startKilometers,
+                endKilometers,
+                tripDate == default ? DateTime.Today : tripDate,
+                route,
+                description,
                 cancellationToken);
 
-            TempData["MileageSuccess"] =
-                "Chilometri registrati correttamente.";
+            TempData["MileageSuccess"] = "Percorrenza registrata correttamente.";
         }
-        catch (InvalidOperationException exception)
+        catch (Exception exception) when (
+            exception is InvalidOperationException or ArgumentOutOfRangeException)
         {
             TempData["MileageError"] = exception.Message;
         }
