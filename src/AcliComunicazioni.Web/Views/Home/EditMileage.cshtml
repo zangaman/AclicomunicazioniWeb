@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Modifica percorrenza";
+    var cultura = new System.Globalization.CultureInfo("it-IT");
 }
 
 <section class="page-heading compact-heading">
@@ -64,6 +65,15 @@
             <button class="primary-button save-button" type="submit">Salva modifiche</button>
         </div>
     </form>
+
+    <div class="delete-section">
+        <form asp-action="DeleteMileage" method="post" id="delete-mileage-form">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@Model.Id" />
+            <button class="delete-text-button" type="submit">Elimina questa percorrenza</button>
+        </form>
+        <small>La percorrenza verrà rimossa dalla vista, ma resterà conservata nello storico del database.</small>
+    </div>
 </section>
 
 @section Scripts
@@ -73,6 +83,8 @@
             const start = document.getElementById('startKilometers');
             const end = document.getElementById('endKilometers');
             const preview = document.querySelector('#distance-preview strong');
+            const deleteForm = document.getElementById('delete-mileage-form');
+            const formatter = new Intl.NumberFormat('it-IT');
 
             const updateDistance = () => {
                 const startValue = Number(start.value);
@@ -80,11 +92,19 @@
                 end.min = start.value || '0';
 
                 if (Number.isFinite(startValue) && Number.isFinite(endValue) && endValue >= startValue) {
-                    preview.textContent = new Intl.NumberFormat('it-IT').format(endValue - startValue) + ' km';
+                    preview.textContent = formatter.format(endValue - startValue) + ' km';
                 } else {
                     preview.textContent = '—';
                 }
             };
+
+            deleteForm.addEventListener('submit', event => {
+                const message = `Eliminare questa percorrenza?\n\nData: @Model.TripDate.ToString("dd/MM/yyyy")\nTragitto: @Model.Route\nKm: @Model.StartKilometers.ToString("N0", cultura) → @Model.EndKilometers.ToString("N0", cultura)\n\nIl record resterà conservato nello storico del database.`;
+
+                if (!window.confirm(message)) {
+                    event.preventDefault();
+                }
+            });
 
             start.addEventListener('input', updateDistance);
             end.addEventListener('input', updateDistance);
