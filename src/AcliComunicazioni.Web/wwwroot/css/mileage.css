@@ -26,7 +26,7 @@
     line-height: 1.4;
 }
 
-/* Disposizione desktop: riepilogo orizzontale e modulo sotto, senza vuoti laterali. */
+/* Disposizione desktop: tutti i blocchi principali hanno la stessa larghezza. */
 @media (min-width: 901px) {
     .mileage-dashboard-grid {
         grid-template-columns: 1fr;
@@ -62,8 +62,8 @@
     }
 
     .mileage-dashboard-grid #quick-entry {
-        width: min(980px, 100%);
-        margin-inline: auto;
+        width: 100%;
+        margin-inline: 0;
     }
 }
 
