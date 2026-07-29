@@ -1,6 +1,8 @@
 using AcliComunicazioni.Application.Authentication;
 using AcliComunicazioni.Application.Common.Interfaces;
+using AcliComunicazioni.Application.Mileage;
 using AcliComunicazioni.Infrastructure.Authentication;
+using AcliComunicazioni.Infrastructure.Mileage;
 using AcliComunicazioni.Web.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
@@ -34,6 +36,7 @@ builder.Services.AddScoped<
     DatabaseUserAuthenticationService>();
 
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+builder.Services.AddScoped<IMileageService, DatabaseMileageService>();
 
 var app = builder.Build();
 
