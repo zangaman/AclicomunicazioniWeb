@@ -9,7 +9,7 @@
     <div>
         <span class="eyebrow">Gestione trasferte</span>
         <h1>Percorrenze</h1>
-        <p>Registra gli spostamenti di lavoro e consulta rapidamente lo storico.</p>
+        <p>Registra gli spostamenti di lavoro e consulta rapidamente lo storico condiviso.</p>
     </div>
     <a class="primary-button page-action" href="#quick-entry">＋ Nuova percorrenza</a>
 </section>
@@ -29,7 +29,7 @@
         <div class="card-heading-row">
             <div>
                 <span class="card-kicker">Situazione attuale</span>
-                <h2>Riepilogo</h2>
+                <h2>Riepilogo del mezzo</h2>
             </div>
             <span class="summary-icon" aria-hidden="true">↗</span>
         </div>
@@ -53,8 +53,8 @@
                 <dd>@(Model.RecentEntries.FirstOrDefault()?.DistanceKilometers.ToString("N0", cultura) ?? "—") km</dd>
             </div>
             <div>
-                <dt>Registrazioni visibili</dt>
-                <dd>@Model.RecentEntries.Count</dd>
+                <dt>Inserito da</dt>
+                <dd>@(Model.RecentEntries.FirstOrDefault()?.InsertedBy ?? "—")</dd>
             </div>
         </dl>
     </article>
@@ -82,7 +82,13 @@
                     <label for="startKilometers">Km partenza</label>
                     <input id="startKilometers" name="startKilometers" type="number"
                            min="0" step="1" value="@Model.CurrentKilometers" required />
+                    <small class="field-help">Il valore è proposto automaticamente, ma può essere modificato.</small>
                 </div>
+            </div>
+
+            <div id="gap-warning" class="gap-warning" hidden>
+                <strong>Attenzione: possibile tratto non registrato</strong>
+                <span></span>
             </div>
 
             <div class="form-field">
@@ -116,7 +122,7 @@
 <section class="dashboard-card activity-card trips-card" id="latest-trips">
     <div class="table-toolbar">
         <div>
-            <span class="card-kicker">Storico recente</span>
+            <span class="card-kicker">Storico condiviso</span>
             <h2>Ultime percorrenze</h2>
             <p>@Model.RecentEntries.Count registrazioni visualizzate</p>
         </div>
@@ -150,20 +156,39 @@
                         <th class="numeric-column">Partenza</th>
                         <th class="numeric-column">Arrivo</th>
                         <th class="numeric-column">Percorsi</th>
-                        <th>Descrizione</th>
+                        <th>Inserito da</th>
+                        <th>Segnalazioni</th>
                         <th class="actions-column"><span class="visually-hidden">Azioni</span></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var entry in Model.RecentEntries)
                     {
-                        <tr>
+                        <tr class="@(entry.GapKilometers > 0 ? "row-with-gap" : null)">
                             <td data-label="Data"><time datetime="@entry.TripDate.ToString("yyyy-MM-dd")">@entry.TripDate.ToString("dd/MM/yyyy")</time></td>
-                            <td data-label="Tragitto"><strong class="route-name">@entry.Route</strong></td>
+                            <td data-label="Tragitto">
+                                <strong class="route-name">@entry.Route</strong>
+                                @if (!string.IsNullOrWhiteSpace(entry.Description))
+                                {
+                                    <small class="route-description">@entry.Description</small>
+                                }
+                            </td>
                             <td data-label="Partenza" class="numeric-column">@entry.StartKilometers.ToString("N0", cultura)</td>
                             <td data-label="Arrivo" class="numeric-column">@entry.EndKilometers.ToString("N0", cultura)</td>
                             <td data-label="Percorsi" class="numeric-column"><span class="distance-badge">@entry.DistanceKilometers.ToString("N0", cultura) km</span></td>
-                            <td data-label="Descrizione" class="description-cell">@(string.IsNullOrWhiteSpace(entry.Description) ? "—" : entry.Description)</td>
+                            <td data-label="Inserito da"><span class="user-badge">@entry.InsertedBy</span></td>
+                            <td data-label="Segnalazioni">
+                                @if (entry.GapKilometers > 0)
+                                {
+                                    <span class="gap-badge" title="Tra l'arrivo precedente e questa partenza risultano chilometri non registrati">
+                                        +@entry.GapKilometers.ToString("N0", cultura) km non registrati
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="no-gap">Nessun buco</span>
+                                }
+                            </td>
                             <td class="actions-column">
                                 <a class="table-action" asp-action="EditMileage" asp-route-id="@entry.Id" aria-label="Modifica @entry.Route">Modifica</a>
                             </td>
@@ -179,24 +204,37 @@
 {
     <script>
         (() => {
+            const currentKilometers = @(Model.CurrentKilometers?.ToString() ?? "null");
             const start = document.getElementById('startKilometers');
             const end = document.getElementById('endKilometers');
             const preview = document.querySelector('#distance-preview strong');
+            const gapWarning = document.getElementById('gap-warning');
+            const gapText = gapWarning.querySelector('span');
+            const formatter = new Intl.NumberFormat('it-IT');
 
-            const updateDistance = () => {
+            const updateValues = () => {
                 const startValue = Number(start.value);
                 const endValue = Number(end.value);
                 end.min = start.value || '0';
 
                 if (Number.isFinite(startValue) && Number.isFinite(endValue) && endValue >= startValue) {
-                    preview.textContent = new Intl.NumberFormat('it-IT').format(endValue - startValue) + ' km';
+                    preview.textContent = formatter.format(endValue - startValue) + ' km';
                 } else {
                     preview.textContent = '—';
                 }
+
+                if (currentKilometers !== null && Number.isFinite(startValue) && startValue > currentKilometers) {
+                    const gap = startValue - currentKilometers;
+                    gapText.textContent = `Dall'ultima percorrenza risultano ${formatter.format(gap)} km senza registrazione. Puoi comunque salvare.`;
+                    gapWarning.hidden = false;
+                } else {
+                    gapWarning.hidden = true;
+                }
             };
 
-            start.addEventListener('input', updateDistance);
-            end.addEventListener('input', updateDistance);
+            start.addEventListener('input', updateValues);
+            end.addEventListener('input', updateValues);
+            updateValues();
         })();
     </script>
 }
