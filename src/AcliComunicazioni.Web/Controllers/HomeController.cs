@@ -54,9 +54,7 @@ public sealed class HomeController : Controller
             return Challenge();
         }
 
-        var insertedBy = User.FindFirst("display_name")?.Value
-            ?? User.Identity?.Name
-            ?? $"Utente {userId.Value}";
+        var insertedBy = CurrentDisplayName(userId.Value);
 
         try
         {
@@ -149,14 +147,43 @@ public sealed class HomeController : Controller
                 route,
                 description,
                 DateTime.UtcNow,
-                User.FindFirst("display_name")?.Value
-                    ?? User.Identity?.Name
-                    ?? "Utente",
+                CurrentDisplayName(userId.Value),
                 null,
                 0);
 
             return View(entry);
         }
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteMileage(
+        int id,
+        CancellationToken cancellationToken)
+    {
+        var userId = _currentUser.UserId;
+
+        if (userId is null)
+        {
+            return Challenge();
+        }
+
+        try
+        {
+            await _mileageService.DeleteAsync(
+                userId.Value,
+                id,
+                CurrentDisplayName(userId.Value),
+                cancellationToken);
+
+            TempData["MileageSuccess"] = "Percorrenza eliminata correttamente. Lo storico è stato conservato.";
+        }
+        catch (InvalidOperationException exception)
+        {
+            TempData["MileageError"] = exception.Message;
+        }
+
+        return Redirect($"{Url.Action(nameof(Index))}#latest-trips");
     }
 
     [HttpGet]
@@ -199,6 +226,11 @@ public sealed class HomeController : Controller
                 $"percorrenze-{fileDate}.csv")
         };
     }
+
+    private string CurrentDisplayName(int userId) =>
+        User.FindFirst("display_name")?.Value
+        ?? User.Identity?.Name
+        ?? $"Utente {userId}";
 
     private static byte[] CreateCsv(IEnumerable<MileageEntry> entries)
     {
