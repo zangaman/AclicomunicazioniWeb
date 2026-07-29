@@ -45,10 +45,15 @@ public sealed class HomeController : Controller
         if (userId is null)
             return Challenge();
 
+        var insertedBy = User.FindFirst("display_name")?.Value
+            ?? User.Identity?.Name
+            ?? $"Utente {userId.Value}";
+
         try
         {
             await _mileageService.AddAsync(
                 userId.Value,
+                insertedBy,
                 startKilometers,
                 endKilometers,
                 tripDate == default ? DateTime.Today : tripDate,
@@ -120,7 +125,10 @@ public sealed class HomeController : Controller
                 tripDate,
                 route,
                 description,
-                DateTime.UtcNow);
+                DateTime.UtcNow,
+                User.FindFirst("display_name")?.Value ?? User.Identity?.Name ?? "Utente",
+                null,
+                0);
             return View(entry);
         }
     }
@@ -155,7 +163,7 @@ public sealed class HomeController : Controller
     private static byte[] CreateCsv(IEnumerable<MileageEntry> entries)
     {
         var builder = new StringBuilder();
-        builder.AppendLine("Data;Tragitto;Km partenza;Km arrivo;Km percorsi;Descrizione");
+        builder.AppendLine("Data;Tragitto;Km partenza;Km arrivo;Km percorsi;Km non registrati;Inserito da;Descrizione");
 
         foreach (var entry in entries)
         {
@@ -164,14 +172,15 @@ public sealed class HomeController : Controller
                 .Append(entry.StartKilometers).Append(';')
                 .Append(entry.EndKilometers).Append(';')
                 .Append(entry.DistanceKilometers).Append(';')
+                .Append(entry.GapKilometers).Append(';')
+                .Append(Csv(entry.InsertedBy)).Append(';')
                 .Append(Csv(entry.Description ?? string.Empty)).AppendLine();
         }
 
         return new UTF8Encoding(encoderShouldEmitUTF8Identifier: true).GetBytes(builder.ToString());
     }
 
-    private static string Csv(string value) =>
-        $"\"{value.Replace("\"", "\"\"")}\"";
+    private static string Csv(string value) => $"\"{value.Replace("\"", "\"\"")}\"";
 
     private static XDocument CreateXml(IEnumerable<MileageEntry> entries) =>
         new(
@@ -184,5 +193,7 @@ public sealed class HomeController : Controller
                         new XElement("KmPartenza", entry.StartKilometers),
                         new XElement("KmArrivo", entry.EndKilometers),
                         new XElement("KmPercorsi", entry.DistanceKilometers),
+                        new XElement("KmNonRegistrati", entry.GapKilometers),
+                        new XElement("InseritoDa", entry.InsertedBy),
                         new XElement("Descrizione", entry.Description ?? string.Empty)))));
 }
