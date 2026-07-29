@@ -3,13 +3,16 @@
 @{
     ViewData["Title"] = "Percorrenze";
     var cultura = new System.Globalization.CultureInfo("it-IT");
+    var conducenteCorrente = User.FindFirst("display_name")?.Value
+        ?? User.Identity?.Name
+        ?? "Utente collegato";
 }
 
 <section class="page-heading">
     <div>
         <span class="eyebrow">Gestione trasferte</span>
         <h1>Percorrenze</h1>
-        <p>Registra gli spostamenti di lavoro e consulta rapidamente lo storico condiviso.</p>
+        <p>Registra i chilometri iniziali e finali. Il conducente viene identificato automaticamente dall’utente collegato.</p>
     </div>
     <a class="primary-button page-action" href="#quick-entry">＋ Nuova percorrenza</a>
 </section>
@@ -53,7 +56,7 @@
                 <dd>@(Model.RecentEntries.FirstOrDefault()?.DistanceKilometers.ToString("N0", cultura) ?? "—") km</dd>
             </div>
             <div>
-                <dt>Inserito da</dt>
+                <dt>Ultimo conducente</dt>
                 <dd>@(Model.RecentEntries.FirstOrDefault()?.InsertedBy ?? "—")</dd>
             </div>
         </dl>
@@ -79,10 +82,10 @@
                 </div>
 
                 <div class="form-field">
-                    <label for="startKilometers">Km partenza</label>
+                    <label for="startKilometers">Km iniziali</label>
                     <input id="startKilometers" name="startKilometers" type="number"
                            min="0" step="1" value="@Model.CurrentKilometers" required />
-                    <small class="field-help">Il valore è proposto automaticamente, ma può essere modificato.</small>
+                    <small class="field-help">L’ultimo valore è proposto automaticamente, ma puoi modificarlo.</small>
                 </div>
             </div>
 
@@ -92,7 +95,7 @@
             </div>
 
             <div class="form-field">
-                <label for="endKilometers">Km arrivo</label>
+                <label for="endKilometers">Km finali</label>
                 <input id="endKilometers" name="endKilometers" type="number"
                        min="@(Model.CurrentKilometers ?? 0)" step="1" required />
             </div>
@@ -109,9 +112,15 @@
             </div>
 
             <div class="form-field">
-                <label for="description">Descrizione <span class="optional-label">facoltativa</span></label>
+                <label for="description">Dettaglio <span class="optional-label">facoltativo</span></label>
                 <textarea id="description" name="description" maxlength="500" rows="3"
                           placeholder="Motivo della trasferta o note utili"></textarea>
+            </div>
+
+            <div class="driver-detail" aria-label="Conducente della percorrenza">
+                <span class="driver-detail-label">Conducente</span>
+                <strong>@conducenteCorrente</strong>
+                <small>Assegnato automaticamente in base all’utente collegato.</small>
             </div>
 
             <button class="primary-button" type="submit">Salva percorrenza</button>
@@ -153,10 +162,10 @@
                     <tr>
                         <th>Data</th>
                         <th>Tragitto</th>
-                        <th class="numeric-column">Partenza</th>
-                        <th class="numeric-column">Arrivo</th>
+                        <th class="numeric-column">Km iniziali</th>
+                        <th class="numeric-column">Km finali</th>
                         <th class="numeric-column">Percorsi</th>
-                        <th>Inserito da</th>
+                        <th>Conducente</th>
                         <th>Segnalazioni</th>
                         <th class="actions-column"><span class="visually-hidden">Azioni</span></th>
                     </tr>
@@ -173,14 +182,14 @@
                                     <small class="route-description">@entry.Description</small>
                                 }
                             </td>
-                            <td data-label="Partenza" class="numeric-column">@entry.StartKilometers.ToString("N0", cultura)</td>
-                            <td data-label="Arrivo" class="numeric-column">@entry.EndKilometers.ToString("N0", cultura)</td>
+                            <td data-label="Km iniziali" class="numeric-column">@entry.StartKilometers.ToString("N0", cultura)</td>
+                            <td data-label="Km finali" class="numeric-column">@entry.EndKilometers.ToString("N0", cultura)</td>
                             <td data-label="Percorsi" class="numeric-column"><span class="distance-badge">@entry.DistanceKilometers.ToString("N0", cultura) km</span></td>
-                            <td data-label="Inserito da"><span class="user-badge">@entry.InsertedBy</span></td>
+                            <td data-label="Conducente"><span class="user-badge">@entry.InsertedBy</span></td>
                             <td data-label="Segnalazioni">
                                 @if (entry.GapKilometers > 0)
                                 {
-                                    <span class="gap-badge" title="Tra l'arrivo precedente e questa partenza risultano chilometri non registrati">
+                                    <span class="gap-badge" title="Tra l’arrivo precedente e questa partenza risultano chilometri non registrati">
                                         +@entry.GapKilometers.ToString("N0", cultura) km non registrati
                                     </span>
                                 }
@@ -225,7 +234,7 @@
 
                 if (currentKilometers !== null && Number.isFinite(startValue) && startValue > currentKilometers) {
                     const gap = startValue - currentKilometers;
-                    gapText.textContent = `Dall'ultima percorrenza risultano ${formatter.format(gap)} km senza registrazione. Puoi comunque salvare.`;
+                    gapText.textContent = `Dall’ultima percorrenza risultano ${formatter.format(gap)} km senza registrazione. Puoi comunque salvare.`;
                     gapWarning.hidden = false;
                 } else {
                     gapWarning.hidden = true;
