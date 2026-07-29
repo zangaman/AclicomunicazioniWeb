@@ -1,0 +1,93 @@
+@model AcliComunicazioni.Application.Mileage.MileageEntry
+
+@{
+    ViewData["Title"] = "Modifica percorrenza";
+}
+
+<section class="page-heading compact-heading">
+    <div>
+        <span class="eyebrow">Storico percorrenze</span>
+        <h1>Modifica percorrenza</h1>
+        <p>Aggiorna i dati della registrazione selezionata.</p>
+    </div>
+    <a class="secondary-button back-button" asp-action="Index" asp-fragment="latest-trips">← Torna allo storico</a>
+</section>
+
+<section class="dashboard-card edit-card">
+    <form asp-action="EditMileage" method="post" class="edit-form" id="edit-mileage-form">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.Id" />
+
+        <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+        <div class="form-row">
+            <div class="form-field">
+                <label for="tripDate">Data</label>
+                <input id="tripDate" name="tripDate" type="date"
+                       max="@DateTime.Today.ToString("yyyy-MM-dd")"
+                       value="@Model.TripDate.ToString("yyyy-MM-dd")" required />
+            </div>
+
+            <div class="form-field">
+                <label for="route">Tragitto</label>
+                <input id="route" name="route" type="text" maxlength="200"
+                       value="@Model.Route" required />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-field">
+                <label for="startKilometers">Km partenza</label>
+                <input id="startKilometers" name="startKilometers" type="number"
+                       min="0" step="1" value="@Model.StartKilometers" required />
+            </div>
+
+            <div class="form-field">
+                <label for="endKilometers">Km arrivo</label>
+                <input id="endKilometers" name="endKilometers" type="number"
+                       min="@Model.StartKilometers" step="1" value="@Model.EndKilometers" required />
+            </div>
+        </div>
+
+        <div class="distance-preview" id="distance-preview" aria-live="polite">
+            <span>Km percorsi</span>
+            <strong>@Model.DistanceKilometers km</strong>
+        </div>
+
+        <div class="form-field">
+            <label for="description">Descrizione <span class="optional-label">facoltativa</span></label>
+            <textarea id="description" name="description" maxlength="500" rows="4">@Model.Description</textarea>
+        </div>
+
+        <div class="form-actions">
+            <a class="secondary-button cancel-button" asp-action="Index" asp-fragment="latest-trips">Annulla</a>
+            <button class="primary-button save-button" type="submit">Salva modifiche</button>
+        </div>
+    </form>
+</section>
+
+@section Scripts
+{
+    <script>
+        (() => {
+            const start = document.getElementById('startKilometers');
+            const end = document.getElementById('endKilometers');
+            const preview = document.querySelector('#distance-preview strong');
+
+            const updateDistance = () => {
+                const startValue = Number(start.value);
+                const endValue = Number(end.value);
+                end.min = start.value || '0';
+
+                if (Number.isFinite(startValue) && Number.isFinite(endValue) && endValue >= startValue) {
+                    preview.textContent = new Intl.NumberFormat('it-IT').format(endValue - startValue) + ' km';
+                } else {
+                    preview.textContent = '—';
+                }
+            };
+
+            start.addEventListener('input', updateDistance);
+            end.addEventListener('input', updateDistance);
+        })();
+    </script>
+}
