@@ -8,7 +8,10 @@ public interface IMileageService
 
     Task AddAsync(
         int userId,
-        int kilometers,
-        DateTime readingDate,
+        int startKilometers,
+        int endKilometers,
+        DateTime tripDate,
+        string route,
+        string? description,
         CancellationToken cancellationToken = default);
 }
