@@ -13,4 +13,7 @@ public sealed record MileageEntry(
     DateTime TripDate,
     string Route,
     string? Description,
-    DateTime CreatedAt);
+    DateTime CreatedAt,
+    string InsertedBy,
+    int? PreviousEndKilometers,
+    int GapKilometers);
