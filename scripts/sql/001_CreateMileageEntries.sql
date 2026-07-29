@@ -5,9 +5,9 @@ SET NOCOUNT ON;
 SET XACT_ABORT ON;
 GO
 
-IF OBJECT_ID(N'dbo.MileageEntries', N'U') IS NOT NULL
+IF OBJECT_ID(N'dbo.RilevazioniChilometriche', N'U') IS NOT NULL
 BEGIN
-    PRINT 'La tabella dbo.MileageEntries esiste già. Nessuna modifica eseguita.';
+    PRINT 'La tabella dbo.RilevazioniChilometriche esiste già. Nessuna modifica eseguita.';
     RETURN;
 END;
 GO
@@ -15,40 +15,40 @@ GO
 BEGIN TRY
     BEGIN TRANSACTION;
 
-    CREATE TABLE dbo.MileageEntries
+    CREATE TABLE dbo.RilevazioniChilometriche
     (
         Id INT IDENTITY(1,1) NOT NULL
-            CONSTRAINT PK_MileageEntries PRIMARY KEY,
+            CONSTRAINT PK_RilevazioniChilometriche PRIMARY KEY,
 
-        UserId INT NOT NULL,
+        IdUtente INT NOT NULL,
 
-        Kilometers INT NOT NULL,
+        Chilometri INT NOT NULL,
 
-        ReadingDate DATETIME2(0) NOT NULL,
+        DataRilevazione DATETIME2(0) NOT NULL,
 
-        CreatedAt DATETIME2(0) NOT NULL
-            CONSTRAINT DF_MileageEntries_CreatedAt
+        DataCreazione DATETIME2(0) NOT NULL
+            CONSTRAINT DF_RilevazioniChilometriche_DataCreazione
             DEFAULT SYSUTCDATETIME(),
 
-        CONSTRAINT CK_MileageEntries_Kilometers
-            CHECK (Kilometers > 0),
+        CONSTRAINT CK_RilevazioniChilometriche_Chilometri
+            CHECK (Chilometri > 0),
 
-        CONSTRAINT FK_MileageEntries_Utenti
-            FOREIGN KEY (UserId)
+        CONSTRAINT FK_RilevazioniChilometriche_Utenti
+            FOREIGN KEY (IdUtente)
             REFERENCES dbo.Utenti(ID_utente)
     );
 
-    CREATE INDEX IX_MileageEntries_UserId_ReadingDate
-        ON dbo.MileageEntries
+    CREATE INDEX IX_RilevazioniChilometriche_IdUtente_DataRilevazione
+        ON dbo.RilevazioniChilometriche
         (
-            UserId,
-            ReadingDate DESC,
+            IdUtente,
+            DataRilevazione DESC,
             Id DESC
         );
 
     COMMIT TRANSACTION;
 
-    PRINT 'Tabella dbo.MileageEntries creata correttamente.';
+    PRINT 'Tabella dbo.RilevazioniChilometriche creata correttamente.';
 END TRY
 BEGIN CATCH
     IF @@TRANCOUNT > 0
