@@ -69,8 +69,22 @@ public sealed class DatabaseMileageService : IMileageService
         if (endKilometers < startKilometers)
             throw new InvalidOperationException("I chilometri di arrivo non possono essere inferiori a quelli di partenza.");
 
-        if (string.IsNullOrWhiteSpace(route))
+        if (tripDate.Date > DateTime.Today)
+            throw new InvalidOperationException("La data della percorrenza non può essere futura.");
+
+        var normalizedRoute = route?.Trim() ?? string.Empty;
+        if (normalizedRoute.Length == 0)
             throw new InvalidOperationException("Inserisci il tragitto.");
+
+        if (normalizedRoute.Length > 200)
+            throw new InvalidOperationException("Il tragitto non può superare 200 caratteri.");
+
+        var normalizedDescription = string.IsNullOrWhiteSpace(description)
+            ? null
+            : description.Trim();
+
+        if (normalizedDescription?.Length > 500)
+            throw new InvalidOperationException("La descrizione non può superare 500 caratteri.");
 
         await using var connection = new SqlConnection(_connectionString);
         await connection.OpenAsync(cancellationToken);
@@ -107,9 +121,9 @@ public sealed class DatabaseMileageService : IMileageService
         command.Parameters.Add("@TripDate", SqlDbType.Date).Value = tripDate.Date;
         command.Parameters.Add("@StartKilometers", SqlDbType.Int).Value = startKilometers;
         command.Parameters.Add("@EndKilometers", SqlDbType.Int).Value = endKilometers;
-        command.Parameters.Add("@Route", SqlDbType.NVarChar, 200).Value = route.Trim();
+        command.Parameters.Add("@Route", SqlDbType.NVarChar, 200).Value = normalizedRoute;
         command.Parameters.Add("@Description", SqlDbType.NVarChar, 500).Value =
-            string.IsNullOrWhiteSpace(description) ? DBNull.Value : description.Trim();
+            normalizedDescription is null ? DBNull.Value : normalizedDescription;
 
         await command.ExecuteNonQueryAsync(cancellationToken);
     }
