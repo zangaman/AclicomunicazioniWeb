@@ -1,24 +1,131 @@
 @{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = "Dashboard";
+
+    var displayName =
+        User.FindFirst("display_name")?.Value
+        ?? User.Identity?.Name
+        ?? "utente";
+
+    var firstName = displayName
+        .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+        .FirstOrDefault()
+        ?? displayName;
 }
 
-<section class="hero">
-    <span class="eyebrow">Piattaforma interna</span>
-    <h1>Benvenuto in AcliComunicazioni</h1>
-    <p>La base del nuovo sistema è pronta. Il primo modulo sarà la gestione dei mezzi e dei chilometri.</p>
-    <div class="card-grid">
-        <article class="module-card">
-            <h2>Gestione mezzi</h2>
-            <p>Inserimento chilometri, viaggi, storico e controlli.</p>
-            <span class="status">Prossimo modulo</span>
-        </article>
-        <article class="module-card muted">
-            <h2>Presenze</h2>
-            <p>Modulo previsto per una fase successiva.</p>
-        </article>
-        <article class="module-card muted">
-            <h2>Documenti</h2>
-            <p>Archivio e condivisione documentale futura.</p>
-        </article>
+<section class="dashboard-heading">
+    <div>
+        <span class="eyebrow">Piattaforma interna</span>
+        <h1>Buongiorno, @firstName</h1>
+        <p>Da qui puoi gestire i mezzi, registrare i chilometri e controllare le attività più recenti.</p>
     </div>
+
+    <a class="primary-button dashboard-primary-action" href="#quick-entry">
+        <span aria-hidden="true">＋</span>
+        Registra chilometri
+    </a>
+</section>
+
+<section class="dashboard-grid" aria-label="Riepilogo gestione mezzi">
+    <article class="dashboard-card vehicle-overview-card">
+        <div class="card-heading-row">
+            <div>
+                <span class="card-kicker">Mezzo principale</span>
+                <h2>Furgone aziendale</h2>
+            </div>
+            <span class="status status-ready">Attivo</span>
+        </div>
+
+        <div class="vehicle-visual" aria-hidden="true">
+            <span class="vehicle-icon">🚐</span>
+            <div>
+                <span class="vehicle-label">Targa</span>
+                <strong>Da configurare</strong>
+            </div>
+        </div>
+
+        <dl class="vehicle-stats">
+            <div>
+                <dt>Ultima rilevazione</dt>
+                <dd>—</dd>
+            </div>
+            <div>
+                <dt>Chilometri attuali</dt>
+                <dd>— km</dd>
+            </div>
+            <div>
+                <dt>Ultimo aggiornamento</dt>
+                <dd>Nessun dato</dd>
+            </div>
+        </dl>
+    </article>
+
+    <article class="dashboard-card quick-entry-card" id="quick-entry">
+        <div class="card-heading-row">
+            <div>
+                <span class="card-kicker">Inserimento rapido</span>
+                <h2>Nuova rilevazione</h2>
+            </div>
+            <span class="step-badge">1° passo</span>
+        </div>
+
+        <p class="card-description">
+            La struttura è pronta. Nel prossimo passaggio collegheremo questo modulo al database.
+        </p>
+
+        <div class="quick-entry-preview">
+            <label for="mileage-preview">Chilometri attuali</label>
+            <div class="mileage-input-preview">
+                <input id="mileage-preview" type="text" inputmode="numeric" placeholder="es. 48.250" disabled />
+                <span>km</span>
+            </div>
+            <button class="primary-button" type="button" disabled>Salva rilevazione</button>
+        </div>
+    </article>
+</section>
+
+<section class="dashboard-card activity-card">
+    <div class="card-heading-row activity-heading">
+        <div>
+            <span class="card-kicker">Attività</span>
+            <h2>Ultime registrazioni</h2>
+        </div>
+        <span class="activity-count">0 elementi</span>
+    </div>
+
+    <div class="empty-state">
+        <span class="empty-state-icon" aria-hidden="true">↗</span>
+        <div>
+            <h3>Nessuna rilevazione presente</h3>
+            <p>Le registrazioni dei chilometri compariranno qui in ordine cronologico.</p>
+        </div>
+    </div>
+</section>
+
+<section class="next-modules" aria-label="Moduli futuri">
+    <article class="mini-module-card">
+        <span class="mini-module-icon" aria-hidden="true">⛽</span>
+        <div>
+            <h2>Rifornimenti</h2>
+            <p>Consumi, costi e storico carburante.</p>
+        </div>
+        <span class="future-label">In seguito</span>
+    </article>
+
+    <article class="mini-module-card">
+        <span class="mini-module-icon" aria-hidden="true">🛠</span>
+        <div>
+            <h2>Manutenzioni</h2>
+            <p>Scadenze, interventi e promemoria.</p>
+        </div>
+        <span class="future-label">In seguito</span>
+    </article>
+
+    <article class="mini-module-card">
+        <span class="mini-module-icon" aria-hidden="true">📄</span>
+        <div>
+            <h2>Documenti</h2>
+            <p>Assicurazione, revisione e allegati.</p>
+        </div>
+        <span class="future-label">In seguito</span>
+    </article>
 </section>
