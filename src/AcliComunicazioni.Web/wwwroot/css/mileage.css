@@ -26,6 +26,95 @@
     line-height: 1.4;
 }
 
+/* Pagina di modifica percorrenza */
+.edit-page-heading {
+    max-width: 980px;
+    margin-inline: auto;
+}
+
+.mileage-edit-card,
+.edit-card {
+    width: min(900px, 100%);
+    padding: 34px;
+    border-radius: 24px;
+}
+
+.edit-card .edit-form {
+    gap: 22px;
+    margin-top: 0;
+}
+
+.edit-card .form-row {
+    gap: 18px;
+}
+
+.edit-card .form-field input,
+.edit-card .form-field textarea {
+    background: #fff;
+    border-color: #d5e0e7;
+    padding: 15px 16px;
+}
+
+.edit-card .form-field textarea {
+    min-height: 120px;
+}
+
+.edit-card .distance-preview {
+    padding: 16px 18px;
+    background: linear-gradient(135deg, #f2f8fa, #edf5f7);
+    border-color: #d3e4ea;
+}
+
+.edit-card .distance-preview strong {
+    font-size: 1.25rem;
+}
+
+.edit-card .form-actions {
+    padding-top: 8px;
+}
+
+.delete-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 22px;
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid #e7edf1;
+}
+
+.delete-section form {
+    order: 2;
+    flex: 0 0 auto;
+}
+
+.delete-section small {
+    order: 1;
+    max-width: 520px;
+    color: #7a858e;
+    font-size: .8rem;
+    line-height: 1.45;
+}
+
+.delete-text-button {
+    appearance: none;
+    border: 0;
+    padding: 7px 0;
+    background: transparent;
+    color: #9a2525;
+    font-size: .82rem;
+    font-weight: 750;
+    text-decoration: underline;
+    text-decoration-color: rgba(154, 37, 37, .35);
+    text-underline-offset: 4px;
+    cursor: pointer;
+}
+
+.delete-text-button:hover {
+    color: #741919;
+    text-decoration-color: currentColor;
+}
+
 /* Disposizione desktop: tutti i blocchi principali hanno la stessa larghezza. */
 @media (min-width: 901px) {
     .mileage-dashboard-grid {
@@ -78,5 +167,24 @@
 
     .mileage-dashboard-grid .summary-card .summary-main-value {
         min-height: 145px;
+    }
+}
+
+@media (max-width: 680px) {
+    .mileage-edit-card,
+    .edit-card {
+        padding: 21px;
+        border-radius: 18px;
+    }
+
+    .delete-section {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .delete-section form,
+    .delete-section small {
+        order: initial;
     }
 }
