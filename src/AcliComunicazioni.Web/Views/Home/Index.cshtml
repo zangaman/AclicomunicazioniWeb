@@ -1,31 +1,12 @@
 @model AcliComunicazioni.Application.Mileage.MileageDashboard
 
 @{
-    ViewData["Title"] = "Dashboard";
-
-    var displayName =
-        User.FindFirst("display_name")?.Value
-        ?? User.Identity?.Name
-        ?? "utente";
-
-    var firstName = displayName
-        .Split(' ', StringSplitOptions.RemoveEmptyEntries)
-        .FirstOrDefault()
-        ?? displayName;
+    ViewData["Title"] = "Percorrenze";
+    var cultura = new System.Globalization.CultureInfo("it-IT");
 }
 
-<section class="dashboard-heading">
-    <div>
-        <span class="eyebrow">Piattaforma interna</span>
-        <h1>Buongiorno, @firstName</h1>
-        <p>Registra subito i chilometri del mezzo e consulta le ultime rilevazioni.</p>
-    </div>
-
-    <a class="primary-button dashboard-primary-action" href="#quick-entry">
-        <span aria-hidden="true">＋</span>
-        Registra chilometri
-    </a>
-</section>
+<h1>Percorrenze</h1>
+<p>Registra i chilometri di partenza e arrivo, il tragitto e una descrizione facoltativa.</p>
 
 @if (TempData["MileageSuccess"] is string successMessage)
 {
@@ -37,108 +18,96 @@
     <div class="alert alert-error" role="alert">@errorMessage</div>
 }
 
-<section class="dashboard-grid" aria-label="Riepilogo chilometri">
-    <article class="dashboard-card vehicle-overview-card">
-        <div class="card-heading-row">
-            <div>
-                <span class="card-kicker">Mezzo principale</span>
-                <h2>Furgone aziendale</h2>
-            </div>
-            <span class="status status-ready">Attivo</span>
-        </div>
-
-        <div class="vehicle-visual" aria-hidden="true">
-            <span class="vehicle-icon">🚐</span>
-            <div>
-                <span class="vehicle-label">Targa</span>
-                <strong>Da configurare</strong>
-            </div>
-        </div>
-
+<section class="dashboard-grid">
+    <article class="dashboard-card">
+        <h2>Riepilogo</h2>
         <dl class="vehicle-stats">
             <div>
-                <dt>Chilometri attuali</dt>
-                <dd>@(Model.CurrentKilometers?.ToString("N0", new System.Globalization.CultureInfo("it-IT")) ?? "—") km</dd>
+                <dt>Ultimo chilometraggio</dt>
+                <dd>@(Model.CurrentKilometers?.ToString("N0", cultura) ?? "—") km</dd>
             </div>
             <div>
-                <dt>Ultima rilevazione</dt>
-                <dd>@(Model.LastReadingDate?.ToString("dd/MM/yyyy") ?? "Nessun dato")</dd>
+                <dt>Ultima percorrenza</dt>
+                <dd>@(Model.LastTripDate?.ToString("dd/MM/yyyy") ?? "Nessun dato")</dd>
             </div>
         </dl>
     </article>
 
-    <article class="dashboard-card quick-entry-card" id="quick-entry">
-        <div class="card-heading-row">
-            <div>
-                <span class="card-kicker">Inserimento rapido</span>
-                <h2>Nuova rilevazione</h2>
-            </div>
-        </div>
+    <article class="dashboard-card" id="quick-entry">
+        <h2>Nuova percorrenza</h2>
 
         <form asp-controller="Home" asp-action="AddMileage" method="post" class="quick-entry-form">
             @Html.AntiForgeryToken()
 
             <div class="form-field">
-                <label for="readingDate">Data</label>
-                <input id="readingDate"
-                       name="readingDate"
-                       type="date"
-                       value="@DateTime.Today.ToString("yyyy-MM-dd")"
-                       required />
+                <label for="tripDate">Data</label>
+                <input id="tripDate" name="tripDate" type="date"
+                       value="@DateTime.Today.ToString("yyyy-MM-dd")" required />
             </div>
 
             <div class="form-field">
-                <label for="kilometers">Chilometri attuali</label>
-                <div class="mileage-input-preview">
-                    <input id="kilometers"
-                           name="kilometers"
-                           type="number"
-                           inputmode="numeric"
-                           min="1"
-                           step="1"
-                           placeholder="es. 48250"
-                           required
-                           autofocus />
-                    <span>km</span>
-                </div>
+                <label for="startKilometers">Km partenza</label>
+                <input id="startKilometers" name="startKilometers" type="number"
+                       min="0" step="1" value="@Model.CurrentKilometers" required />
             </div>
 
-            <button class="primary-button" type="submit">Salva rilevazione</button>
+            <div class="form-field">
+                <label for="endKilometers">Km arrivo</label>
+                <input id="endKilometers" name="endKilometers" type="number"
+                       min="0" step="1" required />
+            </div>
+
+            <div class="form-field">
+                <label for="route">Tragitto</label>
+                <input id="route" name="route" type="text" maxlength="200"
+                       placeholder="es. Trento - Rovereto" required />
+            </div>
+
+            <div class="form-field">
+                <label for="description">Descrizione</label>
+                <textarea id="description" name="description" maxlength="500" rows="3"></textarea>
+            </div>
+
+            <button class="primary-button" type="submit">Salva percorrenza</button>
         </form>
     </article>
 </section>
 
 <section class="dashboard-card activity-card">
-    <div class="card-heading-row activity-heading">
-        <div>
-            <span class="card-kicker">Attività</span>
-            <h2>Ultime registrazioni</h2>
-        </div>
-        <span class="activity-count">@Model.RecentEntries.Count elementi</span>
-    </div>
+    <h2>Ultime percorrenze</h2>
 
     @if (Model.RecentEntries.Count == 0)
     {
-        <div class="empty-state">
-            <span class="empty-state-icon" aria-hidden="true">↗</span>
-            <div>
-                <h3>Nessuna rilevazione presente</h3>
-                <p>Inserisci qui sopra i chilometri attuali del mezzo.</p>
-            </div>
-        </div>
+        <p>Nessuna percorrenza presente.</p>
     }
     else
     {
-        <div class="mileage-list">
-            @foreach (var entry in Model.RecentEntries)
-            {
-                <article class="mileage-row">
-                    <div>
-                        <strong>@entry.Kilometers.ToString("N0", new System.Globalization.CultureInfo("it-IT")) km</strong>
-                        <span>@entry.ReadingDate.ToString("dd/MM/yyyy")</span>
-                    </div>
-                </article>
-            }
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Tragitto</th>
+                        <th>Partenza</th>
+                        <th>Arrivo</th>
+                        <th>Percorsi</th>
+                        <th>Descrizione</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var entry in Model.RecentEntries)
+                    {
+                        <tr>
+                            <td>@entry.TripDate.ToString("dd/MM/yyyy")</td>
+                            <td>@entry.Route</td>
+                            <td>@entry.StartKilometers.ToString("N0", cultura)</td>
+                            <td>@entry.EndKilometers.ToString("N0", cultura)</td>
+                            <td>@entry.DistanceKilometers.ToString("N0", cultura) km</td>
+                            <td>@(string.IsNullOrWhiteSpace(entry.Description) ? "—" : entry.Description)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     }
 </section>
