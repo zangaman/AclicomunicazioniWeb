@@ -2,11 +2,15 @@ namespace AcliComunicazioni.Application.Mileage;
 
 public sealed record MileageDashboard(
     int? CurrentKilometers,
-    DateTime? LastReadingDate,
+    DateTime? LastTripDate,
     IReadOnlyList<MileageEntry> RecentEntries);
 
 public sealed record MileageEntry(
     int Id,
-    int Kilometers,
-    DateTime ReadingDate,
+    int StartKilometers,
+    int EndKilometers,
+    int DistanceKilometers,
+    DateTime TripDate,
+    string Route,
+    string? Description,
     DateTime CreatedAt);
