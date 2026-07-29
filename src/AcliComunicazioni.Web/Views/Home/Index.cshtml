@@ -3,12 +3,16 @@
 @{
     ViewData["Title"] = "Percorrenze";
     var cultura = new System.Globalization.CultureInfo("it-IT");
-    var ultimaPercorrenza = Model.RecentEntries.FirstOrDefault();
-    var kmPartenzaProposti = Model.CurrentKilometers ?? 0;
 }
 
-<h1>Percorrenze</h1>
-<p>Registra rapidamente uno spostamento e consulta le ultime percorrenze.</p>
+<section class="page-heading">
+    <div>
+        <span class="eyebrow">Gestione trasferte</span>
+        <h1>Percorrenze</h1>
+        <p>Registra gli spostamenti di lavoro e consulta rapidamente lo storico.</p>
+    </div>
+    <a class="primary-button page-action" href="#quick-entry">＋ Nuova percorrenza</a>
+</section>
 
 @if (TempData["MileageSuccess"] is string successMessage)
 {
@@ -20,100 +24,88 @@
     <div class="alert alert-error" role="alert">@errorMessage</div>
 }
 
-<section class="dashboard-grid">
-    <article class="dashboard-card">
-        <h2>Riepilogo</h2>
-        <dl class="vehicle-stats">
+<section class="dashboard-grid mileage-dashboard-grid">
+    <article class="dashboard-card summary-card">
+        <div class="card-heading-row">
             <div>
-                <dt>Ultimo chilometraggio</dt>
-                <dd>@(Model.CurrentKilometers?.ToString("N0", cultura) ?? "—") km</dd>
+                <span class="card-kicker">Situazione attuale</span>
+                <h2>Riepilogo</h2>
             </div>
+            <span class="summary-icon" aria-hidden="true">↗</span>
+        </div>
+
+        <div class="summary-main-value">
+            <span>Ultimo chilometraggio</span>
+            <strong>@(Model.CurrentKilometers?.ToString("N0", cultura) ?? "—") <small>km</small></strong>
+        </div>
+
+        <dl class="vehicle-stats mileage-summary-stats">
             <div>
                 <dt>Ultima percorrenza</dt>
                 <dd>@(Model.LastTripDate?.ToString("dd/MM/yyyy") ?? "Nessun dato")</dd>
             </div>
-            @if (ultimaPercorrenza is not null)
-            {
-                <div>
-                    <dt>Ultimo tragitto</dt>
-                    <dd>@ultimaPercorrenza.Route</dd>
-                </div>
-                <div>
-                    <dt>Km percorsi</dt>
-                    <dd>@ultimaPercorrenza.DistanceKilometers.ToString("N0", cultura) km</dd>
-                </div>
-            }
+            <div>
+                <dt>Ultimo tragitto</dt>
+                <dd>@(Model.RecentEntries.FirstOrDefault()?.Route ?? "—")</dd>
+            </div>
+            <div>
+                <dt>Ultima distanza</dt>
+                <dd>@(Model.RecentEntries.FirstOrDefault()?.DistanceKilometers.ToString("N0", cultura) ?? "—") km</dd>
+            </div>
+            <div>
+                <dt>Registrazioni visibili</dt>
+                <dd>@Model.RecentEntries.Count</dd>
+            </div>
         </dl>
     </article>
 
     <article class="dashboard-card" id="quick-entry">
-        <h2>Nuova percorrenza</h2>
+        <div class="card-heading-row">
+            <div>
+                <span class="card-kicker">Inserimento rapido</span>
+                <h2>Nuova percorrenza</h2>
+            </div>
+        </div>
 
-        <form asp-controller="Home" asp-action="AddMileage" method="post" class="quick-entry-form">
+        <form asp-controller="Home" asp-action="AddMileage" method="post" class="quick-entry-form" id="mileage-form">
             @Html.AntiForgeryToken()
 
-            <div class="form-field">
-                <label for="tripDate">Data</label>
-                <input id="tripDate"
-                       name="tripDate"
-                       type="date"
-                       value="@DateTime.Today.ToString("yyyy-MM-dd")"
-                       max="@DateTime.Today.ToString("yyyy-MM-dd")"
-                       required />
-            </div>
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="tripDate">Data</label>
+                    <input id="tripDate" name="tripDate" type="date"
+                           max="@DateTime.Today.ToString("yyyy-MM-dd")"
+                           value="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+                </div>
 
-            <div class="form-field">
-                <label for="startKilometers">Km partenza</label>
-                <input id="startKilometers"
-                       name="startKilometers"
-                       type="number"
-                       inputmode="numeric"
-                       min="0"
-                       step="1"
-                       value="@kmPartenzaProposti"
-                       required />
-                @if (Model.CurrentKilometers.HasValue)
-                {
-                    <small>Proposto dall'ultimo chilometraggio registrato.</small>
-                }
+                <div class="form-field">
+                    <label for="startKilometers">Km partenza</label>
+                    <input id="startKilometers" name="startKilometers" type="number"
+                           min="0" step="1" value="@Model.CurrentKilometers" required />
+                </div>
             </div>
 
             <div class="form-field">
                 <label for="endKilometers">Km arrivo</label>
-                <input id="endKilometers"
-                       name="endKilometers"
-                       type="number"
-                       inputmode="numeric"
-                       min="@kmPartenzaProposti"
-                       step="1"
-                       placeholder="es. @(kmPartenzaProposti + 50)"
-                       required
-                       autofocus />
+                <input id="endKilometers" name="endKilometers" type="number"
+                       min="@(Model.CurrentKilometers ?? 0)" step="1" required />
             </div>
 
-            <div class="form-field">
-                <label>Km percorsi</label>
-                <output id="distancePreview" aria-live="polite">—</output>
+            <div class="distance-preview" id="distance-preview" aria-live="polite">
+                <span>Km percorsi</span>
+                <strong>—</strong>
             </div>
 
             <div class="form-field">
                 <label for="route">Tragitto</label>
-                <input id="route"
-                       name="route"
-                       type="text"
-                       maxlength="200"
-                       placeholder="es. Trento - Rovereto"
-                       autocomplete="off"
-                       required />
+                <input id="route" name="route" type="text" maxlength="200"
+                       placeholder="es. Trento - Rovereto" required />
             </div>
 
             <div class="form-field">
-                <label for="description">Descrizione <span aria-hidden="true">(facoltativa)</span></label>
-                <textarea id="description"
-                          name="description"
-                          maxlength="500"
-                          rows="3"
-                          placeholder="es. Riunione presso la sede"></textarea>
+                <label for="description">Descrizione <span class="optional-label">facoltativa</span></label>
+                <textarea id="description" name="description" maxlength="500" rows="3"
+                          placeholder="Motivo della trasferta o note utili"></textarea>
             </div>
 
             <button class="primary-button" type="submit">Salva percorrenza</button>
@@ -121,40 +113,60 @@
     </article>
 </section>
 
-<section class="dashboard-card activity-card">
-    <div class="card-heading-row">
-        <h2>Ultime percorrenze</h2>
-        <span>@Model.RecentEntries.Count elementi</span>
+<section class="dashboard-card activity-card trips-card" id="latest-trips">
+    <div class="table-toolbar">
+        <div>
+            <span class="card-kicker">Storico recente</span>
+            <h2>Ultime percorrenze</h2>
+            <p>@Model.RecentEntries.Count registrazioni visualizzate</p>
+        </div>
+
+        <div class="export-actions" aria-label="Esporta percorrenze">
+            <a class="secondary-button export-button" asp-action="ExportMileage" asp-route-format="csv">CSV / Excel</a>
+            <a class="secondary-button export-button" asp-action="ExportMileage" asp-route-format="json">JSON</a>
+            <a class="secondary-button export-button" asp-action="ExportMileage" asp-route-format="xml">XML</a>
+            <button class="secondary-button export-button" type="button" onclick="window.print()">Stampa / PDF</button>
+        </div>
     </div>
 
     @if (Model.RecentEntries.Count == 0)
     {
-        <p>Nessuna percorrenza presente. Inserisci la prima percorrenza dal modulo qui sopra.</p>
+        <div class="empty-state">
+            <span class="empty-state-icon" aria-hidden="true">↗</span>
+            <div>
+                <h3>Nessuna percorrenza presente</h3>
+                <p>Inserisci la prima percorrenza dal modulo qui sopra.</p>
+            </div>
+        </div>
     }
     else
     {
-        <div class="table-responsive">
-            <table class="table">
+        <div class="table-responsive mileage-table-wrapper">
+            <table class="mileage-table">
                 <thead>
                     <tr>
                         <th>Data</th>
                         <th>Tragitto</th>
-                        <th>Partenza</th>
-                        <th>Arrivo</th>
-                        <th>Percorsi</th>
+                        <th class="numeric-column">Partenza</th>
+                        <th class="numeric-column">Arrivo</th>
+                        <th class="numeric-column">Percorsi</th>
                         <th>Descrizione</th>
+                        <th class="actions-column"><span class="visually-hidden">Azioni</span></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var entry in Model.RecentEntries)
                     {
                         <tr>
-                            <td>@entry.TripDate.ToString("dd/MM/yyyy")</td>
-                            <td><strong>@entry.Route</strong></td>
-                            <td>@entry.StartKilometers.ToString("N0", cultura)</td>
-                            <td>@entry.EndKilometers.ToString("N0", cultura)</td>
-                            <td><strong>@entry.DistanceKilometers.ToString("N0", cultura) km</strong></td>
-                            <td>@(string.IsNullOrWhiteSpace(entry.Description) ? "—" : entry.Description)</td>
+                            <td data-label="Data"><time datetime="@entry.TripDate.ToString("yyyy-MM-dd")">@entry.TripDate.ToString("dd/MM/yyyy")</time></td>
+                            <td data-label="Tragitto"><strong class="route-name">@entry.Route</strong></td>
+                            <td data-label="Partenza" class="numeric-column">@entry.StartKilometers.ToString("N0", cultura)</td>
+                            <td data-label="Arrivo" class="numeric-column">@entry.EndKilometers.ToString("N0", cultura)</td>
+                            <td data-label="Percorsi" class="numeric-column"><span class="distance-badge">@entry.DistanceKilometers.ToString("N0", cultura) km</span></td>
+                            <td data-label="Descrizione" class="description-cell">@(string.IsNullOrWhiteSpace(entry.Description) ? "—" : entry.Description)</td>
+                            <td class="actions-column">
+                                <a class="table-action" asp-action="EditMileage" asp-route-id="@entry.Id" aria-label="Modifica @entry.Route">Modifica</a>
+                            </td>
                         </tr>
                     }
                 </tbody>
@@ -163,37 +175,28 @@
     }
 </section>
 
-@section Scripts {
+@section Scripts
+{
     <script>
         (() => {
-            const startInput = document.getElementById('startKilometers');
-            const endInput = document.getElementById('endKilometers');
-            const preview = document.getElementById('distancePreview');
-
-            if (!startInput || !endInput || !preview) {
-                return;
-            }
+            const start = document.getElementById('startKilometers');
+            const end = document.getElementById('endKilometers');
+            const preview = document.querySelector('#distance-preview strong');
 
             const updateDistance = () => {
-                const start = Number.parseInt(startInput.value, 10);
-                const end = Number.parseInt(endInput.value, 10);
+                const startValue = Number(start.value);
+                const endValue = Number(end.value);
+                end.min = start.value || '0';
 
-                endInput.min = Number.isFinite(start) ? start.toString() : '0';
-
-                if (!Number.isFinite(start) || !Number.isFinite(end)) {
+                if (Number.isFinite(startValue) && Number.isFinite(endValue) && endValue >= startValue) {
+                    preview.textContent = new Intl.NumberFormat('it-IT').format(endValue - startValue) + ' km';
+                } else {
                     preview.textContent = '—';
-                    return;
                 }
-
-                const distance = end - start;
-                preview.textContent = distance >= 0
-                    ? `${distance.toLocaleString('it-IT')} km`
-                    : 'I km di arrivo devono essere maggiori o uguali alla partenza';
             };
 
-            startInput.addEventListener('input', updateDistance);
-            endInput.addEventListener('input', updateDistance);
-            updateDistance();
+            start.addEventListener('input', updateDistance);
+            end.addEventListener('input', updateDistance);
         })();
     </script>
 }
