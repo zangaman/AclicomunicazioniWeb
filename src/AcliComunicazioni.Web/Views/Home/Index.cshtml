@@ -6,6 +6,8 @@
     var conducenteCorrente = User.FindFirst("display_name")?.Value
         ?? User.Identity?.Name
         ?? "Utente collegato";
+    var gapsCount = Model.RecentEntries.Count(entry => entry.GapKilometers > 0);
+    var missingKilometers = Model.RecentEntries.Sum(entry => entry.GapKilometers);
 }
 
 <section class="page-heading">
@@ -133,7 +135,13 @@
         <div>
             <span class="card-kicker">Storico condiviso</span>
             <h2>Ultime percorrenze</h2>
-            <p>@Model.RecentEntries.Count registrazioni visualizzate</p>
+            <p>
+                @Model.RecentEntries.Count registrazioni visualizzate
+                @if (gapsCount > 0)
+                {
+                    <span> · <strong>@gapsCount slot vuoti</strong> · @missingKilometers.ToString("N0", cultura) km da verificare</span>
+                }
+            </p>
         </div>
 
         <div class="export-actions" aria-label="Esporta percorrenze">
@@ -143,6 +151,13 @@
             <button class="secondary-button export-button" type="button" onclick="window.print()">Stampa / PDF</button>
         </div>
     </div>
+
+    @if (gapsCount > 0)
+    {
+        <div class="alert alert-error" role="alert">
+            Sono presenti @missingKilometers.ToString("N0", cultura) km non registrati in @gapsCount intervalli. Usa “Inserisci tratto” per completare lo storico.
+        </div>
+    }
 
     @if (Model.RecentEntries.Count == 0)
     {
@@ -173,7 +188,40 @@
                 <tbody>
                     @foreach (var entry in Model.RecentEntries)
                     {
-                        <tr class="@(entry.GapKilometers > 0 ? "row-with-gap" : null)">
+                        @if (entry.GapKilometers > 0 && entry.PreviousEndKilometers.HasValue)
+                        {
+                            <tr class="row-with-gap missing-mileage-row">
+                                <td data-label="Data">
+                                    <span title="Data da verificare">Da verificare</span>
+                                </td>
+                                <td data-label="Tragitto">
+                                    <strong class="route-name">⚠ Tratto non registrato</strong>
+                                    <small class="route-description">
+                                        Slot @entry.PreviousEndKilometers.Value.ToString("N0", cultura) – @entry.StartKilometers.ToString("N0", cultura)
+                                    </small>
+                                </td>
+                                <td data-label="Km iniziali" class="numeric-column">@entry.PreviousEndKilometers.Value.ToString("N0", cultura)</td>
+                                <td data-label="Km finali" class="numeric-column">@entry.StartKilometers.ToString("N0", cultura)</td>
+                                <td data-label="Percorsi" class="numeric-column">
+                                    <span class="gap-badge">@entry.GapKilometers.ToString("N0", cultura) km</span>
+                                </td>
+                                <td data-label="Conducente"><span class="user-badge">Da assegnare</span></td>
+                                <td data-label="Segnalazioni">
+                                    <span class="gap-badge">Percorrenza mancante</span>
+                                </td>
+                                <td class="actions-column">
+                                    <button type="button"
+                                            class="table-action fill-gap-button"
+                                            data-start="@entry.PreviousEndKilometers.Value"
+                                            data-end="@entry.StartKilometers"
+                                            data-date="@entry.TripDate.ToString("yyyy-MM-dd")">
+                                        Inserisci tratto
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+
+                        <tr>
                             <td data-label="Data"><time datetime="@entry.TripDate.ToString("yyyy-MM-dd")">@entry.TripDate.ToString("dd/MM/yyyy")</time></td>
                             <td data-label="Tragitto">
                                 <strong class="route-name">@entry.Route</strong>
@@ -186,18 +234,7 @@
                             <td data-label="Km finali" class="numeric-column">@entry.EndKilometers.ToString("N0", cultura)</td>
                             <td data-label="Percorsi" class="numeric-column"><span class="distance-badge">@entry.DistanceKilometers.ToString("N0", cultura) km</span></td>
                             <td data-label="Conducente"><span class="user-badge">@entry.InsertedBy</span></td>
-                            <td data-label="Segnalazioni">
-                                @if (entry.GapKilometers > 0)
-                                {
-                                    <span class="gap-badge" title="Tra l’arrivo precedente e questa partenza risultano chilometri non registrati">
-                                        +@entry.GapKilometers.ToString("N0", cultura) km non registrati
-                                    </span>
-                                }
-                                else
-                                {
-                                    <span class="no-gap">Nessun buco</span>
-                                }
-                            </td>
+                            <td data-label="Segnalazioni"><span class="no-gap">Registrata</span></td>
                             <td class="actions-column">
                                 <a class="table-action" asp-action="EditMileage" asp-route-id="@entry.Id" aria-label="Modifica @entry.Route">Modifica</a>
                             </td>
@@ -214,8 +251,12 @@
     <script>
         (() => {
             const currentKilometers = @(Model.CurrentKilometers?.ToString() ?? "null");
+            const form = document.getElementById('mileage-form');
+            const tripDate = document.getElementById('tripDate');
             const start = document.getElementById('startKilometers');
             const end = document.getElementById('endKilometers');
+            const route = document.getElementById('route');
+            const description = document.getElementById('description');
             const preview = document.querySelector('#distance-preview strong');
             const gapWarning = document.getElementById('gap-warning');
             const gapText = gapWarning.querySelector('span');
@@ -240,6 +281,19 @@
                     gapWarning.hidden = true;
                 }
             };
+
+            document.querySelectorAll('.fill-gap-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    start.value = button.dataset.start;
+                    end.value = button.dataset.end;
+                    tripDate.value = button.dataset.date;
+                    route.value = '';
+                    description.value = `Completamento dello slot chilometrico ${formatter.format(Number(button.dataset.start))} - ${formatter.format(Number(button.dataset.end))}.`;
+                    updateValues();
+                    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    window.setTimeout(() => route.focus(), 450);
+                });
+            });
 
             start.addEventListener('input', updateValues);
             end.addEventListener('input', updateValues);
