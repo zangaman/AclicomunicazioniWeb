@@ -7,12 +7,13 @@
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; background: #f4f6f8; }
-button, input { font: inherit; }
-.container { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+button, input, textarea { font: inherit; }
+.container { width: min(1240px, calc(100% - 32px)); margin: 0 auto; }
 .topbar { background: rgba(255, 255, 255, .94); border-bottom: 1px solid #dde3e9; padding: 16px 0; position: sticky; top: 0; z-index: 20; backdrop-filter: blur(12px); }
 .main-content { padding: 42px 0 64px; }
 .eyebrow { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; color: #65727e; }
 h1 { font-size: clamp(2rem, 5vw, 3.45rem); line-height: 1.05; margin: 12px 0 14px; letter-spacing: -.045em; }
+h2 { letter-spacing: -.025em; }
 
 .topbar-content { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .topbar-brand { display: inline-flex; align-items: center; gap: 10px; color: inherit; text-decoration: none; }
@@ -23,44 +24,68 @@ h1 { font-size: clamp(2rem, 5vw, 3.45rem); line-height: 1.05; margin: 12px 0 14p
 .user-copy span { color: #687580; font-size: .76rem; }
 .user-copy strong { font-size: .95rem; }
 .secondary-button, .primary-button { border: 0; border-radius: 11px; font: inherit; font-weight: 750; cursor: pointer; transition: transform .15s ease, box-shadow .15s ease, background .15s ease; }
-.secondary-button { padding: 9px 14px; background: #edf1f4; color: #17212b; }
+.secondary-button { padding: 9px 14px; background: #edf1f4; color: #17212b; text-decoration: none; }
 .secondary-button:hover { background: #e2e8ed; }
-.primary-button { width: 100%; padding: 13px 18px; background: #17212b; color: white; }
+.primary-button { width: 100%; padding: 13px 18px; background: #17212b; color: white; text-decoration: none; text-align: center; }
 .primary-button:not(:disabled):hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(23, 33, 43, .18); }
 .primary-button:disabled { cursor: not-allowed; opacity: .5; }
 .inline-button { display: inline-block; width: auto; text-decoration: none; margin-top: 12px; }
 
-.dashboard-heading { display: flex; align-items: end; justify-content: space-between; gap: 28px; margin-bottom: 28px; }
-.dashboard-heading p { max-width: 680px; margin: 0; color: #5c6975; font-size: 1.06rem; line-height: 1.65; }
-.dashboard-primary-action { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: auto; min-width: 205px; text-decoration: none; white-space: nowrap; }
-.dashboard-primary-action span { font-size: 1.35rem; line-height: .8; }
-.dashboard-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr); gap: 20px; }
+.page-heading, .dashboard-heading { display: flex; align-items: end; justify-content: space-between; gap: 28px; margin-bottom: 28px; }
+.page-heading p, .dashboard-heading p { max-width: 680px; margin: 0; color: #5c6975; font-size: 1.06rem; line-height: 1.65; }
+.page-action, .dashboard-primary-action { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: auto; min-width: 205px; white-space: nowrap; }
+.compact-heading { align-items: center; }
+.back-button { white-space: nowrap; }
+
+.dashboard-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(360px, .95fr); gap: 22px; }
 .dashboard-card { background: white; border: 1px solid #dde4ea; border-radius: 20px; padding: 26px; box-shadow: 0 12px 34px rgba(21, 35, 48, .055); }
 .card-heading-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
 .card-kicker { display: block; margin-bottom: 7px; color: #77848f; font-size: .76rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
-.card-heading-row h2 { margin: 0; font-size: 1.38rem; letter-spacing: -.02em; }
-.card-description { color: #65727e; line-height: 1.58; margin: 18px 0 22px; }
-.status, .step-badge, .activity-count, .future-label { display: inline-flex; align-items: center; border-radius: 999px; font-size: .78rem; font-weight: 750; white-space: nowrap; }
-.status { padding: 7px 11px; }
-.status-ready { background: #e8f5ed; color: #21663d; }
-.step-badge { padding: 7px 11px; background: #eef2f5; color: #55636f; }
-.vehicle-visual { display: flex; align-items: center; gap: 16px; margin: 28px 0; padding: 22px; border: 1px solid #e4e9ed; border-radius: 16px; background: linear-gradient(135deg, #f8fafb 0%, #eef2f5 100%); }
-.vehicle-icon { width: 58px; height: 58px; display: grid; place-items: center; border-radius: 16px; background: white; font-size: 2rem; box-shadow: 0 8px 18px rgba(21, 35, 48, .08); }
-.vehicle-label { display: block; margin-bottom: 5px; color: #78858f; font-size: .74rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
-.vehicle-visual strong { font-size: 1.13rem; }
+.card-heading-row h2, .table-toolbar h2 { margin: 0; font-size: 1.38rem; }
+.summary-icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; background: #edf1f4; font-size: 1.2rem; }
+.summary-main-value { margin: 28px 0 22px; padding: 24px; border-radius: 17px; background: linear-gradient(135deg, #17212b, #344556); color: white; }
+.summary-main-value span { display: block; margin-bottom: 8px; font-size: .82rem; color: rgba(255,255,255,.72); }
+.summary-main-value strong { font-size: clamp(2rem, 5vw, 3.4rem); letter-spacing: -.045em; }
+.summary-main-value small { font-size: 1rem; font-weight: 700; opacity: .72; }
 .vehicle-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 0; }
 .vehicle-stats div { padding: 16px; border: 1px solid #e6ebef; border-radius: 14px; background: #fbfcfd; }
 .vehicle-stats dt { margin-bottom: 9px; color: #78848e; font-size: .76rem; line-height: 1.35; }
-.vehicle-stats dd { margin: 0; font-size: 1rem; font-weight: 800; }
-.quick-entry-preview, .quick-entry-form { display: grid; gap: 14px; margin-top: 22px; }
-.quick-entry-preview label { font-size: .88rem; font-weight: 750; }
-.mileage-input-preview { display: flex; align-items: center; border: 1px solid #d4dce2; border-radius: 13px; background: #f8fafb; overflow: hidden; }
-.mileage-input-preview:focus-within { border-color: #17212b; box-shadow: 0 0 0 3px rgba(23, 33, 43, .09); background: white; }
-.mileage-input-preview input { min-width: 0; flex: 1; border: 0; padding: 15px; background: transparent; color: #17212b; outline: none; }
-.mileage-input-preview span { padding: 0 15px; color: #75828d; font-weight: 750; }
-.activity-card { margin-top: 20px; }
-.activity-heading { align-items: center; }
-.activity-count { padding: 7px 11px; background: #f0f3f5; color: #697681; }
+.vehicle-stats dd { margin: 0; font-size: 1rem; font-weight: 800; overflow-wrap: anywhere; }
+
+.quick-entry-form, .edit-form { display: grid; gap: 15px; margin-top: 22px; }
+.form-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.form-field { display: grid; gap: 7px; }
+.form-field label { font-weight: 700; font-size: .92rem; }
+.form-field input, .form-field textarea { width: 100%; border: 1px solid #cfd8df; border-radius: 11px; padding: 12px 13px; background: #fbfcfd; color: #17212b; outline: none; resize: vertical; }
+.form-field input:focus, .form-field textarea:focus { border-color: #17212b; box-shadow: 0 0 0 3px rgba(23, 33, 43, .09); background: white; }
+.optional-label { color: #7a8791; font-size: .78rem; font-weight: 500; }
+.distance-preview { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 13px 15px; border: 1px solid #dfe6eb; border-radius: 12px; background: #f7f9fa; }
+.distance-preview span { color: #6b7781; font-size: .85rem; }
+.distance-preview strong { font-size: 1.08rem; }
+.form-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 4px; }
+.cancel-button, .save-button { width: auto; min-width: 150px; }
+.edit-card { width: min(820px, 100%); margin: 0 auto; }
+
+.activity-card { margin-top: 22px; }
+.table-toolbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-bottom: 22px; }
+.table-toolbar p { margin: 7px 0 0; color: #74808a; font-size: .9rem; }
+.export-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.export-button { display: inline-flex; align-items: center; justify-content: center; border: 1px solid #dfe5ea; font-size: .84rem; }
+.mileage-table-wrapper { overflow-x: auto; border: 1px solid #e1e7eb; border-radius: 15px; }
+.mileage-table { width: 100%; border-collapse: collapse; min-width: 980px; }
+.mileage-table th { padding: 13px 15px; background: #f5f7f9; color: #66737e; font-size: .75rem; text-transform: uppercase; letter-spacing: .055em; text-align: left; border-bottom: 1px solid #dfe5ea; }
+.mileage-table td { padding: 15px; border-bottom: 1px solid #edf0f2; vertical-align: middle; font-size: .9rem; }
+.mileage-table tbody tr:last-child td { border-bottom: 0; }
+.mileage-table tbody tr:hover { background: #fafbfc; }
+.numeric-column { text-align: right !important; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.actions-column { width: 90px; text-align: right !important; }
+.route-name { display: block; max-width: 220px; overflow-wrap: anywhere; }
+.description-cell { max-width: 260px; color: #66737e; line-height: 1.45; }
+.distance-badge { display: inline-flex; padding: 6px 9px; border-radius: 999px; background: #e8f5ed; color: #21663d; font-weight: 800; }
+.table-action { display: inline-flex; padding: 7px 10px; border-radius: 9px; background: #edf1f4; color: #17212b; text-decoration: none; font-size: .82rem; font-weight: 750; }
+.table-action:hover { background: #dde5eb; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
 .empty-state { display: flex; align-items: center; gap: 16px; margin-top: 22px; padding: 22px; border: 1px dashed #ccd5dc; border-radius: 16px; background: #fafbfc; }
 .empty-state-icon { width: 44px; height: 44px; display: grid; place-items: center; flex: 0 0 auto; border-radius: 13px; background: #edf1f4; color: #5c6974; font-size: 1.25rem; }
 .empty-state h3 { margin: 0 0 5px; font-size: 1rem; }
@@ -68,11 +93,9 @@ h1 { font-size: clamp(2rem, 5vw, 3.45rem); line-height: 1.05; margin: 12px 0 14p
 .alert { margin: -8px 0 22px; padding: 14px 16px; border-radius: 13px; font-weight: 700; }
 .alert-success { background: #e8f5ed; border: 1px solid #b8dec7; color: #21663d; }
 .alert-error { background: #fff0f0; border: 1px solid #e8bcbc; color: #9a2525; }
-.mileage-list { display: grid; gap: 10px; margin-top: 20px; }
-.mileage-row { padding: 15px 17px; border: 1px solid #e3e9ed; border-radius: 14px; background: #fbfcfd; }
-.mileage-row div { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
-.mileage-row strong { font-size: 1rem; }
-.mileage-row span { color: #6f7c86; font-size: .9rem; }
+.validation-summary, .field-error { color: #a61b1b; font-size: .86rem; }
+.validation-summary:empty, .field-error:empty { display: none; }
+.validation-summary ul { margin: 0; padding-left: 20px; }
 
 .login-page { min-height: 100vh; background: radial-gradient(circle at top left, #ffffff 0, #f4f6f8 52%, #e9eef2 100%); }
 .login-shell { min-height: 100vh; display: grid; place-items: center; padding: 28px 16px; }
@@ -83,40 +106,56 @@ h1 { font-size: clamp(2rem, 5vw, 3.45rem); line-height: 1.05; margin: 12px 0 14p
 .login-heading h1 { margin: 11px 0 8px; font-size: 2.25rem; }
 .login-heading p { color: #65727e; margin: 0 0 28px; }
 .login-form { display: grid; gap: 18px; }
-.form-field { display: grid; gap: 7px; }
-.form-field label { font-weight: 700; font-size: .92rem; }
-.form-field input { width: 100%; border: 1px solid #cfd8df; border-radius: 11px; padding: 12px 13px; font: inherit; background: #fbfcfd; outline: none; }
-.form-field input:focus { border-color: #17212b; box-shadow: 0 0 0 3px rgba(23, 33, 43, .09); background: white; }
 .remember-row { display: flex; align-items: center; gap: 9px; color: #56636e; font-size: .9rem; cursor: pointer; }
-.validation-summary, .field-error { color: #a61b1b; font-size: .86rem; }
-.validation-summary:empty, .field-error:empty { display: none; }
-.validation-summary ul { margin: 0; padding-left: 20px; }
 .login-note { margin: 25px 0 0; text-align: center; color: #7b8791; font-size: .8rem; }
-.compact-hero { max-width: 760px; }
 
 @media (max-width: 900px) {
-    .dashboard-heading { align-items: flex-start; }
+    .page-heading, .dashboard-heading { align-items: flex-start; }
     .dashboard-grid { grid-template-columns: 1fr; }
+    .table-toolbar { flex-direction: column; }
+    .export-actions { justify-content: flex-start; }
 }
 
 @media (max-width: 680px) {
-    .container { width: min(100% - 22px, 1180px); }
+    .container { width: min(100% - 22px, 1240px); }
     .topbar { padding: 12px 0; }
     .topbar-brand strong { font-size: .92rem; }
     .main-content { padding: 28px 0 44px; }
-    .dashboard-heading { display: grid; gap: 20px; }
-    .dashboard-primary-action { width: 100%; }
+    .page-heading, .dashboard-heading { display: grid; gap: 20px; }
+    .page-action, .dashboard-primary-action, .back-button { width: 100%; }
     .dashboard-card { padding: 20px; border-radius: 17px; }
-    .vehicle-stats { grid-template-columns: 1fr; }
+    .vehicle-stats, .form-row { grid-template-columns: 1fr; }
+    .summary-main-value { padding: 20px; }
+    .export-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
+    .export-button { width: 100%; }
+    .mileage-table { min-width: 0; }
+    .mileage-table thead { display: none; }
+    .mileage-table, .mileage-table tbody, .mileage-table tr, .mileage-table td { display: block; width: 100%; }
+    .mileage-table tr { padding: 15px; border-bottom: 1px solid #e5eaee; }
+    .mileage-table tr:last-child { border-bottom: 0; }
+    .mileage-table td { display: grid; grid-template-columns: 105px 1fr; gap: 12px; padding: 7px 0; border: 0; text-align: left !important; }
+    .mileage-table td::before { content: attr(data-label); color: #77838d; font-size: .74rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
+    .mileage-table .actions-column { display: flex; justify-content: flex-end; width: 100%; padding-top: 12px; }
+    .mileage-table .actions-column::before { display: none; }
+    .description-cell, .route-name { max-width: none; }
+    .form-actions { flex-direction: column-reverse; }
+    .cancel-button, .save-button { width: 100%; }
     .empty-state { align-items: flex-start; padding: 18px; }
-    .mileage-row div { align-items: flex-start; flex-direction: column; gap: 5px; }
     .login-panel { padding: 27px 22px; border-radius: 19px; }
     .user-copy { display: none; }
+}
+
+@media print {
+    .topbar, .page-heading .page-action, .mileage-dashboard-grid, .export-actions, .actions-column { display: none !important; }
+    body, .main-content { background: white; padding: 0; }
+    .container { width: 100%; }
+    .dashboard-card { border: 0; box-shadow: none; padding: 0; }
+    .mileage-table-wrapper { border: 0; overflow: visible; }
+    .mileage-table { min-width: 0; }
 }
 
 @media (max-width: 420px) {
     .topbar-brand strong { display: none; }
     .card-heading-row { gap: 10px; }
     .card-heading-row h2 { font-size: 1.2rem; }
-    .vehicle-visual { padding: 17px; }
 }
