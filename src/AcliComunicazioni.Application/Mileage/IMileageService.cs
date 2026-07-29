@@ -34,4 +34,10 @@ public interface IMileageService
         string route,
         string? description,
         CancellationToken cancellationToken = default);
+
+    Task DeleteAsync(
+        int userId,
+        int id,
+        string deletedBy,
+        CancellationToken cancellationToken = default);
 }
