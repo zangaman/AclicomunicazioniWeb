@@ -42,6 +42,9 @@
     @if (gapsCount > 0)
     {
         <article class="mobile-reminder-card">
+            <span class="mobile-reminder-icon" aria-hidden="true">
+                <svg class="app-icon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0-6 6c0 6-2 6-2 8h16c0-2-2-2-2-8a6 6 0 0 0-6-6M10 21h4"/></svg>
+            </span>
             <div>
                 <span>Promemoria</span>
                 <strong>Sequenza chilometrica da completare</strong>
@@ -55,7 +58,7 @@
         <span>Chilometraggio attuale</span>
         <strong>@(Model.CurrentKilometers?.ToString("N0", cultura) ?? "—") <small>km</small></strong>
         <p>Aggiornato al @(Model.LastTripDate?.ToString("dd/MM/yyyy") ?? "—")</p>
-        <div class="mobile-hero-ring" aria-hidden="true"></div>
+        <div class="mobile-hero-ring" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><path d="M5 16a7 7 0 1 1 14 0M12 12l4-3M4 16h16"/></svg></div>
         <button type="button" class="mobile-add-mileage" id="mobile-add-mileage" aria-label="Aggiungi percorrenza" aria-expanded="false">
             <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
             <span>Registra</span>
