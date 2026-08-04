@@ -64,6 +64,8 @@ h2 { letter-spacing: -.025em; }
 .vehicle-stats dt { margin-bottom: 8px; color: #7a8792; font-size: .75rem; line-height: 1.35; }
 .vehicle-stats dd { margin: 0; font-size: 1rem; font-weight: 820; overflow-wrap: anywhere; }
 
+.mobile-home-intro, .mobile-bottom-nav { display: none; }
+
 .mobile-add-mileage { display: none; border: 0; border-radius: 9px; padding: 8px 11px; background: var(--accent); color: white; font: inherit; font-size: .76rem; font-weight: 780; cursor: pointer; }
 
 .mileage-status-card { display: grid; grid-template-columns: minmax(220px, .7fr) minmax(0, 1fr); gap: 18px; align-items: center; margin-bottom: 22px; padding: 18px 22px; border: 1px solid #dce5eb; border-radius: 17px; background: rgba(255,255,255,.96); box-shadow: 0 10px 28px rgba(21,35,48,.05); }
@@ -491,6 +493,166 @@ h2 { letter-spacing: -.025em; }
     .empty-state { padding: 14px; border-radius: 4px; }
     .login-panel { padding: 24px 20px; border-radius: 14px; }
     .back-button { width: 100%; }
+
+    /* Mobile home inspired by the supplied vehicle-app reference. */
+    .topbar {
+        padding: 7px 0;
+        background: rgba(255,255,255,.97);
+        border-bottom: 1px solid #e8ecef;
+        box-shadow: 0 2px 10px rgba(22, 45, 62, .06);
+    }
+    .topbar::after { display: none; }
+    .topbar-brand { color: #233744; }
+    .topbar-brand strong { color: #233744; }
+    .topbar-brand .brand-mark {
+        background: #153f62;
+        color: white;
+    }
+    .user-area .secondary-button {
+        border: 1px solid #e1e7eb;
+        background: #f5f7f8;
+        color: #3d4b54;
+    }
+
+    .mobile-home-intro {
+        display: block;
+        padding: 8px 2px 10px;
+    }
+    .mobile-home-intro > span {
+        color: #8c969d;
+        font-size: .62rem;
+    }
+    .mobile-home-intro h1 {
+        margin: 2px 0 1px;
+        color: #263640;
+        font-size: 1.18rem;
+        line-height: 1.15;
+        letter-spacing: -.025em;
+    }
+    .mobile-home-intro p {
+        margin: 0;
+        color: #79858d;
+        font-size: .67rem;
+    }
+
+    .mileage-status-card {
+        position: relative;
+        display: block;
+        overflow: hidden;
+        min-height: 132px;
+        padding: 16px 18px;
+        border-radius: 7px;
+        background: linear-gradient(135deg, #2999aa 0%, #48b7c4 62%, #65c5cd 100%);
+        color: white;
+        box-shadow: 0 8px 20px rgba(37, 145, 160, .22);
+    }
+    .mileage-status-card::after {
+        content: "";
+        position: absolute;
+        right: 24px;
+        top: 32px;
+        width: 54px;
+        height: 54px;
+        border: 10px solid rgba(255,255,255,.26);
+        border-right-color: rgba(10, 91, 106, .5);
+        border-radius: 50%;
+        transform: rotate(-28deg);
+    }
+    .mileage-status-main { display: grid; gap: 2px; }
+    .mileage-status-main .card-kicker,
+    .mileage-status-main > span:last-child {
+        color: rgba(255,255,255,.78);
+    }
+    .mileage-status-main strong {
+        margin-top: 6px;
+        color: white;
+        font-size: 1.8rem;
+    }
+    .mileage-status-detail {
+        position: absolute;
+        left: 18px;
+        right: 96px;
+        bottom: 14px;
+        margin: 0;
+        padding: 0;
+        border: 0;
+    }
+    .mileage-status-detail strong,
+    .mileage-status-detail span {
+        color: rgba(255,255,255,.92) !important;
+    }
+    .mileage-status-detail strong { font-size: .68rem; }
+    .mileage-status-detail span { font-size: .61rem; }
+
+    .mobile-add-mileage {
+        display: grid;
+        position: absolute;
+        right: 16px;
+        bottom: 12px;
+        width: 30px;
+        height: 30px;
+        background: #ff9f1c;
+        box-shadow: 0 4px 10px rgba(165, 91, 0, .28);
+    }
+    .mobile-add-mileage::before { font-size: 1.05rem; }
+
+    .activity-card {
+        margin-top: 12px;
+        overflow: hidden;
+        border-radius: 7px;
+        background: white;
+        box-shadow: 0 3px 12px rgba(22, 45, 62, .07);
+    }
+    .table-toolbar {
+        padding: 11px 12px 8px;
+        border-bottom: 1px solid #eef1f3;
+    }
+    .table-toolbar h2 {
+        color: #394a54;
+        font-size: .82rem;
+        text-align: left;
+    }
+    .table-toolbar p {
+        color: #929ba1;
+        font-size: .6rem;
+        text-align: left;
+    }
+    .activity-card > .alert {
+        margin: 6px 10px;
+        border: 1px solid #f3d098;
+        border-radius: 6px;
+    }
+
+    .mobile-bottom-nav {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 50;
+        min-height: 54px;
+        padding: 5px max(12px, env(safe-area-inset-right)) calc(5px + env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+        border-top: 1px solid #e7ecef;
+        background: rgba(255,255,255,.97);
+        box-shadow: 0 -4px 14px rgba(22,45,62,.06);
+        backdrop-filter: blur(10px);
+    }
+    .mobile-bottom-nav a,
+    .mobile-bottom-nav > span {
+        display: grid;
+        place-items: center;
+        gap: 1px;
+        color: #9ba4aa;
+        text-decoration: none;
+        font-size: .78rem;
+    }
+    .mobile-bottom-nav strong {
+        font-size: .54rem;
+        font-weight: 600;
+    }
+    .mobile-bottom-nav .active { color: #ff9718; }
+    .mobile-bottom-nav .disabled { opacity: .65; }
 }
 
 @media print {
