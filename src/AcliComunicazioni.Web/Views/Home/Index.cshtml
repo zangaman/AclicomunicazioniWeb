@@ -140,7 +140,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var entry in Model.RecentEntries)
+                    @foreach (var entry in Model.RecentEntries
+                        .OrderBy(entry => entry.StartKilometers)
+                        .ThenBy(entry => entry.EndKilometers)
+                        .ThenBy(entry => entry.TripDate)
+                        .ThenBy(entry => entry.Id))
                     {
                         @if (entry.GapKilometers > 0 && entry.PreviousEndKilometers.HasValue)
                         {
