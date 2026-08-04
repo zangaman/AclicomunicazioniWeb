@@ -6,6 +6,7 @@
     var conducenteCorrente = User.FindFirst("display_name")?.Value
         ?? User.Identity?.Name
         ?? "Utente collegato";
+    var nomeBreve = conducenteCorrente.Split(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? "Utente";
     var gapsCount = Model.RecentEntries.Count(entry => entry.GapKilometers > 0);
     var missingKilometers = Model.RecentEntries.Sum(entry => entry.GapKilometers);
 }
@@ -28,6 +29,12 @@
 {
     <div class="alert alert-error" role="alert">@errorMessage</div>
 }
+
+<section class="mobile-home-intro">
+    <span>Benvenuto</span>
+    <h1>Ciao @nomeBreve</h1>
+    <p>Gestione del furgone</p>
+</section>
 
 <section class="mileage-status-card @(gapsCount == 0 ? "status-ok" : "status-warning")" aria-live="polite">
     <div class="mileage-status-main">
@@ -230,6 +237,13 @@
         </div>
     }
 </section>
+
+<nav class="mobile-bottom-nav" aria-label="Navigazione mobile">
+    <a class="active" asp-controller="Home" asp-action="Index"><span aria-hidden="true">⌂</span><strong>Home</strong></a>
+    <a asp-controller="Home" asp-action="Index" asp-fragment="latest-trips"><span aria-hidden="true">↗</span><strong>Viaggi</strong></a>
+    <span class="disabled"><span aria-hidden="true">▥</span><strong>Report</strong></span>
+    <span class="disabled"><span aria-hidden="true">○</span><strong>Profilo</strong></span>
+</nav>
 
 @section Scripts
 {
