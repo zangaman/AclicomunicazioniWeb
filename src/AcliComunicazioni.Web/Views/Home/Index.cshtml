@@ -30,6 +30,65 @@
     <div class="alert alert-error" role="alert">@errorMessage</div>
 }
 
+<section class="mobile-mileage-app">
+    <header class="mobile-app-welcome">
+        <div>
+            <span>Benvenuto</span>
+            <h1>Ciao @nomeBreve</h1>
+        </div>
+        <span class="mobile-app-avatar">@nomeBreve[..1].ToUpperInvariant()</span>
+    </header>
+
+    @if (gapsCount > 0)
+    {
+        <article class="mobile-reminder-card">
+            <div>
+                <span>Promemoria</span>
+                <strong>Sequenza chilometrica da completare</strong>
+                <small>@missingKilometers.ToString("N0", cultura) km da verificare in @gapsCount intervallo@(gapsCount == 1 ? "" : "i")</small>
+            </div>
+            <span aria-hidden="true">›</span>
+        </article>
+    }
+
+    <article class="mobile-odometer-hero">
+        <span>Chilometraggio attuale</span>
+        <strong>@(Model.CurrentKilometers?.ToString("N0", cultura) ?? "—") <small>km</small></strong>
+        <p>Aggiornato al @(Model.LastTripDate?.ToString("dd/MM/yyyy") ?? "—")</p>
+        <div class="mobile-hero-ring" aria-hidden="true"></div>
+    </article>
+
+    <section class="mobile-odometer-action">
+        <div>
+            <span>Contachilometri</span>
+            <strong>@(Model.CurrentKilometers?.ToString("N0", cultura) ?? "—") km</strong>
+        </div>
+        <button type="button" class="mobile-add-mileage" id="mobile-add-mileage" aria-label="Aggiungi percorrenza" aria-expanded="false">＋</button>
+    </section>
+
+    <section class="mobile-activity-log">
+        <header>
+            <h2>Attività recenti</h2>
+            <a href="#latest-trips">Vedi tutte ›</a>
+        </header>
+
+        @foreach (var entry in Model.RecentEntries
+            .OrderByDescending(entry => entry.EndKilometers)
+            .ThenByDescending(entry => entry.TripDate)
+            .Take(5))
+        {
+            <a class="mobile-trip-row" asp-action="EditMileage" asp-route-id="@entry.Id">
+                <span class="mobile-trip-icon" aria-hidden="true">↗</span>
+                <span class="mobile-trip-copy">
+                    <strong>@entry.Route</strong>
+                    <small>@entry.TripDate.ToString("dd/MM/yyyy") · @entry.StartKilometers.ToString("N0", cultura) → @entry.EndKilometers.ToString("N0", cultura)</small>
+                </span>
+                <span class="mobile-trip-distance">@entry.DistanceKilometers.ToString("N0", cultura) km</span>
+            </a>
+        }
+    </section>
+</section>
+
 <section class="mobile-home-intro">
     <span>Benvenuto</span>
     <h1>Ciao @nomeBreve</h1>
@@ -54,7 +113,6 @@
             <span>@missingKilometers.ToString("N0", cultura) km da verificare in @gapsCount intervallo@(gapsCount == 1 ? "" : "i").</span>
         }
     </div>
-    <button type="button" class="mobile-add-mileage" id="mobile-add-mileage" aria-label="Nuova percorrenza" aria-expanded="false">＋ Nuova percorrenza</button>
 </section>
 
 <section class="dashboard-grid mileage-dashboard-grid">
