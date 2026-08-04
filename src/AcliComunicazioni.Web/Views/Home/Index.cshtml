@@ -36,6 +36,7 @@
         <span>Ultimo valore raggiunto</span>
     </div>
     <div class="mileage-status-detail">
+        <button type="button" class="mobile-add-mileage" id="mobile-add-mileage">＋ Nuova percorrenza</button>
         @if (gapsCount == 0)
         {
             <strong>✓ Sequenza coerente</strong>
@@ -72,7 +73,7 @@
         </dl>
     </article>
 
-    <article class="dashboard-card" id="quick-entry">
+    <article class="dashboard-card quick-entry-card" id="quick-entry">
         <div class="card-heading-row"><div><span class="card-kicker">Inserimento rapido</span><h2>Nuova percorrenza</h2></div></div>
 
         <form asp-controller="Home" asp-action="AddMileage" method="post" class="quick-entry-form" id="mileage-form">
@@ -245,6 +246,13 @@
             const gapWarning = document.getElementById('gap-warning');
             const gapText = gapWarning.querySelector('span');
             const formatter = new Intl.NumberFormat('it-IT');
+            const quickEntryCard = document.querySelector('.quick-entry-card');
+            const mobileAddMileage = document.getElementById('mobile-add-mileage');
+
+            mobileAddMileage?.addEventListener('click', () => {
+                quickEntryCard?.classList.add('mobile-form-open');
+                quickEntryCard?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
 
             const updateValues = () => {
                 const startValue = Number(start.value);
