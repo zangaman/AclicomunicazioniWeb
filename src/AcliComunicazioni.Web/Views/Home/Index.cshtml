@@ -56,15 +56,11 @@
         <strong>@(Model.CurrentKilometers?.ToString("N0", cultura) ?? "—") <small>km</small></strong>
         <p>Aggiornato al @(Model.LastTripDate?.ToString("dd/MM/yyyy") ?? "—")</p>
         <div class="mobile-hero-ring" aria-hidden="true"></div>
+        <button type="button" class="mobile-add-mileage" id="mobile-add-mileage" aria-label="Aggiungi percorrenza" aria-expanded="false">
+            <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            <span>Registra</span>
+        </button>
     </article>
-
-    <section class="mobile-odometer-action">
-        <div>
-            <span>Contachilometri</span>
-            <strong>@(Model.CurrentKilometers?.ToString("N0", cultura) ?? "—") km</strong>
-        </div>
-        <button type="button" class="mobile-add-mileage" id="mobile-add-mileage" aria-label="Aggiungi percorrenza" aria-expanded="false"><svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
-    </section>
 
     <section class="mobile-activity-log">
         <header>
