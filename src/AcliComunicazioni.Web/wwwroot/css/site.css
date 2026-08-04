@@ -1076,6 +1076,126 @@ h2 { letter-spacing: -.025em; }
     .mobile-bottom-nav .disabled {
         opacity: .38;
     }
+
+    /* Selected mockup A: minimal light theme */
+    body { background: #f7f8fa; }
+    .mobile-app-welcome h1 {
+        font-size: 1.38rem;
+        text-transform: capitalize;
+    }
+    .mobile-app-welcome > div > span { font-size: .7rem; }
+    .mobile-app-welcome p { font-size: .73rem; }
+
+    .mobile-reminder-card {
+        display: grid;
+        grid-template-columns: 34px minmax(0, 1fr) 16px;
+        padding: 12px;
+        border: 1px solid #e5eaed;
+        border-left: 1px solid #e5eaed;
+        border-radius: 12px;
+        box-shadow: 0 3px 12px rgba(25,47,61,.045);
+    }
+    .mobile-reminder-icon {
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #eaf6f6;
+        color: #177f87;
+    }
+    .mobile-reminder-icon .app-icon { width: 16px; height: 16px; }
+    .mobile-reminder-card strong { font-size: .78rem; }
+    .mobile-reminder-card small { font-size: .67rem; }
+    .mobile-reminder-card div > span { font-size: .62rem; }
+
+    .mobile-odometer-hero {
+        min-height: 196px;
+        padding: 18px 18px 70px;
+        border: 1px solid #e3e9ec;
+        border-radius: 13px;
+        background: white;
+        color: #2e414b;
+        box-shadow: 0 5px 18px rgba(25,47,61,.06);
+    }
+    .mobile-odometer-hero > span {
+        color: #69777f;
+        font-size: .78rem;
+    }
+    .mobile-odometer-hero > strong {
+        margin-top: 9px;
+        color: #147b84;
+        font-size: 2.25rem;
+    }
+    .mobile-odometer-hero strong small {
+        color: #147b84;
+        font-size: .78rem;
+        opacity: .9;
+    }
+    .mobile-odometer-hero p {
+        left: 18px;
+        bottom: 62px;
+        color: #7e8a91;
+        font-size: .68rem;
+    }
+    .mobile-hero-ring {
+        display: grid;
+        place-items: center;
+        right: 22px;
+        top: 48px;
+        width: 54px;
+        height: 54px;
+        border: 0;
+        border-radius: 50%;
+        background: #eaf5f5;
+        color: #147b84;
+        filter: none;
+        transform: none;
+    }
+    .mobile-hero-ring .app-icon {
+        width: 27px;
+        height: 27px;
+        stroke-width: 1.65;
+    }
+    .mobile-odometer-hero .mobile-add-mileage {
+        left: 18px;
+        right: 18px;
+        bottom: 14px;
+        justify-content: center;
+        width: auto;
+        height: 40px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #16838b, #11737c);
+        box-shadow: 0 5px 13px rgba(17,115,124,.19);
+        font-size: .76rem;
+    }
+    .mobile-odometer-hero .mobile-add-mileage .app-icon {
+        width: 16px;
+        height: 16px;
+    }
+
+    .mobile-activity-log {
+        margin-top: 12px;
+        border-radius: 13px;
+        box-shadow: 0 4px 15px rgba(25,47,61,.05);
+    }
+    .mobile-activity-log > header { padding: 13px 14px 10px; }
+    .mobile-activity-log h2 { font-size: .88rem; }
+    .mobile-activity-log header a { font-size: .63rem; }
+    .mobile-trip-row {
+        margin: 0 12px;
+        padding: 10px 2px;
+    }
+    .mobile-trip-icon {
+        width: 30px;
+        height: 30px;
+    }
+    .mobile-trip-copy strong { font-size: .77rem; }
+    .mobile-trip-copy small { font-size: .64rem; }
+    .mobile-trip-distance { font-size: .71rem; }
+
+    .mobile-bottom-nav strong { font-size: .62rem; }
+    .mobile-bottom-nav .active { color: #147b84; }
 }
 
 @media print {
