@@ -47,7 +47,7 @@
                 <strong>Sequenza chilometrica da completare</strong>
                 <small>@missingKilometers.ToString("N0", cultura) km da verificare in @gapsCount intervallo@(gapsCount == 1 ? "" : "i")</small>
             </div>
-            <span aria-hidden="true">›</span>
+            <svg class="app-icon reminder-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
         </article>
     }
 
@@ -63,7 +63,7 @@
             <span>Contachilometri</span>
             <strong>@(Model.CurrentKilometers?.ToString("N0", cultura) ?? "—") km</strong>
         </div>
-        <button type="button" class="mobile-add-mileage" id="mobile-add-mileage" aria-label="Aggiungi percorrenza" aria-expanded="false">＋</button>
+        <button type="button" class="mobile-add-mileage" id="mobile-add-mileage" aria-label="Aggiungi percorrenza" aria-expanded="false"><svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
     </section>
 
     <section class="mobile-activity-log">
@@ -78,7 +78,7 @@
             .Take(5))
         {
             <a class="mobile-trip-row" asp-action="EditMileage" asp-route-id="@entry.Id">
-                <span class="mobile-trip-icon" aria-hidden="true">↗</span>
+                <span class="mobile-trip-icon" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><path d="M5 17h14M7 17l1.2-6.2A2 2 0 0 1 10.16 9h3.68a2 2 0 0 1 1.96 1.8L17 17M8 14h8M8 19v1M16 19v1"/></svg></span>
                 <span class="mobile-trip-copy">
                     <strong>@entry.Route</strong>
                     <small>@entry.TripDate.ToString("dd/MM/yyyy") · @entry.StartKilometers.ToString("N0", cultura) → @entry.EndKilometers.ToString("N0", cultura)</small>
@@ -297,10 +297,10 @@
 </section>
 
 <nav class="mobile-bottom-nav" aria-label="Navigazione mobile">
-    <a class="active" asp-controller="Home" asp-action="Index"><span aria-hidden="true">⌂</span><strong>Home</strong></a>
-    <a asp-controller="Home" asp-action="Index" asp-fragment="latest-trips"><span aria-hidden="true">↗</span><strong>Viaggi</strong></a>
-    <span class="disabled"><span aria-hidden="true">▥</span><strong>Report</strong></span>
-    <span class="disabled"><span aria-hidden="true">○</span><strong>Profilo</strong></span>
+    <a class="active" asp-controller="Home" asp-action="Index"><svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 11 8-7 8 7v9h-6v-6h-4v6H4z"/></svg><strong>Home</strong></a>
+    <a asp-controller="Home" asp-action="Index" asp-fragment="latest-trips"><svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 17h14M7 17l1.2-6.2A2 2 0 0 1 10.16 9h3.68a2 2 0 0 1 1.96 1.8L17 17M8 14h8M8 19v1M16 19v1"/></svg><strong>Viaggi</strong></a>
+    <span class="disabled"><svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V9M12 19V5M19 19v-7"/></svg><strong>Report</strong></span>
+    <span class="disabled"><svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3"/><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"/></svg><strong>Profilo</strong></span>
 </nav>
 
 @section Scripts
