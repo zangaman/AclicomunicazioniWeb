@@ -144,7 +144,27 @@
                     {
                         @if (entry.GapKilometers > 0 && entry.PreviousEndKilometers.HasValue)
                         {
-                            <tr class="row-with-gap missing-mileage-row">
+                            var gapStart = entry.PreviousEndKilometers.Value;
+                            var gapEnd = entry.StartKilometers;
+                            var overlappingEntry = Model.RecentEntries.FirstOrDefault(other =>
+                                other.Id != entry.Id &&
+                                other.StartKilometers < gapEnd &&
+                                other.EndKilometers > gapStart);
+
+                            <tr class="row-with-gap @(overlappingEntry is null ? "missing-mileage-row" : "overlap-mileage-row")">
+                                @if (overlappingEntry is not null)
+                                {
+                                    <td data-label="Data"><span title="Intervallo già coperto">Da verificare</span></td>
+                                    <td data-label="Tragitto"><strong class="route-name">⚠ Sovrapposizione rilevata</strong><small class="route-description">Il tratto @gapStart.ToString("N0", cultura) – @gapEnd.ToString("N0", cultura) è già coperto da @overlappingEntry.StartKilometers.ToString("N0", cultura) – @overlappingEntry.EndKilometers.ToString("N0", cultura).</small></td>
+                                    <td data-label="Km iniziali" class="numeric-column">@gapStart.ToString("N0", cultura)</td>
+                                    <td data-label="Km finali" class="numeric-column">@gapEnd.ToString("N0", cultura)</td>
+                                    <td data-label="Percorsi" class="numeric-column"><span class="gap-badge">Da verificare</span></td>
+                                    <td data-label="Conducente"><span class="user-badge">—</span></td>
+                                    <td data-label="Segnalazioni"><span class="gap-badge">Non inserire</span></td>
+                                    <td class="actions-column"><a class="table-action" asp-action="EditMileage" asp-route-id="@overlappingEntry.Id">Verifica riga</a></td>
+                                }
+                                else
+                                {
                                 <td data-label="Data"><span title="Data da verificare">Da verificare</span></td>
                                 <td data-label="Tragitto"><strong class="route-name">⚠ Tratto non registrato</strong><small class="route-description">Slot @entry.PreviousEndKilometers.Value.ToString("N0", cultura) – @entry.StartKilometers.ToString("N0", cultura)</small></td>
                                 <td data-label="Km iniziali" class="numeric-column">@entry.PreviousEndKilometers.Value.ToString("N0", cultura)</td>
@@ -152,7 +172,8 @@
                                 <td data-label="Percorsi" class="numeric-column"><span class="gap-badge">@entry.GapKilometers.ToString("N0", cultura) km</span></td>
                                 <td data-label="Conducente"><span class="user-badge">Da assegnare</span></td>
                                 <td data-label="Segnalazioni"><span class="gap-badge">Percorrenza mancante</span></td>
-                                <td class="actions-column"><button type="button" class="table-action fill-gap-button" data-start="@entry.PreviousEndKilometers.Value" data-end="@entry.StartKilometers" data-date="@entry.TripDate.ToString("yyyy-MM-dd")">Inserisci tratto</button></td>
+                                    <td class="actions-column"><button type="button" class="table-action fill-gap-button" data-start="@entry.PreviousEndKilometers.Value" data-end="@entry.StartKilometers" data-date="@entry.TripDate.ToString("yyyy-MM-dd")">Inserisci tratto</button></td>
+                                }
                             </tr>
                         }
 
