@@ -117,6 +117,14 @@ public sealed class DatabaseMileageService : IMileageService
             excludeId: null,
             cancellationToken);
 
+        await EnsureDateWithinNeighboringTripsAsync(
+            connection,
+            startKilometers,
+            endKilometers,
+            tripDate,
+            excludeId: null,
+            cancellationToken);
+
         const string sql = """
             INSERT INTO dbo.Percorrenze
                 (IdUtente, DataPercorrenza, KmPartenza, KmArrivo, Tragitto, Descrizione, InseritoDa, DataCreazione)
@@ -163,6 +171,14 @@ public sealed class DatabaseMileageService : IMileageService
             connection,
             startKilometers,
             endKilometers,
+            excludeId: id,
+            cancellationToken);
+
+        await EnsureDateWithinNeighboringTripsAsync(
+            connection,
+            startKilometers,
+            endKilometers,
+            tripDate,
             excludeId: id,
             cancellationToken);
 
@@ -376,6 +392,66 @@ public sealed class DatabaseMileageService : IMileageService
         }
 
         return (normalizedRoute, normalizedDescription);
+    }
+
+    private static async Task EnsureDateWithinNeighboringTripsAsync(
+        SqlConnection connection,
+        int startKilometers,
+        int endKilometers,
+        DateTime tripDate,
+        int? excludeId,
+        CancellationToken cancellationToken)
+    {
+        const string sql = """
+            SELECT
+                (SELECT TOP (1) DataPercorrenza
+                 FROM dbo.Percorrenze
+                 WHERE IsDeleted = 0
+                   AND KmArrivo = @StartKilometers
+                   AND (@ExcludeId IS NULL OR Id <> @ExcludeId)
+                 ORDER BY DataPercorrenza DESC, Id DESC) AS PreviousTripDate,
+                (SELECT TOP (1) DataPercorrenza
+                 FROM dbo.Percorrenze
+                 WHERE IsDeleted = 0
+                   AND KmPartenza = @EndKilometers
+                   AND (@ExcludeId IS NULL OR Id <> @ExcludeId)
+                 ORDER BY DataPercorrenza ASC, Id ASC) AS NextTripDate;
+            """;
+
+        await using var command = new SqlCommand(sql, connection);
+        command.Parameters.Add("@StartKilometers", SqlDbType.Int).Value = startKilometers;
+        command.Parameters.Add("@EndKilometers", SqlDbType.Int).Value = endKilometers;
+        command.Parameters.Add("@ExcludeId", SqlDbType.Int).Value =
+            excludeId.HasValue ? excludeId.Value : DBNull.Value;
+
+        await using var reader = await command.ExecuteReaderAsync(
+            CommandBehavior.SingleRow,
+            cancellationToken);
+
+        if (!await reader.ReadAsync(cancellationToken))
+        {
+            return;
+        }
+
+        var previousDate = reader.IsDBNull(reader.GetOrdinal("PreviousTripDate"))
+            ? (DateTime?)null
+            : reader.GetDateTime(reader.GetOrdinal("PreviousTripDate")).Date;
+        var nextDate = reader.IsDBNull(reader.GetOrdinal("NextTripDate"))
+            ? (DateTime?)null
+            : reader.GetDateTime(reader.GetOrdinal("NextTripDate")).Date;
+        var normalizedDate = tripDate.Date;
+
+        if (previousDate.HasValue && normalizedDate < previousDate.Value)
+        {
+            throw new InvalidOperationException(
+                $"La data deve essere uguale o successiva al {previousDate:dd/MM/yyyy}.");
+        }
+
+        if (nextDate.HasValue && normalizedDate > nextDate.Value)
+        {
+            throw new InvalidOperationException(
+                $"La data deve essere uguale o precedente al {nextDate:dd/MM/yyyy}.");
+        }
     }
 
     private static async Task EnsureNoOverlapAsync(
