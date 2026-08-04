@@ -29,6 +29,26 @@
     <div class="alert alert-error" role="alert">@errorMessage</div>
 }
 
+<section class="mileage-status-card @(gapsCount == 0 ? "status-ok" : "status-warning")" aria-live="polite">
+    <div class="mileage-status-main">
+        <span class="card-kicker">Stato contachilometri</span>
+        <strong>@(Model.CurrentKilometers?.ToString("N0", cultura) ?? "—") km</strong>
+        <span>Ultimo valore raggiunto</span>
+    </div>
+    <div class="mileage-status-detail">
+        @if (gapsCount == 0)
+        {
+            <strong>✓ Sequenza coerente</strong>
+            <span>Non risultano intervalli da verificare.</span>
+        }
+        else
+        {
+            <strong>⚠ Sequenza da completare</strong>
+            <span>@missingKilometers.ToString("N0", cultura) km da verificare in @gapsCount intervallo@(gapsCount == 1 ? "" : "i").</span>
+        }
+    </div>
+</section>
+
 <section class="dashboard-grid mileage-dashboard-grid">
     <article class="dashboard-card summary-card">
         <div class="card-heading-row">
