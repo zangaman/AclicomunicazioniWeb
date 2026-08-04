@@ -55,7 +55,7 @@ public sealed class DatabaseMileageService : IMileageService
                     Descrizione,
                     DataCreazione,
                     InseritoDa,
-                    LAG(KmArrivo) OVER (ORDER BY DataPercorrenza, Id) AS KmArrivoPrecedente
+                    LAG(KmArrivo) OVER (ORDER BY KmPartenza, KmArrivo, DataPercorrenza, Id) AS KmArrivoPrecedente
                 FROM dbo.Percorrenze
                 WHERE IsDeleted = 0
             )
@@ -274,7 +274,7 @@ public sealed class DatabaseMileageService : IMileageService
                     Descrizione,
                     DataCreazione,
                     InseritoDa,
-                    LAG(KmArrivo) OVER (ORDER BY DataPercorrenza, Id) AS KmArrivoPrecedente
+                    LAG(KmArrivo) OVER (ORDER BY KmPartenza, KmArrivo, DataPercorrenza, Id) AS KmArrivoPrecedente
                 FROM dbo.Percorrenze
                 WHERE IsDeleted = 0
             )
