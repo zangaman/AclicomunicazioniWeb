@@ -110,6 +110,13 @@ public sealed class DatabaseMileageService : IMileageService
         await using var connection = new SqlConnection(_connectionString);
         await connection.OpenAsync(cancellationToken);
 
+        await EnsureNoOverlapAsync(
+            connection,
+            startKilometers,
+            endKilometers,
+            excludeId: null,
+            cancellationToken);
+
         const string sql = """
             INSERT INTO dbo.Percorrenze
                 (IdUtente, DataPercorrenza, KmPartenza, KmArrivo, Tragitto, Descrizione, InseritoDa, DataCreazione)
@@ -151,6 +158,13 @@ public sealed class DatabaseMileageService : IMileageService
 
         await using var connection = new SqlConnection(_connectionString);
         await connection.OpenAsync(cancellationToken);
+
+        await EnsureNoOverlapAsync(
+            connection,
+            startKilometers,
+            endKilometers,
+            excludeId: id,
+            cancellationToken);
 
         const string sql = """
             UPDATE dbo.Percorrenze
@@ -362,6 +376,47 @@ public sealed class DatabaseMileageService : IMileageService
         }
 
         return (normalizedRoute, normalizedDescription);
+    }
+
+    private static async Task EnsureNoOverlapAsync(
+        SqlConnection connection,
+        int startKilometers,
+        int endKilometers,
+        int? excludeId,
+        CancellationToken cancellationToken)
+    {
+        const string sql = """
+            SELECT TOP (1)
+                Id,
+                KmPartenza,
+                KmArrivo
+            FROM dbo.Percorrenze
+            WHERE IsDeleted = 0
+              AND (@ExcludeId IS NULL OR Id <> @ExcludeId)
+              AND KmPartenza < @EndKilometers
+              AND KmArrivo > @StartKilometers;
+            """;
+
+        await using var command = new SqlCommand(sql, connection);
+        command.Parameters.Add("@StartKilometers", SqlDbType.Int).Value = startKilometers;
+        command.Parameters.Add("@EndKilometers", SqlDbType.Int).Value = endKilometers;
+        command.Parameters.Add("@ExcludeId", SqlDbType.Int).Value =
+            excludeId.HasValue ? excludeId.Value : DBNull.Value;
+
+        await using var reader = await command.ExecuteReaderAsync(
+            CommandBehavior.SingleRow,
+            cancellationToken);
+
+        if (await reader.ReadAsync(cancellationToken))
+        {
+            var existingStart = reader.GetInt32(reader.GetOrdinal("KmPartenza"));
+            var existingEnd = reader.GetInt32(reader.GetOrdinal("KmArrivo"));
+
+            throw new InvalidOperationException(
+                $"La percorrenza {startKilometers:N0} → {endKilometers:N0} si sovrappone " +
+                $"alla registrazione {existingStart:N0} → {existingEnd:N0}. " +
+                "Correggi i chilometri prima di salvare.");
+        }
     }
 
     private static void AddWriteParameters(
