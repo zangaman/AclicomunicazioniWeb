@@ -21,9 +21,10 @@ public sealed class DatabaseMileageService : IMileageService
     {
         var entries = await GetEntriesAsync(50, cancellationToken);
         var latest = entries.FirstOrDefault();
+        var current = entries.MaxBy(entry => entry.EndKilometers);
 
         return new MileageDashboard(
-            latest?.EndKilometers,
+            current?.EndKilometers,
             latest?.TripDate,
             entries);
     }
