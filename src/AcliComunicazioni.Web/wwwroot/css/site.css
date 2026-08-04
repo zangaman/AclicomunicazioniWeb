@@ -65,7 +65,7 @@ h2 { letter-spacing: -.025em; }
 .vehicle-stats dt { margin-bottom: 8px; color: #7a8792; font-size: .75rem; line-height: 1.35; }
 .vehicle-stats dd { margin: 0; font-size: 1rem; font-weight: 820; overflow-wrap: anywhere; }
 
-.mobile-home-intro, .mobile-bottom-nav, .mobile-mileage-app { display: none; }
+.mobile-home-intro, .mobile-bottom-nav, .mobile-mileage-app, .mobile-form-close, .mobile-form-backdrop { display: none; }
 
 .mobile-add-mileage { display: none; border: 0; border-radius: 9px; padding: 8px 11px; background: var(--accent); color: white; font: inherit; font-size: .76rem; font-weight: 780; cursor: pointer; }
 
@@ -973,6 +973,66 @@ h2 { letter-spacing: -.025em; }
     }
     .mobile-bottom-nav strong { font-size: .56rem; }
     .mobile-bottom-nav .active .app-icon { stroke-width: 2.1; }
+
+    .mobile-form-backdrop:not([hidden]) {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 70;
+        background: rgba(12, 25, 34, .48);
+        backdrop-filter: blur(2px);
+        animation: mobileBackdropIn .18s ease both;
+    }
+    body.mobile-sheet-open { overflow: hidden; }
+
+    .quick-entry-card.mobile-form-open {
+        display: block;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 75;
+        max-height: min(88vh, 760px);
+        margin: 0;
+        padding: 14px 16px calc(18px + env(safe-area-inset-bottom));
+        overflow-y: auto;
+        border-radius: 18px 18px 0 0;
+        background: white;
+        box-shadow: 0 -16px 42px rgba(10, 28, 40, .24);
+        animation: mobileSheetUp .24s cubic-bezier(.2,.75,.25,1) both;
+    }
+    .quick-entry-card.mobile-form-open::before {
+        content: "";
+        display: block;
+        width: 38px;
+        height: 4px;
+        margin: -5px auto 10px;
+        border-radius: 999px;
+        background: #dce2e6;
+    }
+    .mobile-form-close {
+        display: grid;
+        place-items: center;
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: #f2f5f6;
+        color: #687780;
+        cursor: pointer;
+    }
+    .mobile-form-close .app-icon { width: 14px; height: 14px; }
+    .quick-entry-card.mobile-form-open .quick-entry-form { margin-top: 12px; }
+
+    @keyframes mobileSheetUp {
+        from { opacity: .5; transform: translateY(28px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes mobileBackdropIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
 }
 
 @media print {
