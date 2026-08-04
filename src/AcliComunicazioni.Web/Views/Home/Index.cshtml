@@ -36,7 +36,7 @@
             <span>Benvenuto</span>
             <h1>Ciao @nomeBreve</h1>
         </div>
-        <span class="mobile-app-avatar">@nomeBreve[..1].ToUpperInvariant()</span>
+        <span class="mobile-app-avatar">@(nomeBreve.Substring(0, 1).ToUpperInvariant())</span>
     </header>
 
     @if (gapsCount > 0)
