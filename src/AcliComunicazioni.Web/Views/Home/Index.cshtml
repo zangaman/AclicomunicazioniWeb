@@ -140,8 +140,30 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var entry in Model.RecentEntries)
+                    @foreach (var entry in Model.RecentEntries
+                        .OrderByDescending(entry => entry.EndKilometers)
+                        .ThenByDescending(entry => entry.TripDate)
+                        .ThenByDescending(entry => entry.Id))
                     {
+                        <tr>
+                            <td data-label="Data"><time datetime="@entry.TripDate.ToString("yyyy-MM-dd")">@entry.TripDate.ToString("dd/MM/yyyy")</time></td>
+                            <td data-label="Tragitto">
+                                <strong class="route-name">@entry.Route</strong>
+                                @if (!string.IsNullOrWhiteSpace(entry.Description))
+                                {
+                                    <small class="route-description">@entry.Description</small>
+                                }
+                            </td>
+                            <td data-label="Km iniziali" class="numeric-column">@entry.StartKilometers.ToString("N0", cultura)</td>
+                            <td data-label="Km finali" class="numeric-column">@entry.EndKilometers.ToString("N0", cultura)</td>
+                            <td data-label="Percorsi" class="numeric-column"><span class="distance-badge">@entry.DistanceKilometers.ToString("N0", cultura) km</span></td>
+                            <td data-label="Conducente"><span class="user-badge">@entry.InsertedBy</span></td>
+                            <td data-label="Segnalazioni"><span class="no-gap">Registrata</span></td>
+                            <td class="actions-column">
+                                <a class="table-action" asp-action="EditMileage" asp-route-id="@entry.Id" aria-label="Modifica @entry.Route">Modifica</a>
+                            </td>
+                        </tr>
+
                         @if (entry.GapKilometers > 0 && entry.PreviousEndKilometers.HasValue)
                         {
                             var gapStart = entry.PreviousEndKilometers.Value;
@@ -181,25 +203,6 @@
                                 }
                             </tr>
                         }
-
-                        <tr>
-                            <td data-label="Data"><time datetime="@entry.TripDate.ToString("yyyy-MM-dd")">@entry.TripDate.ToString("dd/MM/yyyy")</time></td>
-                            <td data-label="Tragitto">
-                                <strong class="route-name">@entry.Route</strong>
-                                @if (!string.IsNullOrWhiteSpace(entry.Description))
-                                {
-                                    <small class="route-description">@entry.Description</small>
-                                }
-                            </td>
-                            <td data-label="Km iniziali" class="numeric-column">@entry.StartKilometers.ToString("N0", cultura)</td>
-                            <td data-label="Km finali" class="numeric-column">@entry.EndKilometers.ToString("N0", cultura)</td>
-                            <td data-label="Percorsi" class="numeric-column"><span class="distance-badge">@entry.DistanceKilometers.ToString("N0", cultura) km</span></td>
-                            <td data-label="Conducente"><span class="user-badge">@entry.InsertedBy</span></td>
-                            <td data-label="Segnalazioni"><span class="no-gap">Registrata</span></td>
-                            <td class="actions-column">
-                                <a class="table-action" asp-action="EditMileage" asp-route-id="@entry.Id" aria-label="Modifica @entry.Route">Modifica</a>
-                            </td>
-                        </tr>
                     }
                 </tbody>
             </table>
