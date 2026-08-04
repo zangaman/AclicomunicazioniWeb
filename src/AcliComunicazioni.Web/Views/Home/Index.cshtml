@@ -43,7 +43,6 @@
         <span>Ultimo valore raggiunto</span>
     </div>
     <div class="mileage-status-detail">
-        <button type="button" class="mobile-add-mileage" id="mobile-add-mileage">＋ Nuova percorrenza</button>
         @if (gapsCount == 0)
         {
             <strong>✓ Sequenza coerente</strong>
@@ -55,6 +54,7 @@
             <span>@missingKilometers.ToString("N0", cultura) km da verificare in @gapsCount intervallo@(gapsCount == 1 ? "" : "i").</span>
         }
     </div>
+    <button type="button" class="mobile-add-mileage" id="mobile-add-mileage" aria-label="Nuova percorrenza" aria-expanded="false">＋ Nuova percorrenza</button>
 </section>
 
 <section class="dashboard-grid mileage-dashboard-grid">
