@@ -250,8 +250,13 @@
             const mobileAddMileage = document.getElementById('mobile-add-mileage');
 
             mobileAddMileage?.addEventListener('click', () => {
-                quickEntryCard?.classList.add('mobile-form-open');
-                quickEntryCard?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                const isOpen = quickEntryCard?.classList.toggle('mobile-form-open') ?? false;
+                mobileAddMileage.setAttribute('aria-expanded', String(isOpen));
+
+                if (isOpen) {
+                    quickEntryCard?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    window.setTimeout(() => end.focus(), 350);
+                }
             });
 
             const updateValues = () => {
@@ -272,6 +277,8 @@
 
             document.querySelectorAll('.fill-gap-button').forEach(button => {
                 button.addEventListener('click', () => {
+                    quickEntryCard?.classList.add('mobile-form-open');
+                    mobileAddMileage?.setAttribute('aria-expanded', 'true');
                     start.value = button.dataset.start;
                     end.value = button.dataset.end;
                     tripDate.min = button.dataset.minDate || '';
