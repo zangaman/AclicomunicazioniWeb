@@ -166,13 +166,23 @@ h2 { letter-spacing: -.025em; }
     .container { width: min(100% - 22px, 1320px); }
     .topbar { padding: 12px 0; }
     .topbar-brand strong { font-size: .92rem; }
-    body { overflow-x: hidden; }
-    .main-content { padding: 12px 0 24px; }
+    body { overflow-x: hidden; background: #f5f7f9; }
+    .topbar { position: sticky; top: 0; padding: 8px 0; background: #15518a; border-bottom: 0; box-shadow: 0 2px 8px rgba(0,0,0,.12); }
+    .topbar-content { min-height: 34px; }
+    .topbar-brand { color: white; }
+    .topbar-brand strong { color: white; font-size: .82rem; }
+    .topbar-brand .brand-mark { width: 32px; height: 32px; border-radius: 9px; background: #0f3e6a; font-size: .75rem; box-shadow: none; }
+    .user-area .secondary-button { padding: 6px 9px; border: 0; border-radius: 8px; background: rgba(255,255,255,.15); color: white; font-size: .7rem; }
+    .main-content { padding: 10px 0 24px; }
     .page-heading { display: none; }
     .mileage-dashboard-grid { display: block; }
     .mileage-dashboard-grid > .summary-card { display: none; }
     .mileage-dashboard-grid > .quick-entry-card { margin-bottom: 0; }
-    .activity-card { margin-top: 12px; }
+    .activity-card { margin-top: 10px; padding: 0; border: 0; box-shadow: none; background: transparent; }
+    .activity-card .table-toolbar { padding: 0 2px; }
+    .activity-card .table-toolbar h2 { font-size: .95rem; }
+    .activity-card .mileage-table-wrapper { border: 0; background: transparent; }
+    .activity-card .mileage-table tr { margin-bottom: 5px; padding: 8px 10px; border: 1px solid #e1e7eb; border-radius: 9px; background: white; box-shadow: 0 2px 7px rgba(21,35,48,.035); }
     .table-toolbar { margin-bottom: 10px; }
     .table-toolbar p { font-size: .72rem; }
     .mileage-table-wrapper { border-radius: 11px; }
@@ -188,7 +198,14 @@ h2 { letter-spacing: -.025em; }
     .page-action, .dashboard-primary-action { display: none; }
     .back-button { width: 100%; }
     .dashboard-card { padding: 11px; border-radius: 13px; }
-    .mileage-status-card { grid-template-columns: 1fr; gap: 8px; margin-bottom: 12px; padding: 11px; border-radius: 12px; }
+    .mileage-status-card { grid-template-columns: 1fr; gap: 6px; margin-bottom: 10px; padding: 10px; border-radius: 10px; box-shadow: 0 3px 10px rgba(21,35,48,.05); }
+    .mileage-status-card .mileage-status-main { grid-template-columns: 1fr auto; align-items: center; }
+    .mileage-status-card .mileage-status-main .card-kicker,
+    .mileage-status-card .mileage-status-main > span:last-child { grid-column: 1; }
+    .mileage-status-card .mileage-status-main strong { grid-column: 2; grid-row: 1 / span 2; }
+    .mileage-status-detail { grid-template-columns: 1fr; padding-top: 6px; }
+    .mobile-add-mileage { position: fixed; right: 18px; bottom: 18px; z-index: 40; width: 48px; height: 48px; margin: 0; padding: 0; border-radius: 50%; box-shadow: 0 5px 14px rgba(0,0,0,.22); font-size: 0; }
+    .mobile-add-mileage::before { content: "+"; font-size: 1.65rem; line-height: 1; }
     .mobile-add-mileage { display: inline-flex; align-items: center; justify-content: center; width: 100%; margin-top: 5px; }
     .quick-entry-card { display: none; }
     .quick-entry-card.mobile-form-open { display: block; }
