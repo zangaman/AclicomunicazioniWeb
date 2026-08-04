@@ -181,12 +181,17 @@ h2 { letter-spacing: -.025em; }
     .card-heading-row { gap: 10px; }
     .card-kicker { margin-bottom: 4px; font-size: .68rem; }
     .card-heading-row h2, .table-toolbar h2 { font-size: 1.22rem; }
-    .vehicle-stats, .form-row { grid-template-columns: 1fr; }
-    .vehicle-stats { gap: 8px; }
-    .vehicle-stats div { min-height: 0; padding: 10px 12px; border-radius: 11px; }
-    .vehicle-stats dt { margin-bottom: 4px; }
-    .summary-main-value { margin: 16px 0 12px; padding: 16px; border-radius: 14px; }
-    .summary-main-value strong { font-size: 2.2rem; }
+    .vehicle-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+    .form-row { grid-template-columns: 1fr; }
+    .vehicle-stats div { min-height: 0; padding: 8px 9px; border-radius: 9px; }
+    .vehicle-stats dt { margin-bottom: 3px; font-size: .64rem; }
+    .vehicle-stats dd { font-size: .78rem; line-height: 1.15; }
+    .mileage-dashboard-grid { gap: 12px; }
+    .mileage-dashboard-grid > .dashboard-card { width: 100%; }
+    .mileage-dashboard-grid > .dashboard-card:nth-child(2) { margin: 0 auto; }
+    .summary-main-value { margin: 10px 0 8px; padding: 12px; border-radius: 11px; }
+    .summary-main-value span { margin-bottom: 4px; font-size: .68rem; }
+    .summary-main-value strong { font-size: 1.8rem; }
     .quick-entry-form, .edit-form { gap: 12px; margin-top: 14px; }
     .form-field { gap: 5px; }
     .form-field input, .form-field textarea { padding: 10px 11px; border-radius: 10px; }
