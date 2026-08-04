@@ -169,6 +169,9 @@ h2 { letter-spacing: -.025em; }
     .page-heading p, .dashboard-heading p { font-size: .92rem; line-height: 1.45; }
     .page-action, .dashboard-primary-action, .back-button { width: 100%; }
     .dashboard-card { padding: 14px; border-radius: 15px; }
+    .mileage-status-card { grid-template-columns: 1fr; gap: 10px; margin-bottom: 16px; padding: 14px; border-radius: 14px; }
+    .mileage-status-main strong { font-size: 1.55rem; }
+    .mileage-status-detail { padding: 10px 0 0; border-left: 0; border-top: 1px solid #dce5eb; }
     .card-heading-row { gap: 10px; }
     .card-kicker { margin-bottom: 4px; font-size: .68rem; }
     .card-heading-row h2, .table-toolbar h2 { font-size: 1.22rem; }
