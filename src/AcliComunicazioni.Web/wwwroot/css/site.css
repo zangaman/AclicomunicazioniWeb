@@ -153,20 +153,35 @@ h2 { letter-spacing: -.025em; }
     .container { width: min(100% - 22px, 1320px); }
     .topbar { padding: 12px 0; }
     .topbar-brand strong { font-size: .92rem; }
-    .main-content { padding: 26px 0 44px; }
-    .page-heading, .dashboard-heading { display: grid; gap: 18px; }
+    .main-content { padding: 20px 0 32px; }
+    .page-heading, .dashboard-heading { display: grid; gap: 12px; margin-bottom: 16px; }
+    .page-heading p, .dashboard-heading p { font-size: .92rem; line-height: 1.45; }
     .page-action, .dashboard-primary-action, .back-button { width: 100%; }
-    .dashboard-card { padding: 20px; border-radius: 18px; }
+    .dashboard-card { padding: 14px; border-radius: 15px; }
+    .card-heading-row { gap: 10px; }
+    .card-kicker { margin-bottom: 4px; font-size: .68rem; }
+    .card-heading-row h2, .table-toolbar h2 { font-size: 1.22rem; }
     .vehicle-stats, .form-row { grid-template-columns: 1fr; }
-    .summary-main-value { padding: 21px; }
+    .vehicle-stats { gap: 8px; }
+    .vehicle-stats div { min-height: 0; padding: 10px 12px; border-radius: 11px; }
+    .vehicle-stats dt { margin-bottom: 4px; }
+    .summary-main-value { margin: 16px 0 12px; padding: 16px; border-radius: 14px; }
+    .summary-main-value strong { font-size: 2.2rem; }
+    .quick-entry-form, .edit-form { gap: 12px; margin-top: 14px; }
+    .form-field { gap: 5px; }
+    .form-field input, .form-field textarea { padding: 10px 11px; border-radius: 10px; }
+    .form-field textarea { min-height: 68px; }
+    .distance-preview, .driver-detail, .gap-warning { padding: 10px 12px; border-radius: 10px; }
+    .primary-button { padding: 11px 14px; }
+    .table-toolbar { gap: 12px; margin-bottom: 14px; }
     .export-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
     .export-button { width: 100%; }
     .mileage-table { min-width: 0; }
     .mileage-table thead { display: none; }
     .mileage-table, .mileage-table tbody, .mileage-table tr, .mileage-table td { display: block; width: 100%; }
-    .mileage-table tr { padding: 15px; border-bottom: 1px solid #e5eaee; }
+    .mileage-table tr { padding: 10px 12px; border-bottom: 1px solid #e5eaee; }
     .mileage-table tr:last-child { border-bottom: 0; }
-    .mileage-table td { display: grid; grid-template-columns: 105px 1fr; gap: 12px; padding: 7px 0; border: 0; text-align: left !important; }
+    .mileage-table td { display: grid; grid-template-columns: 92px 1fr; gap: 8px; padding: 5px 0; border: 0; text-align: left !important; }
     .mileage-table td::before { content: attr(data-label); color: #77838d; font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
     .mileage-table .actions-column { display: flex; justify-content: flex-end; width: 100%; padding-top: 12px; }
     .mileage-table .actions-column::before { display: none; }
