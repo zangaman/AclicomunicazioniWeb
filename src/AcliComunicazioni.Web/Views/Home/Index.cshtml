@@ -115,6 +115,8 @@
     </div>
 </section>
 
+<div class="mobile-form-backdrop" id="mobile-form-backdrop" hidden></div>
+
 <section class="dashboard-grid mileage-dashboard-grid">
     <article class="dashboard-card summary-card">
         <div class="card-heading-row">
@@ -139,7 +141,12 @@
     </article>
 
     <article class="dashboard-card quick-entry-card" id="quick-entry">
-        <div class="card-heading-row"><div><span class="card-kicker">Inserimento rapido</span><h2>Nuova percorrenza</h2></div></div>
+        <div class="card-heading-row">
+            <div><span class="card-kicker">Inserimento rapido</span><h2>Nuova percorrenza</h2></div>
+            <button type="button" class="mobile-form-close" id="mobile-form-close" aria-label="Chiudi inserimento">
+                <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+            </button>
+        </div>
 
         <form asp-controller="Home" asp-action="AddMileage" method="post" class="quick-entry-form" id="mileage-form">
             @Html.AntiForgeryToken()
@@ -320,16 +327,27 @@
             const formatter = new Intl.NumberFormat('it-IT');
             const quickEntryCard = document.querySelector('.quick-entry-card');
             const mobileAddMileage = document.getElementById('mobile-add-mileage');
+            const mobileFormBackdrop = document.getElementById('mobile-form-backdrop');
+            const mobileFormClose = document.getElementById('mobile-form-close');
+
+            const setMobileFormOpen = open => {
+                quickEntryCard?.classList.toggle('mobile-form-open', open);
+                mobileFormBackdrop?.toggleAttribute('hidden', !open);
+                document.body.classList.toggle('mobile-sheet-open', open);
+                mobileAddMileage?.setAttribute('aria-expanded', String(open));
+            };
 
             mobileAddMileage?.addEventListener('click', () => {
-                const isOpen = quickEntryCard?.classList.toggle('mobile-form-open') ?? false;
-                mobileAddMileage.setAttribute('aria-expanded', String(isOpen));
+                const isOpen = !(quickEntryCard?.classList.contains('mobile-form-open') ?? false);
+                setMobileFormOpen(isOpen);
 
                 if (isOpen) {
-                    quickEntryCard?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     window.setTimeout(() => end.focus(), 350);
                 }
             });
+
+            mobileFormClose?.addEventListener('click', () => setMobileFormOpen(false));
+            mobileFormBackdrop?.addEventListener('click', () => setMobileFormOpen(false));
 
             const updateValues = () => {
                 const startValue = Number(start.value);
@@ -349,8 +367,7 @@
 
             document.querySelectorAll('.fill-gap-button').forEach(button => {
                 button.addEventListener('click', () => {
-                    quickEntryCard?.classList.add('mobile-form-open');
-                    mobileAddMileage?.setAttribute('aria-expanded', 'true');
+                    setMobileFormOpen(true);
                     start.value = button.dataset.start;
                     end.value = button.dataset.end;
                     tripDate.min = button.dataset.minDate || '';
