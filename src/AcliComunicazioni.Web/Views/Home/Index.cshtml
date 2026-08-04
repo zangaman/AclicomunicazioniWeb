@@ -150,6 +150,11 @@
                                 other.Id != entry.Id &&
                                 other.StartKilometers < gapEnd &&
                                 other.EndKilometers > gapStart);
+                            var previousEntry = Model.RecentEntries.FirstOrDefault(other =>
+                                other.Id != entry.Id &&
+                                other.EndKilometers == gapStart);
+                            var minimumGapDate = previousEntry?.TripDate.Date ?? entry.TripDate.Date;
+                            var maximumGapDate = entry.TripDate.Date;
 
                             <tr class="row-with-gap @(overlappingEntry is null ? "missing-mileage-row" : "overlap-mileage-row")">
                                 @if (overlappingEntry is not null)
@@ -172,7 +177,7 @@
                                 <td data-label="Percorsi" class="numeric-column"><span class="gap-badge">@entry.GapKilometers.ToString("N0", cultura) km</span></td>
                                 <td data-label="Conducente"><span class="user-badge">Da assegnare</span></td>
                                 <td data-label="Segnalazioni"><span class="gap-badge">Percorrenza mancante</span></td>
-                                    <td class="actions-column"><button type="button" class="table-action fill-gap-button" data-start="@entry.PreviousEndKilometers.Value" data-end="@entry.StartKilometers" data-date="@entry.TripDate.ToString("yyyy-MM-dd")">Inserisci tratto</button></td>
+                                    <td class="actions-column"><button type="button" class="table-action fill-gap-button" data-start="@entry.PreviousEndKilometers.Value" data-end="@entry.StartKilometers" data-date="@entry.TripDate.ToString("yyyy-MM-dd")" data-min-date="@minimumGapDate.ToString("yyyy-MM-dd")" data-max-date="@maximumGapDate.ToString("yyyy-MM-dd")">Inserisci tratto</button></td>
                                 }
                             </tr>
                         }
@@ -238,6 +243,8 @@
                 button.addEventListener('click', () => {
                     start.value = button.dataset.start;
                     end.value = button.dataset.end;
+                    tripDate.min = button.dataset.minDate || '';
+                    tripDate.max = button.dataset.maxDate || '';
                     tripDate.value = button.dataset.date;
                     route.value = '';
                     description.value = `Completamento dello slot chilometrico ${formatter.format(Number(button.dataset.start))} - ${formatter.format(Number(button.dataset.end))}.`;
