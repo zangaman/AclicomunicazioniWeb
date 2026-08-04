@@ -1033,6 +1033,49 @@ h2 { letter-spacing: -.025em; }
         from { opacity: 0; }
         to { opacity: 1; }
     }
+
+    /* Simplified one-hand mobile layout */
+    .mobile-odometer-hero {
+        min-height: 158px;
+        padding-bottom: 48px;
+    }
+    .mobile-odometer-hero .mobile-add-mileage {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        position: absolute;
+        right: 16px;
+        bottom: 14px;
+        width: auto;
+        height: 30px;
+        margin: 0;
+        padding: 0 10px;
+        border-radius: 999px;
+        background: #ff9f1c;
+        color: white;
+        box-shadow: 0 4px 11px rgba(157,86,0,.25);
+        font-size: .63rem;
+        font-weight: 750;
+    }
+    .mobile-odometer-hero .mobile-add-mileage .app-icon {
+        width: 13px;
+        height: 13px;
+    }
+    .mobile-odometer-hero .mobile-add-mileage span {
+        display: inline;
+        color: white;
+    }
+    .mobile-odometer-hero p { bottom: 18px; }
+    .mobile-hero-ring { top: 32px; }
+
+    .mobile-reminder-card {
+        border-left: 3px solid #ffad34;
+    }
+    .mobile-activity-log { margin-top: 11px; }
+
+    .mobile-bottom-nav .disabled {
+        opacity: .38;
+    }
 }
 
 @media print {
