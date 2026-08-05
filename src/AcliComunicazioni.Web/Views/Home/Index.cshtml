@@ -9,6 +9,10 @@
     var nomeBreve = conducenteCorrente.Split(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? "Utente";
     var gapsCount = Model.RecentEntries.Count(entry => entry.GapKilometers > 0);
     var missingKilometers = Model.RecentEntries.Sum(entry => entry.GapKilometers);
+    var firstGap = Model.RecentEntries
+        .Where(entry => entry.GapKilometers > 0 && entry.PreviousEndKilometers.HasValue)
+        .OrderByDescending(entry => entry.StartKilometers)
+        .FirstOrDefault();
 }
 
 <section class="page-heading">
@@ -41,17 +45,20 @@
 
     @if (gapsCount > 0)
     {
-        <article class="mobile-reminder-card">
+        <button type="button" class="mobile-reminder-card" id="mobile-gap-action" aria-label="Completa il primo tratto chilometrico mancante">
             <span class="mobile-reminder-icon" aria-hidden="true">
                 <svg class="app-icon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0-6 6c0 6-2 6-2 8h16c0-2-2-2-2-8a6 6 0 0 0-6-6M10 21h4"/></svg>
             </span>
-            <div>
-                <span>Promemoria</span>
-                <strong>Sequenza chilometrica da completare</strong>
-                <small>@missingKilometers.ToString("N0", cultura) km da verificare in @gapsCount intervallo@(gapsCount == 1 ? "" : "i")</small>
-            </div>
+            <span class="mobile-reminder-copy">
+                <span>Da completare</span>
+                <strong>@missingKilometers.ToString("N0", cultura) km non registrati</strong>
+                @if (firstGap is not null)
+                {
+                    <small>Tratto @firstGap.PreviousEndKilometers!.Value.ToString("N0", cultura) → @firstGap.StartKilometers.ToString("N0", cultura) · Completa adesso</small>
+                }
+            </span>
             <svg class="app-icon reminder-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-        </article>
+        </button>
     }
 
     <article class="mobile-odometer-hero">
@@ -328,6 +335,8 @@
             const mobileAddMileage = document.getElementById('mobile-add-mileage');
             const mobileFormBackdrop = document.getElementById('mobile-form-backdrop');
             const mobileFormClose = document.getElementById('mobile-form-close');
+            const mobileGapAction = document.getElementById('mobile-gap-action');
+            const successToast = document.querySelector('.alert-success');
 
             const setMobileFormOpen = open => {
                 quickEntryCard?.classList.toggle('mobile-form-open', open);
@@ -347,6 +356,16 @@
 
             mobileFormClose?.addEventListener('click', () => setMobileFormOpen(false));
             mobileFormBackdrop?.addEventListener('click', () => setMobileFormOpen(false));
+            mobileGapAction?.addEventListener('click', () => {
+                document.querySelector('.fill-gap-button')?.click();
+            });
+
+            if (successToast) {
+                window.setTimeout(() => {
+                    successToast.classList.add('is-hiding');
+                    successToast.addEventListener('transitionend', () => successToast.remove(), { once: true });
+                }, 3200);
+            }
 
             const updateValues = () => {
                 const startValue = Number(start.value);
