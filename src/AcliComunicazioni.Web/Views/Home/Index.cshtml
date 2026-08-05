@@ -35,66 +35,127 @@
 }
 
 <section class="mobile-mileage-app">
-    <header class="mobile-app-welcome">
-        <div>
-            <span>Benvenuto</span>
-            <h1>Ciao @nomeBreve</h1>
-        </div>
-        <span class="mobile-app-avatar">@(nomeBreve.Substring(0, 1).ToUpperInvariant())</span>
-    </header>
-
-    @if (gapsCount > 0)
-    {
-        <button type="button" class="mobile-reminder-card" id="mobile-gap-action" aria-label="Completa il primo tratto chilometrico mancante">
-            <span class="mobile-reminder-icon" aria-hidden="true">
-                <svg class="app-icon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0-6 6c0 6-2 6-2 8h16c0-2-2-2-2-8a6 6 0 0 0-6-6M10 21h4"/></svg>
-            </span>
-            <span class="mobile-reminder-copy">
-                <span>Da completare</span>
-                <strong>@missingKilometers.ToString("N0", cultura) km non registrati</strong>
-                @if (firstGap is not null)
-                {
-                    <small>Tratto @firstGap.PreviousEndKilometers.Value.ToString("N0", cultura) → @firstGap.StartKilometers.ToString("N0", cultura) · Completa adesso</small>
-                }
-            </span>
-            <svg class="app-icon reminder-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-        </button>
-    }
-
-    <article class="mobile-odometer-hero">
-        <span>Chilometraggio attuale</span>
-        <strong>@(Model.CurrentKilometers?.ToString("N0", cultura) ?? "—") <small>km</small></strong>
-        <p>Aggiornato al @(Model.LastTripDate?.ToString("dd/MM/yyyy") ?? "—")</p>
-        <div class="mobile-hero-ring" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><path d="M5 16a7 7 0 1 1 14 0M12 12l4-3M4 16h16"/></svg></div>
-        <button type="button" class="mobile-add-mileage" id="mobile-add-mileage" aria-label="Aggiungi percorrenza" aria-expanded="false">
-            <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-            <span>Registra</span>
-        </button>
-    </article>
-
-    <section class="mobile-activity-log">
-        <header>
-            <h2>Attività recenti</h2>
-            <a href="#latest-trips">Vedi tutte ›</a>
+    <section class="mobile-screen mobile-home-screen" data-mobile-screen="home">
+        <header class="mobile-app-welcome">
+            <div>
+                <span>Benvenuto</span>
+                <h1>Ciao @nomeBreve</h1>
+            </div>
+            <span class="mobile-app-avatar">@(nomeBreve.Substring(0, 1).ToUpperInvariant())</span>
         </header>
 
-        @foreach (var entry in Model.RecentEntries
-            .OrderByDescending(entry => entry.EndKilometers)
-            .ThenByDescending(entry => entry.TripDate)
-            .Take(5))
+        <article class="mobile-odometer-hero">
+            <span>Chilometraggio attuale</span>
+            <strong>@(Model.CurrentKilometers?.ToString("N0", cultura) ?? "—") <small>km</small></strong>
+            <p>Aggiornato al @(Model.LastTripDate?.ToString("dd/MM/yyyy") ?? "—")</p>
+            <div class="mobile-hero-ring" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><path d="M5 16a7 7 0 1 1 14 0M12 12l4-3M4 16h16"/></svg></div>
+
+            @if (gapsCount > 0)
+            {
+                <button type="button" class="mobile-hero-gap" id="mobile-gap-action" aria-label="Completa il primo tratto chilometrico mancante">
+                    <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 3 20h18L12 4zM12 9v5M12 17h.01"/></svg>
+                    <span>@missingKilometers.ToString("N0", cultura) km da completare</span>
+                    <svg class="app-icon mobile-hero-gap-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+            }
+
+            <button type="button" class="mobile-add-mileage" id="mobile-add-mileage" aria-label="Aggiungi percorrenza" aria-expanded="false">
+                <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                <span>Registra viaggio</span>
+            </button>
+        </article>
+
+        <section class="mobile-activity-log">
+            <header>
+                <h2>Attività recenti</h2>
+                <button type="button" class="mobile-view-all" data-mobile-open-trips>Vedi tutte</button>
+            </header>
+
+            @foreach (var entry in Model.RecentEntries
+                .OrderByDescending(entry => entry.EndKilometers)
+                .ThenByDescending(entry => entry.TripDate)
+                .Take(3))
+            {
+                <a class="mobile-trip-row" asp-action="EditMileage" asp-route-id="@entry.Id">
+                    <span class="mobile-trip-icon" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><path d="M5 17h14M7 17l1.2-6.2A2 2 0 0 1 10.16 9h3.68a2 2 0 0 1 1.96 1.8L17 17M8 14h8M8 19v1M16 19v1"/></svg></span>
+                    <span class="mobile-trip-copy">
+                        <strong>@entry.Route</strong>
+                        <small>@entry.TripDate.ToString("dd/MM/yyyy") · @entry.StartKilometers.ToString("N0", cultura) → @entry.EndKilometers.ToString("N0", cultura)</small>
+                    </span>
+                    <span class="mobile-trip-distance">@entry.DistanceKilometers.ToString("N0", cultura) km</span>
+                </a>
+            }
+        </section>
+    </section>
+
+    <section class="mobile-screen mobile-trips-screen" data-mobile-screen="trips" hidden>
+        <header class="mobile-trips-heading">
+            <span>Gestione trasferte</span>
+            <h1>Viaggi</h1>
+            <p>Storico delle percorrenze</p>
+        </header>
+
+        <p class="mobile-trips-summary">
+            <strong>@Model.RecentEntries.Count registrazioni</strong>
+            @if (gapsCount > 0)
+            {
+                <span>· @missingKilometers.ToString("N0", cultura) km da verificare</span>
+            }
+            else
+            {
+                <span>· Sequenza completa</span>
+            }
+        </p>
+
+        <label class="mobile-trip-search">
+            <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+            <span class="visually-hidden">Cerca tragitto</span>
+            <input type="search" id="mobile-trip-search" placeholder="Cerca tragitto" autocomplete="off" />
+        </label>
+
+        <div class="mobile-trip-filters" role="group" aria-label="Filtra percorrenze">
+            <button type="button" class="active" data-trip-filter="all" aria-pressed="true">Tutti</button>
+            @if (gapsCount > 0)
+            {
+                <button type="button" data-trip-filter="gaps" aria-pressed="false">Da completare</button>
+            }
+        </div>
+
+        @if (gapsCount > 0 && firstGap is not null)
         {
-            <a class="mobile-trip-row" asp-action="EditMileage" asp-route-id="@entry.Id">
-                <span class="mobile-trip-icon" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><path d="M5 17h14M7 17l1.2-6.2A2 2 0 0 1 10.16 9h3.68a2 2 0 0 1 1.96 1.8L17 17M8 14h8M8 19v1M16 19v1"/></svg></span>
-                <span class="mobile-trip-copy">
-                    <strong>@entry.Route</strong>
-                    <small>@entry.TripDate.ToString("dd/MM/yyyy") · @entry.StartKilometers.ToString("N0", cultura) → @entry.EndKilometers.ToString("N0", cultura)</small>
-                </span>
-                <span class="mobile-trip-distance">@entry.DistanceKilometers.ToString("N0", cultura) km</span>
-            </a>
+            <article class="mobile-gap-summary" id="mobile-gap-summary">
+                <div>
+                    <span>Tratto da completare</span>
+                    <strong>@firstGap.PreviousEndKilometers.Value.ToString("N0", cultura) → @firstGap.StartKilometers.ToString("N0", cultura)</strong>
+                    <small>@firstGap.GapKilometers.ToString("N0", cultura) km mancanti</small>
+                </div>
+                <button type="button" class="mobile-gap-complete">Completa</button>
+            </article>
         }
+
+        <section class="mobile-trip-results">
+            <h2>Percorrenze</h2>
+            <div class="mobile-trip-list" id="mobile-trip-list">
+                @foreach (var entry in Model.RecentEntries
+                    .OrderByDescending(entry => entry.EndKilometers)
+                    .ThenByDescending(entry => entry.TripDate)
+                    .ThenByDescending(entry => entry.Id))
+                {
+                    <a class="mobile-trip-record" data-search="@entry.Route" asp-action="EditMileage" asp-route-id="@entry.Id">
+                        <span class="mobile-trip-icon" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><path d="M5 17h14M7 17l1.2-6.2A2 2 0 0 1 10.16 9h3.68a2 2 0 0 1 1.96 1.8L17 17M8 14h8M8 19v1M16 19v1"/></svg></span>
+                        <span class="mobile-trip-copy">
+                            <strong>@entry.Route</strong>
+                            <small>@entry.TripDate.ToString("dd/MM/yyyy") · @entry.StartKilometers.ToString("N0", cultura) → @entry.EndKilometers.ToString("N0", cultura)</small>
+                        </span>
+                        <span class="mobile-trip-distance">@entry.DistanceKilometers.ToString("N0", cultura) km</span>
+                        <svg class="app-icon mobile-trip-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+                    </a>
+                }
+            </div>
+            <p class="mobile-trip-empty" id="mobile-trip-empty" hidden>Nessun tragitto corrisponde alla ricerca.</p>
+        </section>
     </section>
 </section>
-
 <section class="mobile-home-intro">
     <span>Benvenuto</span>
     <h1>Ciao @nomeBreve</h1>
@@ -310,10 +371,14 @@
 </section>
 
 <nav class="mobile-bottom-nav" aria-label="Navigazione mobile">
-    <a class="active" asp-controller="Home" asp-action="Index"><svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 11 8-7 8 7v9h-6v-6h-4v6H4z"/></svg><strong>Home</strong></a>
-    <a asp-controller="Home" asp-action="Index" asp-fragment="latest-trips"><svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 17h14M7 17l1.2-6.2A2 2 0 0 1 10.16 9h3.68a2 2 0 0 1 1.96 1.8L17 17M8 14h8M8 19v1M16 19v1"/></svg><strong>Viaggi</strong></a>
-    <span class="disabled"><svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V9M12 19V5M19 19v-7"/></svg><strong>Report</strong></span>
-    <span class="disabled"><svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3"/><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"/></svg><strong>Profilo</strong></span>
+    <button type="button" class="active" data-mobile-nav="home" aria-current="page">
+        <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 11 8-7 8 7v9h-6v-6h-4v6H4z"/></svg>
+        <strong>Home</strong>
+    </button>
+    <button type="button" data-mobile-nav="trips">
+        <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 17h14M7 17l1.2-6.2A2 2 0 0 1 10.16 9h3.68a2 2 0 0 1 1.96 1.8L17 17M8 14h8M8 19v1M16 19v1"/></svg>
+        <strong>Viaggi</strong>
+    </button>
 </nav>
 
 @section Scripts
@@ -336,7 +401,17 @@
             const mobileFormBackdrop = document.getElementById('mobile-form-backdrop');
             const mobileFormClose = document.getElementById('mobile-form-close');
             const mobileGapAction = document.getElementById('mobile-gap-action');
+            const mobileGapComplete = document.querySelector('.mobile-gap-complete');
             const successToast = document.querySelector('.alert-success');
+            const mobileScreens = document.querySelectorAll('[data-mobile-screen]');
+            const mobileNavButtons = document.querySelectorAll('[data-mobile-nav]');
+            const mobileOpenTrips = document.querySelector('[data-mobile-open-trips]');
+            const mobileTripSearch = document.getElementById('mobile-trip-search');
+            const mobileTripRows = document.querySelectorAll('.mobile-trip-record');
+            const mobileTripEmpty = document.getElementById('mobile-trip-empty');
+            const mobileTripResults = document.querySelector('.mobile-trip-results');
+            const mobileTripFilters = document.querySelectorAll('[data-trip-filter]');
+            let activeTripFilter = 'all';
 
             const setMobileFormOpen = open => {
                 quickEntryCard?.classList.toggle('mobile-form-open', open);
@@ -356,8 +431,53 @@
 
             mobileFormClose?.addEventListener('click', () => setMobileFormOpen(false));
             mobileFormBackdrop?.addEventListener('click', () => setMobileFormOpen(false));
-            mobileGapAction?.addEventListener('click', () => {
-                document.querySelector('.fill-gap-button')?.click();
+            const openFirstGap = () => document.querySelector('.fill-gap-button')?.click();
+            mobileGapAction?.addEventListener('click', openFirstGap);
+            mobileGapComplete?.addEventListener('click', openFirstGap);
+
+            const setMobileScreen = screenName => {
+                mobileScreens.forEach(screen => {
+                    screen.hidden = screen.dataset.mobileScreen !== screenName;
+                });
+                mobileNavButtons.forEach(button => {
+                    const isActive = button.dataset.mobileNav === screenName;
+                    button.classList.toggle('active', isActive);
+                    button.toggleAttribute('aria-current', isActive);
+                });
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
+            mobileNavButtons.forEach(button => {
+                button.addEventListener('click', () => setMobileScreen(button.dataset.mobileNav));
+            });
+            mobileOpenTrips?.addEventListener('click', () => setMobileScreen('trips'));
+
+            const applyTripFilters = () => {
+                const query = mobileTripSearch?.value.trim().toLocaleLowerCase('it-IT') ?? '';
+                let visibleRows = 0;
+
+                mobileTripRows.forEach(row => {
+                    const matchesSearch = (row.dataset.search ?? '').toLocaleLowerCase('it-IT').includes(query);
+                    const visible = activeTripFilter === 'all' && matchesSearch;
+                    row.hidden = !visible;
+                    if (visible) visibleRows++;
+                });
+
+                if (mobileTripResults) mobileTripResults.hidden = activeTripFilter === 'gaps';
+                if (mobileTripEmpty) mobileTripEmpty.hidden = visibleRows > 0 || activeTripFilter !== 'all';
+            };
+
+            mobileTripSearch?.addEventListener('input', applyTripFilters);
+            mobileTripFilters.forEach(button => {
+                button.addEventListener('click', () => {
+                    activeTripFilter = button.dataset.tripFilter ?? 'all';
+                    mobileTripFilters.forEach(filter => {
+                        const isActive = filter === button;
+                        filter.classList.toggle('active', isActive);
+                        filter.setAttribute('aria-pressed', String(isActive));
+                    });
+                    applyTripFilters();
+                });
             });
 
             if (successToast) {
