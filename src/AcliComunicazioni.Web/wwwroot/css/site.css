@@ -2036,6 +2036,94 @@ h2 { letter-spacing: -.025em; }
     }
     .mobile-bottom-nav button strong { font-size: .69rem; }
 
+    /* Navy and petrol corporate palette. */
+    html,
+    body {
+        background: #f5f7f8;
+        color: #17324d;
+    }
+    .topbar {
+        border-bottom-color: #dce5e8;
+        background: rgba(255,255,255,.96);
+    }
+    .topbar-brand .brand-mark,
+    .main-content > .alert-success::before,
+    .mobile-home-register,
+    .mobile-trip-filters button.active {
+        background: #176b7a;
+    }
+    .topbar-brand .brand-mark {
+        box-shadow: 0 3px 9px rgba(23,107,122,.18);
+    }
+    .main-content > .alert-success {
+        border-color: #bfd8de;
+        background: rgba(240,249,250,.98);
+        box-shadow: 0 10px 28px rgba(23,107,122,.14);
+    }
+
+    .mobile-operation-heading > div > span,
+    .mobile-operation-status,
+    .mobile-trips-summary span {
+        color: #176b7a;
+    }
+    .mobile-operation-status {
+        border-color: #c7e0e4;
+        background: #eef7f8;
+    }
+    .mobile-operation-status i {
+        background: #258496;
+        box-shadow: 0 0 0 3px rgba(37,132,150,.12);
+    }
+
+    .mobile-odometer-hero,
+    .mobile-activity-list,
+    .mobile-trip-list,
+    .mobile-trip-search,
+    .mobile-account-popover {
+        border-color: #dce5e8;
+        background: #ffffff;
+    }
+    .mobile-hero-ring {
+        color: #176b7a;
+    }
+    .mobile-home-register {
+        box-shadow: 0 5px 13px rgba(23,107,122,.2);
+    }
+    .mobile-home-register:active {
+        box-shadow: 0 2px 7px rgba(23,107,122,.16);
+    }
+
+    .mobile-view-all,
+    .mobile-trip-distance,
+    .mobile-trip-filters button.active,
+    .mobile-bottom-nav button.active,
+    .mobile-bottom-nav button.active .nav-trips-icon {
+        color: #176b7a;
+    }
+    .mobile-trip-filters button.active {
+        border-color: #176b7a;
+        box-shadow: 0 3px 8px rgba(23,107,122,.16);
+    }
+    .mobile-trip-search:focus-within {
+        border-color: #176b7a;
+        box-shadow: 0 0 0 3px rgba(23,107,122,.12);
+    }
+    .mobile-gap-complete {
+        border-color: #176b7a;
+        color: #176b7a;
+    }
+    .mobile-bottom-nav button.active::after,
+    .mobile-bottom-nav button.active .nav-home-icon {
+        background: #176b7a;
+        fill: #176b7a;
+        stroke: #176b7a;
+    }
+    .mobile-vehicle-symbol,
+    .mobile-trip-icon {
+        color: #17324d;
+        background: #eef4f6;
+    }
+
     @media (max-width: 360px) {
         .container { width: calc(100% - 16px); }
         .mobile-app-welcome h1,
