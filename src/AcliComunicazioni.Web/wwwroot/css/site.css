@@ -1077,12 +1077,12 @@ h2 { letter-spacing: -.025em; }
         opacity: .38;
     }
 
-    /* Selected mockup A: polished mobile dashboard */
+    /* Selected mockup B: warm corporate mobile system */
+    [hidden] { display: none !important; }
+
     body {
-        background:
-            radial-gradient(circle at 92% 4%, rgba(26, 139, 146, .08), transparent 26%),
-            linear-gradient(180deg, #f8fafb 0%, #f2f6f7 62%, #edf3f5 100%);
-        color: #193139;
+        background: #f3f1ec;
+        color: #172b46;
     }
 
     .container {
@@ -1092,43 +1092,42 @@ h2 { letter-spacing: -.025em; }
 
     .topbar {
         padding: 9px 0;
-        border-bottom-color: rgba(216, 226, 230, .9);
-        background: rgba(255,255,255,.92);
-        box-shadow: 0 4px 18px rgba(23,55,66,.055);
-        backdrop-filter: blur(18px);
+        border-bottom: 1px solid #e2dfd7;
+        background: rgba(251,250,247,.96);
+        box-shadow: 0 3px 14px rgba(30,43,55,.05);
+        backdrop-filter: blur(16px);
     }
     .topbar-content { min-height: 34px; }
     .topbar-brand { gap: 9px; }
     .topbar-brand strong {
-        color: #27404a;
+        color: #172b46;
         font-size: .8rem;
         letter-spacing: -.015em;
     }
     .topbar-brand .brand-mark {
         width: 32px;
         height: 32px;
-        border-radius: 9px;
-        background: linear-gradient(145deg, #15576d, #103e59);
-        box-shadow: 0 4px 10px rgba(17,70,91,.16);
+        border-radius: 7px;
+        background: #66876d;
+        color: white;
+        box-shadow: 0 3px 9px rgba(59,87,65,.15);
         font-size: .72rem;
     }
     .user-area .secondary-button {
         min-height: 30px;
         padding: 6px 10px;
-        border-color: #dfe7ea;
+        border: 1px solid #dedbd3;
         border-radius: 8px;
-        background: #f7f9fa;
-        color: #354c55;
+        background: #f7f5f0;
+        color: #43505b;
         font-size: .69rem;
     }
 
-    .main-content { padding: 12px 0 88px; }
+    .main-content { padding: 13px 0 88px; }
     .main-content > .alert {
         margin: 0 0 12px;
         padding: 10px 12px;
-        border-width: 1px;
-        border-radius: 11px;
-        box-shadow: 0 3px 10px rgba(30,91,58,.045);
+        border-radius: 10px;
         font-size: .72rem;
         line-height: 1.35;
     }
@@ -1139,9 +1138,9 @@ h2 { letter-spacing: -.025em; }
         z-index: 65;
         width: min(calc(100% - 20px), 500px);
         margin: 0;
-        border-color: #b9e0ca;
-        background: rgba(239,250,244,.97);
-        box-shadow: 0 10px 30px rgba(22,74,47,.14);
+        border: 1px solid #bfd7c5;
+        background: rgba(241,248,242,.98);
+        box-shadow: 0 10px 28px rgba(45,73,51,.13);
         transform: translateX(-50%);
         transition: opacity .22s ease, transform .22s ease;
         backdrop-filter: blur(12px);
@@ -1154,7 +1153,7 @@ h2 { letter-spacing: -.025em; }
         height: 20px;
         margin-right: 7px;
         border-radius: 50%;
-        background: #2c8a55;
+        background: #66876d;
         color: white;
         font-size: .67rem;
     }
@@ -1164,278 +1163,400 @@ h2 { letter-spacing: -.025em; }
         pointer-events: none;
     }
 
-    .mobile-app-welcome {
-        padding: 9px 2px 14px;
-    }
-    .mobile-app-welcome > div > span {
-        color: #7d9097;
-        font-size: .68rem;
-        font-weight: 520;
-    }
-    .mobile-app-welcome h1 {
-        margin-top: 3px;
-        color: #18323c;
-        font-size: 1.48rem;
-        font-weight: 790;
-        line-height: 1.05;
-        letter-spacing: -.045em;
-        text-transform: capitalize;
-    }
-    .mobile-app-avatar {
-        width: 38px;
-        height: 38px;
-        border: 3px solid rgba(255,255,255,.94);
-        background: linear-gradient(145deg, #e7f6f5, #d9efef);
-        color: #147c84 !important;
-        box-shadow: 0 5px 16px rgba(25,95,103,.13);
-        font-size: .8rem !important;
+    .mobile-screen { animation: mobileScreenIn .18s ease both; }
+    @keyframes mobileScreenIn {
+        from { opacity: .4; transform: translateY(4px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
-    .mobile-reminder-card {
-        display: grid;
-        grid-template-columns: 36px minmax(0, 1fr) 18px;
-        gap: 10px;
-        margin-bottom: 12px;
-        padding: 12px 13px;
-        border: 1px solid #e1e9ec;
-        border-left: 1px solid #e1e9ec;
-        border-radius: 14px;
-        background: rgba(255,255,255,.94);
-        box-shadow: 0 5px 16px rgba(25,53,64,.05);
+    .mobile-app-welcome {
+        padding: 8px 1px 13px;
     }
-    button.mobile-reminder-card {
-        width: 100%;
-        color: inherit;
-        font: inherit;
-        text-align: left;
-        cursor: pointer;
-        transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease;
-    }
-    button.mobile-reminder-card:active {
-        transform: scale(.995);
-        border-color: #cbdfe1;
-        box-shadow: 0 2px 8px rgba(25,53,64,.045);
-    }
-    button.mobile-reminder-card:focus-visible {
-        outline: 3px solid rgba(21,131,139,.2);
-        outline-offset: 2px;
-    }
-    .mobile-reminder-copy {
-        display: grid;
-        min-width: 0;
-        gap: 2px;
-    }
-    .mobile-reminder-icon {
-        display: grid;
-        place-items: center;
-        width: 34px;
-        height: 34px;
-        border-radius: 11px;
-        background: #e8f5f4;
-        color: #15828a;
-    }
-    .mobile-reminder-icon .app-icon {
-        width: 17px;
-        height: 17px;
-        stroke-width: 1.9;
-    }
-    .mobile-reminder-copy > span {
-        color: #7d9198;
-        font-size: .61rem;
-        font-weight: 650;
-        letter-spacing: .02em;
-        text-transform: uppercase;
-    }
-    .mobile-reminder-card strong {
-        overflow: hidden;
-        color: #29434d;
-        font-size: .78rem;
-        font-weight: 720;
-        line-height: 1.25;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-    .mobile-reminder-card small {
-        color: #778b92;
-        font-size: .66rem;
-        line-height: 1.3;
-    }
-    .reminder-chevron {
-        width: 17px;
-        height: 17px;
-        color: #1b8990;
-        stroke-width: 2;
+    .mobile-app-welcome > div > span,
+    .mobile-app-avatar { display: none; }
+    .mobile-app-welcome h1 {
+        margin: 0;
+        color: #172b46;
+        font-size: 1.5rem;
+        font-weight: 760;
+        line-height: 1.1;
+        letter-spacing: -.04em;
+        text-transform: none;
     }
 
     .mobile-odometer-hero {
-        min-height: 205px;
-        padding: 20px 19px 72px;
-        border: 1px solid rgba(213,226,229,.96);
-        border-radius: 17px;
-        background:
-            radial-gradient(circle at 92% 12%, rgba(34,151,157,.10), transparent 29%),
-            linear-gradient(155deg, #ffffff 0%, #fbfefe 68%, #f3fafa 100%);
-        color: #2e454e;
-        box-shadow:
-            0 12px 30px rgba(24,62,73,.075),
-            inset 0 1px 0 rgba(255,255,255,.9);
+        position: relative;
+        display: block;
+        min-height: 0;
+        padding: 17px;
+        border: 1px solid #d8d8d3;
+        border-radius: 14px;
+        background: #fffefa;
+        color: #172b46;
+        box-shadow: 0 6px 18px rgba(31,43,52,.055);
     }
-    .mobile-odometer-hero::before {
-        content: "";
-        position: absolute;
-        left: 19px;
-        top: 0;
-        width: 54px;
-        height: 3px;
-        border-radius: 0 0 999px 999px;
-        background: linear-gradient(90deg, #15838b, #54bec0);
-    }
+    .mobile-odometer-hero::before { display: none; }
     .mobile-odometer-hero > span {
-        color: #71858c;
+        color: #43536a;
         font-size: .76rem;
-        font-weight: 570;
+        font-weight: 560;
     }
     .mobile-odometer-hero > strong {
-        margin-top: 10px;
-        color: #107d85;
-        font-size: 2.55rem;
-        font-weight: 820;
+        display: block;
+        margin-top: 9px;
+        color: #172b46;
+        font-size: 2.48rem;
+        font-weight: 770;
         line-height: 1;
-        letter-spacing: -.065em;
+        letter-spacing: -.055em;
         font-variant-numeric: tabular-nums;
     }
     .mobile-odometer-hero strong small {
         margin-left: 2px;
-        color: #3e9095;
-        font-size: .78rem;
-        font-weight: 700;
+        color: #344966;
+        font-size: .8rem;
+        font-weight: 670;
         letter-spacing: 0;
         opacity: 1;
     }
     .mobile-odometer-hero p {
-        left: 19px;
-        bottom: 62px;
-        color: #7a8b91;
-        font-size: .66rem;
+        position: static;
+        margin: 8px 0 0;
+        color: #7c858c;
+        font-size: .64rem;
     }
     .mobile-hero-ring {
         display: grid;
         place-items: center;
-        right: 20px;
-        top: 46px;
-        width: 58px;
-        height: 58px;
+        position: absolute;
+        right: 19px;
+        top: 35px;
+        width: 52px;
+        height: 52px;
         border: 0;
-        border-radius: 18px;
-        background: linear-gradient(145deg, #e9f7f6, #dff1f1);
-        color: #11838a;
-        box-shadow: inset 0 0 0 1px rgba(20,126,134,.06);
+        border-radius: 50%;
+        background: #eef2eb;
+        color: #5f8168;
         filter: none;
         transform: none;
     }
     .mobile-hero-ring .app-icon {
-        width: 28px;
-        height: 28px;
+        width: 27px;
+        height: 27px;
         stroke-width: 1.7;
     }
+
+    .mobile-hero-gap {
+        display: grid;
+        grid-template-columns: 18px minmax(0,1fr) 15px;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        margin-top: 15px;
+        padding: 10px 11px;
+        border: 1px solid #efd9aa;
+        border-radius: 9px;
+        background: #fff7e7;
+        color: #5b4a27;
+        font: inherit;
+        font-size: .72rem;
+        font-weight: 650;
+        text-align: left;
+        cursor: pointer;
+    }
+    .mobile-hero-gap > .app-icon:first-child {
+        width: 17px;
+        height: 17px;
+        color: #d58c18;
+    }
+    .mobile-hero-gap-chevron {
+        width: 14px;
+        height: 14px;
+        color: #9b7a3c;
+    }
+
     .mobile-odometer-hero .mobile-add-mileage {
-        left: 19px;
-        right: 19px;
-        bottom: 15px;
+        display: inline-flex;
+        align-items: center;
         justify-content: center;
-        width: auto;
-        height: 40px;
+        gap: 7px;
+        position: static;
+        width: 100%;
+        height: 42px;
+        margin-top: 12px;
         padding: 0 14px;
-        border-radius: 11px;
-        background: linear-gradient(135deg, #168991, #0f747d);
+        border-radius: 9px;
+        background: #66876d;
         color: white;
-        box-shadow: 0 7px 16px rgba(15,116,125,.2);
+        box-shadow: 0 5px 12px rgba(70,101,77,.18);
         font-size: .78rem;
-        font-weight: 760;
-        letter-spacing: -.01em;
+        font-weight: 720;
     }
     .mobile-odometer-hero .mobile-add-mileage:active {
-        transform: translateY(1px) scale(.995);
-        box-shadow: 0 3px 9px rgba(15,116,125,.18);
+        transform: translateY(1px);
+        box-shadow: 0 2px 7px rgba(70,101,77,.16);
     }
     .mobile-odometer-hero .mobile-add-mileage .app-icon {
-        width: 16px;
-        height: 16px;
-        stroke-width: 2.2;
+        width: 17px;
+        height: 17px;
+        stroke-width: 2;
     }
 
     .mobile-activity-log {
-        margin-top: 13px;
+        margin-top: 14px;
         overflow: hidden;
-        border: 1px solid #e1e9ec;
-        border-radius: 16px;
-        background: rgba(255,255,255,.96);
-        box-shadow: 0 8px 23px rgba(25,53,64,.055);
+        border: 1px solid #deded8;
+        border-radius: 13px;
+        background: #fffefa;
+        box-shadow: 0 5px 16px rgba(31,43,52,.045);
     }
     .mobile-activity-log > header {
-        padding: 14px 14px 11px;
-        border-bottom: 1px solid #edf2f3;
+        padding: 13px 13px 10px;
+        border-bottom: 1px solid #ecebe6;
     }
     .mobile-activity-log h2 {
-        color: #243d47;
-        font-size: .9rem;
-        font-weight: 760;
-        letter-spacing: -.02em;
+        color: #172b46;
+        font-size: .88rem;
+        font-weight: 730;
+        letter-spacing: -.015em;
     }
-    .mobile-activity-log header a {
-        display: inline-flex;
-        align-items: center;
-        min-height: 24px;
-        color: #14828a;
-        font-size: .62rem;
-        font-weight: 780;
-        letter-spacing: .025em;
+    .mobile-view-all {
+        min-height: 26px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: #5f8168;
+        font: inherit;
+        font-size: .64rem;
+        font-weight: 740;
+        cursor: pointer;
     }
     .mobile-trip-row {
-        grid-template-columns: 34px minmax(0,1fr) auto;
-        gap: 10px;
+        grid-template-columns: 31px minmax(0,1fr) auto;
+        gap: 9px;
         margin: 0 12px;
-        padding: 10px 2px;
-        border-top: 1px solid #edf2f3;
+        padding: 10px 1px;
+        border-top: 1px solid #ecebe6;
     }
     .mobile-trip-row:first-of-type { border-top: 0; }
     .mobile-trip-row:active {
         margin-inline: 8px;
-        padding-inline: 6px;
-        border-radius: 10px;
-        background: #f2f8f8;
-        transform: scale(.995);
+        padding-inline: 5px;
+        border-radius: 8px;
+        background: #f5f6f1;
     }
     .mobile-trip-icon {
-        width: 32px;
-        height: 32px;
-        border-radius: 10px;
-        background: #eaf6f5;
-        color: #16858c;
+        width: 29px;
+        height: 29px;
+        border-radius: 8px;
+        background: #eef2eb;
+        color: #5f8168;
     }
     .mobile-trip-icon .app-icon {
-        width: 16px;
-        height: 16px;
+        width: 15px;
+        height: 15px;
         stroke-width: 1.8;
     }
     .mobile-trip-copy { gap: 2px; }
     .mobile-trip-copy strong {
-        color: #29414b;
-        font-size: .76rem;
-        font-weight: 720;
+        color: #1f334d;
+        font-size: .75rem;
+        font-weight: 690;
     }
     .mobile-trip-copy small {
-        color: #87969c;
-        font-size: .62rem;
+        color: #7c858c;
+        font-size: .61rem;
         font-variant-numeric: tabular-nums;
     }
     .mobile-trip-distance {
-        padding: 4px 7px;
+        padding: 3px 6px;
         border-radius: 999px;
-        background: #eef8f6;
-        color: #0f7b77;
-        font-size: .67rem;
-        font-weight: 790;
+        background: #f0f4ed;
+        color: #4f7559;
+        font-size: .66rem;
+        font-weight: 760;
+    }
+
+    .mobile-trips-heading {
+        padding: 7px 1px 0;
+    }
+    .mobile-trips-heading > span {
+        color: #718078;
+        font-size: .62rem;
+        font-weight: 680;
+        letter-spacing: .07em;
+        text-transform: uppercase;
+    }
+    .mobile-trips-heading h1 {
+        margin: 5px 0 2px;
+        color: #172b46;
+        font-size: 1.52rem;
+        line-height: 1.05;
+        letter-spacing: -.04em;
+    }
+    .mobile-trips-heading p {
+        margin: 0;
+        color: #66727d;
+        font-size: .72rem;
+    }
+    .mobile-trips-summary {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin: 11px 0;
+        color: #68737b;
+        font-size: .69rem;
+    }
+    .mobile-trips-summary strong {
+        color: #2b3c51;
+        font-weight: 670;
+    }
+    .mobile-trips-summary span { color: #567660; }
+
+    .mobile-trip-search {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        height: 41px;
+        padding: 0 11px;
+        border: 1px solid #d8d8d3;
+        border-radius: 9px;
+        background: #fffefa;
+        color: #6c767d;
+        box-shadow: 0 2px 7px rgba(31,43,52,.025);
+    }
+    .mobile-trip-search .app-icon {
+        width: 18px;
+        height: 18px;
+        flex: 0 0 auto;
+    }
+    .mobile-trip-search input {
+        width: 100%;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: #172b46;
+        font: inherit;
+        font-size: .75rem;
+        outline: 0;
+    }
+    .mobile-trip-search:focus-within {
+        border-color: #78957f;
+        box-shadow: 0 0 0 3px rgba(102,135,109,.12);
+    }
+
+    .mobile-trip-filters {
+        display: flex;
+        gap: 7px;
+        margin: 10px 0 12px;
+    }
+    .mobile-trip-filters button {
+        min-height: 31px;
+        padding: 0 12px;
+        border: 1px solid #d7d7d1;
+        border-radius: 8px;
+        background: #f9f8f4;
+        color: #59636c;
+        font: inherit;
+        font-size: .68rem;
+        cursor: pointer;
+    }
+    .mobile-trip-filters button.active {
+        border-color: #66876d;
+        background: #66876d;
+        color: white;
+        box-shadow: 0 3px 8px rgba(70,101,77,.14);
+    }
+
+    .mobile-gap-summary {
+        display: grid;
+        grid-template-columns: minmax(0,1fr) auto;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 14px;
+        padding: 12px;
+        border: 1px solid #e9cd91;
+        border-radius: 11px;
+        background: #fff7e7;
+    }
+    .mobile-gap-summary > div {
+        display: grid;
+        gap: 2px;
+        min-width: 0;
+    }
+    .mobile-gap-summary span {
+        color: #745d30;
+        font-size: .65rem;
+        font-weight: 650;
+    }
+    .mobile-gap-summary strong {
+        color: #21344b;
+        font-size: 1rem;
+        font-weight: 750;
+        font-variant-numeric: tabular-nums;
+    }
+    .mobile-gap-summary small {
+        color: #77684d;
+        font-size: .65rem;
+    }
+    .mobile-gap-complete {
+        min-height: 32px;
+        padding: 0 10px;
+        border: 1px solid #66876d;
+        border-radius: 8px;
+        background: transparent;
+        color: #4c6f55;
+        font: inherit;
+        font-size: .68rem;
+        font-weight: 720;
+        cursor: pointer;
+    }
+
+    .mobile-trip-results > h2 {
+        margin: 0 0 8px;
+        color: #172b46;
+        font-size: .86rem;
+        font-weight: 730;
+    }
+    .mobile-trip-list {
+        overflow: hidden;
+        border: 1px solid #deded8;
+        border-radius: 12px;
+        background: #fffefa;
+        box-shadow: 0 4px 14px rgba(31,43,52,.04);
+    }
+    .mobile-trip-record {
+        display: grid;
+        grid-template-columns: 29px minmax(0,1fr) auto 13px;
+        align-items: center;
+        gap: 8px;
+        margin: 0 10px;
+        padding: 10px 1px;
+        border-top: 1px solid #ecebe6;
+        color: inherit;
+        text-decoration: none;
+    }
+    .mobile-trip-record:first-child { border-top: 0; }
+    .mobile-trip-record:active {
+        margin-inline: 6px;
+        padding-inline: 5px;
+        border-radius: 8px;
+        background: #f5f6f1;
+    }
+    .mobile-trip-chevron {
+        width: 13px;
+        height: 13px;
+        color: #8d969b;
+    }
+    .mobile-trip-empty {
+        margin: 0;
+        padding: 24px 14px;
+        border: 1px dashed #d4d4ce;
+        border-radius: 10px;
+        background: #f9f8f4;
+        color: #737d83;
+        font-size: .72rem;
+        text-align: center;
     }
 
     .mobile-bottom-nav {
@@ -1443,51 +1564,61 @@ h2 { letter-spacing: -.025em; }
         justify-content: space-around;
         min-height: 64px;
         padding: 7px max(12px, env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
-        border-top: 1px solid rgba(221,229,232,.92);
-        background: rgba(255,255,255,.94);
-        box-shadow: 0 -8px 24px rgba(24,55,67,.065);
-        backdrop-filter: blur(18px);
+        border-top: 1px solid #deddd7;
+        background: rgba(255,254,250,.96);
+        box-shadow: 0 -7px 20px rgba(31,43,52,.055);
+        backdrop-filter: blur(16px);
     }
-    .mobile-bottom-nav a,
-    .mobile-bottom-nav > span {
-        position: relative;
+    .mobile-bottom-nav button {
+        display: grid;
+        place-items: center;
         align-content: center;
         gap: 3px;
-        color: #94a2a7;
+        position: relative;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: #81888d;
+        font: inherit;
+        cursor: pointer;
     }
-    .mobile-bottom-nav .app-icon {
+    .mobile-bottom-nav button .app-icon {
         width: 18px;
         height: 18px;
         stroke-width: 1.8;
     }
-    .mobile-bottom-nav strong {
-        font-size: .6rem;
+    .mobile-bottom-nav button strong {
+        font-size: .61rem;
         font-weight: 650;
     }
-    .mobile-bottom-nav .active { color: #117f87; }
-    .mobile-bottom-nav .active::before {
+    .mobile-bottom-nav button.active { color: #567b60; }
+    .mobile-bottom-nav button.active::after {
         content: "";
         position: absolute;
-        top: -7px;
-        width: 28px;
-        height: 3px;
-        border-radius: 0 0 999px 999px;
-        background: #16878e;
+        bottom: -7px;
+        width: 38px;
+        height: 2px;
+        border-radius: 999px;
+        background: #66876d;
     }
-    .mobile-bottom-nav .active .app-icon { stroke-width: 2.15; }
-    .mobile-bottom-nav .disabled { display: none; }
+    .mobile-bottom-nav button.active .app-icon { stroke-width: 2.1; }
 
     @media (max-width: 360px) {
         .container { width: calc(100% - 16px); }
-        .mobile-app-welcome h1 { font-size: 1.34rem; }
-        .mobile-reminder-card { grid-template-columns: 32px minmax(0,1fr) 16px; padding: 10px; }
-        .mobile-reminder-icon { width: 31px; height: 31px; }
-        .mobile-odometer-hero { min-height: 194px; padding-inline: 16px; }
-        .mobile-odometer-hero > strong { font-size: 2.28rem; }
-        .mobile-odometer-hero .mobile-add-mileage { left: 16px; right: 16px; }
-        .mobile-hero-ring { right: 16px; width: 52px; height: 52px; }
-        .mobile-trip-row { margin-inline: 9px; gap: 8px; }
-        .mobile-trip-distance { padding-inline: 5px; }
+        .mobile-app-welcome h1,
+        .mobile-trips-heading h1 { font-size: 1.37rem; }
+        .mobile-odometer-hero { padding: 15px; }
+        .mobile-odometer-hero > strong { font-size: 2.25rem; }
+        .mobile-hero-ring {
+            right: 15px;
+            top: 34px;
+            width: 48px;
+            height: 48px;
+        }
+        .mobile-trip-row,
+        .mobile-trip-record { margin-inline: 8px; gap: 7px; }
+        .mobile-gap-summary { grid-template-columns: 1fr; }
+        .mobile-gap-complete { width: 100%; }
     }
 }
 
