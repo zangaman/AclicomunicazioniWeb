@@ -2112,9 +2112,10 @@ h2 { letter-spacing: -.025em; }
         border-color: #176b7a;
         color: #176b7a;
     }
-    .mobile-bottom-nav button.active::after,
-    .mobile-bottom-nav button.active .nav-home-icon {
+    .mobile-bottom-nav button.active::after {
         background: #176b7a;
+    }
+    .mobile-bottom-nav button.active .nav-home-icon {
         fill: #176b7a;
         stroke: #176b7a;
     }
