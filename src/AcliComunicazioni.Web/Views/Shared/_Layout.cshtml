@@ -22,10 +22,24 @@
                         <span>Connesso come</span>
                         <strong>@(User.FindFirst("display_name")?.Value ?? User.Identity.Name)</strong>
                     </div>
-                    <form asp-controller="Account" asp-action="Logout" method="post">
+                    <form class="desktop-logout" asp-controller="Account" asp-action="Logout" method="post">
                         @Html.AntiForgeryToken()
                         <button type="submit" class="secondary-button">Esci</button>
                     </form>
+
+                    <details class="mobile-account-menu">
+                        <summary aria-label="Apri menu utente">
+                            <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+                        </summary>
+                        <div class="mobile-account-popover">
+                            <span>Utente collegato</span>
+                            <strong>@(User.FindFirst("display_name")?.Value ?? User.Identity.Name)</strong>
+                            <form asp-controller="Account" asp-action="Logout" method="post">
+                                @Html.AntiForgeryToken()
+                                <button type="submit">Esci</button>
+                            </form>
+                        </div>
+                    </details>
                 </div>
             }
         </div>
