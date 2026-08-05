@@ -6,8 +6,6 @@
     var conducenteCorrente = User.FindFirst("display_name")?.Value
         ?? User.Identity?.Name
         ?? "Utente collegato";
-    var nomeBreveRaw = conducenteCorrente.Split(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? "Utente";
-    var nomeBreve = cultura.TextInfo.ToTitleCase(nomeBreveRaw.ToLower(cultura));
     var gapsCount = Model.RecentEntries.Count(entry => entry.GapKilometers > 0);
     var missingKilometers = Model.RecentEntries.Sum(entry => entry.GapKilometers);
     var firstGap = Model.RecentEntries
@@ -168,9 +166,9 @@
     </section>
 </section>
 <section class="mobile-home-intro">
-    <span>Benvenuto</span>
-    <h1>Ciao @nomeBreve</h1>
-    <p>Gestione del furgone</p>
+    <span>Gestione trasferte</span>
+    <h1>Furgone ACLI</h1>
+    <p>Mezzo operativo</p>
 </section>
 
 <section class="mileage-status-card @(gapsCount == 0 ? "status-ok" : "status-warning")" aria-live="polite">
