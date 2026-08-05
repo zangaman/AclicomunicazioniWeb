@@ -442,7 +442,11 @@
                 mobileNavButtons.forEach(button => {
                     const isActive = button.dataset.mobileNav === screenName;
                     button.classList.toggle('active', isActive);
-                    button.toggleAttribute('aria-current', isActive);
+                    if (isActive) {
+                        button.setAttribute('aria-current', 'page');
+                    } else {
+                        button.removeAttribute('aria-current');
+                    }
                 });
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             };
