@@ -65,7 +65,7 @@ h2 { letter-spacing: -.025em; }
 .vehicle-stats dt { margin-bottom: 8px; color: #7a8792; font-size: .75rem; line-height: 1.35; }
 .vehicle-stats dd { margin: 0; font-size: 1rem; font-weight: 820; overflow-wrap: anywhere; }
 
-.mobile-home-intro, .mobile-bottom-nav, .mobile-mileage-app, .mobile-form-close, .mobile-form-backdrop { display: none; }
+.mobile-home-intro, .mobile-bottom-nav, .mobile-mileage-app, .mobile-form-close, .mobile-form-backdrop, .mobile-account-menu { display: none; }
 
 .mobile-add-mileage { display: none; border: 0; border-radius: 9px; padding: 8px 11px; background: var(--accent); color: white; font: inherit; font-size: .76rem; font-weight: 780; cursor: pointer; }
 
@@ -1602,6 +1602,256 @@ h2 { letter-spacing: -.025em; }
         background: #66876d;
     }
     .mobile-bottom-nav button.active .app-icon { stroke-width: 2.1; }
+
+    /* Final fidelity pass based on the approved B mockup. */
+    html {
+        min-height: 100%;
+        background: #f3f1ec;
+    }
+    body {
+        min-height: 100vh;
+        background: #f3f1ec;
+    }
+    .container { width: calc(100% - 28px); }
+    .main-content {
+        min-height: calc(100vh - 51px);
+        padding-top: 18px;
+    }
+
+    .desktop-logout { display: none; }
+    .mobile-account-menu {
+        display: block;
+        position: relative;
+    }
+    .mobile-account-menu summary {
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        border: 0;
+        border-radius: 8px;
+        background: transparent;
+        color: #172b46;
+        cursor: pointer;
+        list-style: none;
+    }
+    .mobile-account-menu summary::-webkit-details-marker { display: none; }
+    .mobile-account-menu summary .app-icon {
+        width: 23px;
+        height: 23px;
+        stroke-width: 1.8;
+    }
+    .mobile-account-menu[open] summary { background: #efeee9; }
+    .mobile-account-popover {
+        position: absolute;
+        right: 0;
+        top: 41px;
+        z-index: 80;
+        display: grid;
+        gap: 3px;
+        width: min(260px, calc(100vw - 28px));
+        padding: 13px;
+        border: 1px solid #dcd9d1;
+        border-radius: 11px;
+        background: #fffefa;
+        box-shadow: 0 14px 34px rgba(26,38,48,.16);
+    }
+    .mobile-account-popover > span {
+        color: #7b8388;
+        font-size: .62rem;
+    }
+    .mobile-account-popover > strong {
+        overflow: hidden;
+        color: #172b46;
+        font-size: .76rem;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .mobile-account-popover form { margin-top: 8px; }
+    .mobile-account-popover button {
+        width: 100%;
+        min-height: 34px;
+        border: 1px solid #d8d6cf;
+        border-radius: 8px;
+        background: #f6f4ef;
+        color: #354459;
+        font: inherit;
+        font-size: .7rem;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .mobile-app-welcome { padding: 6px 1px 12px; }
+    .mobile-app-welcome h1 {
+        font-size: 1.42rem;
+        font-weight: 720;
+        letter-spacing: -.035em;
+    }
+
+    .mobile-odometer-hero {
+        padding: 18px 17px 16px;
+        border-color: #d8d6cf;
+        border-radius: 13px;
+        box-shadow: 0 3px 11px rgba(31,43,52,.035);
+    }
+    .mobile-odometer-hero > strong {
+        margin-top: 10px;
+        font-size: 2.62rem;
+    }
+    .mobile-odometer-hero p {
+        margin-top: 7px;
+        font-size: .65rem;
+    }
+    .mobile-hero-ring {
+        right: 17px;
+        top: 36px;
+        width: 62px;
+        height: 54px;
+        border-radius: 0;
+        background: transparent;
+        color: #52775d;
+        box-shadow: none;
+    }
+    .mobile-hero-ring .app-icon {
+        width: 53px;
+        height: 43px;
+        stroke-width: 1.55;
+    }
+    .mobile-hero-gap {
+        min-height: 40px;
+        margin-top: 15px;
+        padding: 9px 10px;
+        font-size: .74rem;
+    }
+    .mobile-hero-gap > .app-icon:first-child {
+        width: 18px;
+        height: 18px;
+        stroke-width: 1.8;
+    }
+
+    .mobile-home-register {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        position: static;
+        width: 100%;
+        height: 44px;
+        margin: 12px 0 0;
+        padding: 0 14px;
+        border-radius: 9px;
+        background: #66876d;
+        color: white;
+        box-shadow: 0 5px 13px rgba(70,101,77,.17);
+        font-size: .8rem;
+        font-weight: 720;
+    }
+    .mobile-home-register .app-icon {
+        width: 18px;
+        height: 18px;
+        stroke-width: 2;
+    }
+    .mobile-home-register:active {
+        transform: translateY(1px);
+        box-shadow: 0 2px 7px rgba(70,101,77,.15);
+    }
+
+    .mobile-activity-log {
+        margin-top: 18px;
+        overflow: visible;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+    .mobile-activity-log > header {
+        padding: 0 2px 9px;
+        border: 0;
+    }
+    .mobile-activity-log h2 {
+        font-size: .94rem;
+        font-weight: 710;
+    }
+    .mobile-view-all {
+        color: #567660;
+        font-size: .69rem;
+    }
+    .mobile-activity-list {
+        overflow: hidden;
+        border: 1px solid #dedbd4;
+        border-radius: 12px;
+        background: #fffefa;
+        box-shadow: 0 3px 11px rgba(31,43,52,.03);
+    }
+    .mobile-trip-row {
+        grid-template-columns: 29px minmax(0,1fr) auto;
+        gap: 10px;
+        margin: 0 12px;
+        padding: 11px 1px;
+    }
+    .mobile-trip-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 0;
+        background: transparent;
+        color: #24364d;
+    }
+    .mobile-trip-icon .app-icon,
+    .mobile-trip-icon .vehicle-icon {
+        width: 21px;
+        height: 21px;
+        stroke-width: 1.65;
+    }
+    .mobile-trip-copy strong {
+        font-size: .8rem;
+        font-weight: 680;
+    }
+    .mobile-trip-copy small {
+        margin-top: 1px;
+        font-size: .65rem;
+    }
+    .mobile-trip-distance {
+        padding: 0;
+        border-radius: 0;
+        background: transparent;
+        color: #4e7558;
+        font-size: .72rem;
+        font-weight: 760;
+    }
+
+    .mobile-trip-record {
+        grid-template-columns: 29px minmax(0,1fr) auto 14px;
+        gap: 9px;
+        padding-block: 11px;
+    }
+    .mobile-trip-chevron {
+        width: 14px;
+        height: 14px;
+        color: #657078;
+    }
+
+    .mobile-bottom-nav button .app-icon {
+        width: 21px;
+        height: 21px;
+        stroke-width: 1.7;
+    }
+    .mobile-bottom-nav button strong {
+        font-size: .66rem;
+        font-weight: 650;
+    }
+    .mobile-bottom-nav button.active .nav-home-icon {
+        fill: #66876d;
+        stroke: #66876d;
+    }
+    .mobile-bottom-nav button.active .nav-trips-icon {
+        color: #567b60;
+        stroke-width: 2;
+    }
+    .mobile-bottom-nav button.active::after {
+        width: 46px;
+        height: 2px;
+    }
 
     @media (max-width: 360px) {
         .container { width: calc(100% - 16px); }
