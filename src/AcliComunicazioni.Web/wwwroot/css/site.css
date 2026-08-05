@@ -1689,6 +1689,62 @@ h2 { letter-spacing: -.025em; }
         letter-spacing: -.035em;
     }
 
+    .mobile-vehicle-context {
+        display: grid;
+        grid-template-columns: 34px minmax(0,1fr) auto;
+        align-items: center;
+        gap: 9px;
+        margin: -2px 0 11px;
+        padding: 8px 10px;
+        border: 1px solid #dedbd4;
+        border-radius: 10px;
+        background: rgba(255,254,250,.72);
+    }
+    .mobile-vehicle-symbol {
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: #e9efe7;
+        color: #5a7d63;
+    }
+    .mobile-vehicle-symbol .app-icon {
+        width: 19px;
+        height: 19px;
+        stroke-width: 1.7;
+    }
+    .mobile-vehicle-copy {
+        display: grid;
+        min-width: 0;
+        gap: 1px;
+    }
+    .mobile-vehicle-copy strong {
+        color: #20334b;
+        font-size: .75rem;
+        font-weight: 700;
+    }
+    .mobile-vehicle-copy small {
+        color: #7b858b;
+        font-size: .61rem;
+    }
+    .mobile-vehicle-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: #52725b;
+        font-size: .64rem;
+        font-weight: 680;
+        white-space: nowrap;
+    }
+    .mobile-vehicle-status i {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #6d9777;
+        box-shadow: 0 0 0 3px rgba(109,151,119,.12);
+    }
+
     .mobile-odometer-hero {
         padding: 18px 17px 16px;
         border-color: #d8d6cf;
@@ -1785,8 +1841,8 @@ h2 { letter-spacing: -.025em; }
         box-shadow: 0 3px 11px rgba(31,43,52,.03);
     }
     .mobile-trip-row {
-        grid-template-columns: 29px minmax(0,1fr) auto;
-        gap: 10px;
+        grid-template-columns: 29px minmax(0,1fr) auto 14px;
+        gap: 9px;
         margin: 0 12px;
         padding: 11px 1px;
     }
