@@ -54,7 +54,7 @@
                 <strong>@missingKilometers.ToString("N0", cultura) km non registrati</strong>
                 @if (firstGap is not null)
                 {
-                    <small>Tratto @firstGap.PreviousEndKilometers!.Value.ToString("N0", cultura) → @firstGap.StartKilometers.ToString("N0", cultura) · Completa adesso</small>
+                    <small>Tratto @firstGap.PreviousEndKilometers.Value.ToString("N0", cultura) → @firstGap.StartKilometers.ToString("N0", cultura) · Completa adesso</small>
                 }
             </span>
             <svg class="app-icon reminder-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
