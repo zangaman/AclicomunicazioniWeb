@@ -56,24 +56,30 @@ public sealed class DatabaseMileageService : IMileageService
                     Descrizione,
                     DataCreazione,
                     InseritoDa,
+                    InseritoDaUserId,
                     LAG(KmArrivo) OVER (ORDER BY KmPartenza, KmArrivo, DataPercorrenza, Id) AS KmArrivoPrecedente
                 FROM dbo.Percorrenze
                 WHERE IsDeleted = 0
             )
             SELECT
-                Id,
-                KmPartenza,
-                KmArrivo,
-                KmPercorsi,
-                DataPercorrenza,
-                Tragitto,
-                Descrizione,
-                DataCreazione,
-                InseritoDa,
-                KmArrivoPrecedente
-            FROM Ordinato
-            WHERE IdUtente = @UserId
-              AND Id = @Id;
+                p.Id,
+                p.KmPartenza,
+                p.KmArrivo,
+                p.KmPercorsi,
+                p.DataPercorrenza,
+                p.Tragitto,
+                p.Descrizione,
+                p.DataCreazione,
+                COALESCE(
+                    NULLIF(LTRIM(RTRIM(CONCAT(u.Nome, ' ', u.Cognome))), ''),
+                    NULLIF(LTRIM(RTRIM(p.InseritoDa)), ''),
+                    CONCAT('Utente ', COALESCE(CONVERT(NVARCHAR(12), p.InseritoDaUserId), CONVERT(NVARCHAR(12), p.IdUtente)))
+                ) AS InseritoDa,
+                p.KmArrivoPrecedente
+            FROM Ordinato AS p
+            LEFT JOIN dbo.Utenti AS u ON u.ID_utente = p.InseritoDaUserId
+            WHERE p.IdUtente = @UserId
+              AND p.Id = @Id;
             """;
 
         await using var command = new SqlCommand(sql, connection);
@@ -257,6 +263,7 @@ public sealed class DatabaseMileageService : IMileageService
             (
                 SELECT
                     Id,
+                    IdUtente,
                     KmPartenza,
                     KmArrivo,
                     KmPercorsi,
@@ -265,23 +272,29 @@ public sealed class DatabaseMileageService : IMileageService
                     Descrizione,
                     DataCreazione,
                     InseritoDa,
+                    InseritoDaUserId,
                     LAG(KmArrivo) OVER (ORDER BY KmPartenza, KmArrivo, DataPercorrenza, Id) AS KmArrivoPrecedente
                 FROM dbo.Percorrenze
                 WHERE IsDeleted = 0
             )
             SELECT {topClause}
-                Id,
-                KmPartenza,
-                KmArrivo,
-                KmPercorsi,
-                DataPercorrenza,
-                Tragitto,
-                Descrizione,
-                DataCreazione,
-                InseritoDa,
-                KmArrivoPrecedente
-            FROM Ordinato
-            ORDER BY DataPercorrenza DESC, Id DESC;
+                p.Id,
+                p.KmPartenza,
+                p.KmArrivo,
+                p.KmPercorsi,
+                p.DataPercorrenza,
+                p.Tragitto,
+                p.Descrizione,
+                p.DataCreazione,
+                COALESCE(
+                    NULLIF(LTRIM(RTRIM(CONCAT(u.Nome, ' ', u.Cognome))), ''),
+                    NULLIF(LTRIM(RTRIM(p.InseritoDa)), ''),
+                    CONCAT('Utente ', COALESCE(CONVERT(NVARCHAR(12), p.InseritoDaUserId), CONVERT(NVARCHAR(12), p.IdUtente)))
+                ) AS InseritoDa,
+                p.KmArrivoPrecedente
+            FROM Ordinato AS p
+            LEFT JOIN dbo.Utenti AS u ON u.ID_utente = p.InseritoDaUserId
+            ORDER BY p.DataPercorrenza DESC, p.Id DESC;
             """;
 
         await using var command = new SqlCommand(sql, connection);
