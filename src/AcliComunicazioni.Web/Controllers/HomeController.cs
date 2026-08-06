@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Xml.Linq;
 using AcliComunicazioni.Application.Common.Interfaces;
 using AcliComunicazioni.Application.Mileage;
+using AcliComunicazioni.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,7 +22,10 @@ public sealed class HomeController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(CancellationToken cancellationToken)
+    public async Task<IActionResult> Index(
+        int? year,
+        int? month,
+        CancellationToken cancellationToken)
     {
         var userId = _currentUser.UserId;
 
@@ -34,7 +38,7 @@ public sealed class HomeController : Controller
             userId.Value,
             cancellationToken);
 
-        return View(dashboard);
+        return View(CreateHistoryViewModel(dashboard, year, month));
     }
 
     [HttpPost]
@@ -189,6 +193,8 @@ public sealed class HomeController : Controller
     [HttpGet]
     public async Task<IActionResult> ExportMileage(
         string? format,
+        int? year,
+        int? month,
         CancellationToken cancellationToken)
     {
         var userId = _currentUser.UserId;
@@ -198,9 +204,11 @@ public sealed class HomeController : Controller
             return Challenge();
         }
 
-        var entries = await _mileageService.GetAllAsync(
+        var dashboard = await _mileageService.GetDashboardAsync(
             userId.Value,
             cancellationToken);
+        var history = CreateHistoryViewModel(dashboard, year, month);
+        var entries = history.Dashboard.RecentEntries;
 
         var fileDate = DateTime.Today.ToString("yyyyMMdd");
         var normalizedFormat = format?.Trim().ToLowerInvariant() ?? "csv";
@@ -225,6 +233,56 @@ public sealed class HomeController : Controller
                 "text/csv; charset=utf-8",
                 $"percorrenze-{fileDate}.csv")
         };
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> MileageReport(
+        int? year,
+        int? month,
+        CancellationToken cancellationToken)
+    {
+        var userId = _currentUser.UserId;
+
+        if (userId is null)
+        {
+            return Challenge();
+        }
+
+        var dashboard = await _mileageService.GetDashboardAsync(
+            userId.Value,
+            cancellationToken);
+
+        return View(CreateHistoryViewModel(dashboard, year, month));
+    }
+
+    private static MileageHistoryViewModel CreateHistoryViewModel(
+        MileageDashboard dashboard,
+        int? year,
+        int? month)
+    {
+        var availableYears = dashboard.RecentEntries
+            .Select(entry => entry.TripDate.Year)
+            .Distinct()
+            .OrderByDescending(value => value)
+            .ToArray();
+
+        var selectedYear = year.HasValue && availableYears.Contains(year.Value)
+            ? year
+            : null;
+        var selectedMonth = selectedYear.HasValue && month is >= 1 and <= 12
+            ? month
+            : null;
+
+        var entries = dashboard.RecentEntries
+            .Where(entry => !selectedYear.HasValue || entry.TripDate.Year == selectedYear.Value)
+            .Where(entry => !selectedMonth.HasValue || entry.TripDate.Month == selectedMonth.Value)
+            .ToArray();
+
+        return new MileageHistoryViewModel(
+            dashboard with { RecentEntries = entries },
+            selectedYear,
+            selectedMonth,
+            availableYears);
     }
 
     private string CurrentDisplayName(int userId) =>
