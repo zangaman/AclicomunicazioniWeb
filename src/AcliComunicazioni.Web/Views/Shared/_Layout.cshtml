@@ -107,21 +107,24 @@
     </div>
 
     @await RenderSectionAsync("Scripts", required: false)
-    <script>
-        (() => {
-            const homeLink = document.querySelector('[data-sidebar-home]');
-            const tripsLink = document.querySelector('[data-sidebar-trips]');
+    @if (currentAction == "Index")
+    {
+        <script>
+            (() => {
+                const homeLink = document.querySelector('[data-sidebar-home]');
+                const tripsLink = document.querySelector('[data-sidebar-trips]');
 
-            const syncSidebarSection = () => {
-                if (!homeLink || !tripsLink) return;
-                const isTripsSection = window.location.hash === '#latest-trips';
-                homeLink.classList.toggle('active', !isTripsSection && homeLink.getAttribute('href') !== null);
-                tripsLink.classList.toggle('active', isTripsSection);
-            };
+                const syncSidebarSection = () => {
+                    if (!homeLink || !tripsLink) return;
+                    const isTripsSection = window.location.hash === '#latest-trips';
+                    homeLink.classList.toggle('active', !isTripsSection);
+                    tripsLink.classList.toggle('active', isTripsSection);
+                };
 
-            syncSidebarSection();
-            window.addEventListener('hashchange', syncSidebarSection);
-        })();
-    </script>
+                syncSidebarSection();
+                window.addEventListener('hashchange', syncSidebarSection);
+            })();
+        </script>
+    }
 </body>
 </html>
