@@ -2447,3 +2447,43 @@ h2 { letter-spacing: -.025em; }
         color: #ffffff;
     }
 }
+
+
+/* Mobile typography: prioritise reading comfort on real phones. */
+@media (max-width: 680px) {
+    body { font-size: 15px; }
+
+    .topbar-brand strong { font-size: .88rem; }
+    .mobile-operation-heading > div > span { font-size: .77rem; }
+    .mobile-operation-heading h1 { font-size: 1.92rem; }
+    .mobile-operation-heading p { font-size: .88rem; }
+    .mobile-operation-status { font-size: .76rem; }
+
+    .mobile-odometer-hero > span { font-size: .92rem; }
+    .mobile-odometer-hero > strong { font-size: 3.05rem; }
+    .mobile-odometer-hero strong small { font-size: .95rem; }
+    .mobile-odometer-hero p { font-size: .78rem; }
+    .mobile-hero-gap { font-size: .88rem; }
+    .mobile-home-register { font-size: .96rem; }
+
+    .mobile-trips-heading h1 { font-size: 1.78rem; }
+    .mobile-trips-heading p,
+    .mobile-trips-summary { font-size: .86rem; }
+    .mobile-trip-search input { font-size: .9rem; }
+    .mobile-trip-filters button { font-size: .8rem; }
+    .mobile-history-all { font-size: .8rem; }
+
+    .mobile-period-kilometers h2 { font-size: 1.02rem; }
+    .mobile-period-kilometers .period-kilometers-columns h3 { font-size: .77rem; }
+    .mobile-period-kilometers .period-kilometers-row span,
+    .mobile-period-kilometers .period-kilometers-row strong { font-size: .8rem; }
+
+    .mobile-activity-log h2,
+    .mobile-trip-results > h2 { font-size: 1.1rem; }
+    .mobile-view-all { font-size: .8rem; }
+    .mobile-trip-copy strong { font-size: .94rem; }
+    .mobile-trip-copy small { font-size: .78rem; }
+    .mobile-trip-distance { font-size: .85rem; }
+
+    .mobile-bottom-nav button strong { font-size: .75rem; }
+}
