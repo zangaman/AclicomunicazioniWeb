@@ -1,4 +1,4 @@
-@model AcliComunicazioni.Application.Mileage.MileageDashboard
+@model AcliComunicazioni.Web.Models.MileageHistoryViewModel
 
 @{
     ViewData["Title"] = "Percorrenze";
@@ -6,9 +6,9 @@
     var conducenteCorrente = User.FindFirst("display_name")?.Value
         ?? User.Identity?.Name
         ?? "Utente collegato";
-    var gapsCount = Model.RecentEntries.Count(entry => entry.GapKilometers > 0);
-    var missingKilometers = Model.RecentEntries.Sum(entry => entry.GapKilometers);
-    var firstGap = Model.RecentEntries
+    var gapsCount = Model.Dashboard.RecentEntries.Count(entry => entry.GapKilometers > 0);
+    var missingKilometers = Model.Dashboard.RecentEntries.Sum(entry => entry.GapKilometers);
+    var firstGap = Model.Dashboard.RecentEntries
         .Where(entry => entry.GapKilometers > 0 && entry.PreviousEndKilometers.HasValue)
         .OrderByDescending(entry => entry.StartKilometers)
         .FirstOrDefault();
@@ -46,8 +46,8 @@
 
         <article class="mobile-odometer-hero">
             <span>Chilometraggio attuale</span>
-            <strong>@(Model.CurrentKilometers?.ToString("N0", cultura) ?? "—") <small>km</small></strong>
-            <p>Aggiornato al @(Model.LastTripDate?.ToString("dd/MM/yyyy") ?? "—")</p>
+            <strong>@(Model.Dashboard.CurrentKilometers?.ToString("N0", cultura) ?? "—") <small>km</small></strong>
+            <p>Aggiornato al @(Model.Dashboard.LastTripDate?.ToString("dd/MM/yyyy") ?? "—")</p>
             <div class="mobile-hero-ring" aria-hidden="true">
                 <svg class="app-icon" viewBox="0 0 24 24">
                     <path d="M4 17a8 8 0 0 1 16 0M6 12l-1.5-1M9 9l-.7-1.7M12 8V6M15 9l.7-1.7M18 12l1.5-1M12 17l4-4"/>
@@ -78,7 +78,7 @@
             </header>
 
             <div class="mobile-activity-list">
-            @foreach (var entry in Model.RecentEntries
+            @foreach (var entry in Model.Dashboard.RecentEntries
                 .OrderByDescending(entry => entry.EndKilometers)
                 .ThenByDescending(entry => entry.TripDate)
                 .Take(3))
@@ -105,7 +105,7 @@
         </header>
 
         <p class="mobile-trips-summary">
-            <strong>@Model.RecentEntries.Count registrazioni</strong>
+            <strong>@Model.Dashboard.RecentEntries.Count registrazioni</strong>
             @if (gapsCount > 0)
             {
                 <span>· @missingKilometers.ToString("N0", cultura) km da verificare</span>
@@ -115,6 +115,30 @@
                 <span>· Sequenza completa</span>
             }
         </p>
+
+        <form class="history-filter mobile-history-filter" method="get" asp-action="Index" aria-label="Filtra lo storico per periodo">
+            <label>
+                <span>Anno</span>
+                <select name="year">
+                    <option value="">Tutti</option>
+                    @foreach (var availableYear in Model.AvailableYears)
+                    {
+                        <option value="@availableYear" selected="@(Model.SelectedYear == availableYear ? "selected" : null)">@availableYear</option>
+                    }
+                </select>
+            </label>
+            <label>
+                <span>Mese</span>
+                <select name="month" @(Model.SelectedYear.HasValue ? null : "disabled")>
+                    <option value="">Tutti i mesi</option>
+                    @for (var monthNumber = 1; monthNumber <= 12; monthNumber++)
+                    {
+                        <option value="@monthNumber" selected="@(Model.SelectedMonth == monthNumber ? "selected" : null)">@cultura.DateTimeFormat.GetMonthName(monthNumber)</option>
+                    }
+                </select>
+            </label>
+            <button type="submit">Mostra</button>
+        </form>
 
         <label class="mobile-trip-search">
             <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
@@ -145,7 +169,7 @@
         <section class="mobile-trip-results">
             <h2>Percorrenze</h2>
             <div class="mobile-trip-list" id="mobile-trip-list">
-                @foreach (var entry in Model.RecentEntries
+                @foreach (var entry in Model.Dashboard.RecentEntries
                     .OrderByDescending(entry => entry.EndKilometers)
                     .ThenByDescending(entry => entry.TripDate)
                     .ThenByDescending(entry => entry.Id))
@@ -174,7 +198,7 @@
 <section class="mileage-status-card @(gapsCount == 0 ? "status-ok" : "status-warning")" aria-live="polite">
     <div class="mileage-status-main">
         <span class="card-kicker">Stato contachilometri</span>
-        <strong>@(Model.CurrentKilometers?.ToString("N0", cultura) ?? "—") km</strong>
+        <strong>@(Model.Dashboard.CurrentKilometers?.ToString("N0", cultura) ?? "—") km</strong>
         <span>Ultimo valore raggiunto</span>
     </div>
     <div class="mileage-status-detail">
@@ -205,14 +229,14 @@
 
         <div class="summary-main-value">
             <span>Ultimo chilometraggio</span>
-            <strong>@(Model.CurrentKilometers?.ToString("N0", cultura) ?? "—") <small>km</small></strong>
+            <strong>@(Model.Dashboard.CurrentKilometers?.ToString("N0", cultura) ?? "—") <small>km</small></strong>
         </div>
 
         <dl class="vehicle-stats mileage-summary-stats">
-            <div><dt>Ultima percorrenza</dt><dd>@(Model.LastTripDate?.ToString("dd/MM/yyyy") ?? "Nessun dato")</dd></div>
-            <div><dt>Ultimo tragitto</dt><dd>@(Model.RecentEntries.FirstOrDefault()?.Route ?? "—")</dd></div>
-            <div><dt>Ultima distanza</dt><dd>@(Model.RecentEntries.FirstOrDefault()?.DistanceKilometers.ToString("N0", cultura) ?? "—") km</dd></div>
-            <div><dt>Ultimo conducente</dt><dd>@(Model.RecentEntries.FirstOrDefault()?.InsertedBy ?? "—")</dd></div>
+            <div><dt>Ultima percorrenza</dt><dd>@(Model.Dashboard.LastTripDate?.ToString("dd/MM/yyyy") ?? "Nessun dato")</dd></div>
+            <div><dt>Ultimo tragitto</dt><dd>@(Model.Dashboard.RecentEntries.FirstOrDefault()?.Route ?? "—")</dd></div>
+            <div><dt>Ultima distanza</dt><dd>@(Model.Dashboard.RecentEntries.FirstOrDefault()?.DistanceKilometers.ToString("N0", cultura) ?? "—") km</dd></div>
+            <div><dt>Ultimo conducente</dt><dd>@(Model.Dashboard.RecentEntries.FirstOrDefault()?.InsertedBy ?? "—")</dd></div>
         </dl>
     </article>
 
@@ -233,7 +257,7 @@
                 </div>
                 <div class="form-field">
                     <label for="startKilometers">Km iniziali</label>
-                    <input id="startKilometers" name="startKilometers" type="number" min="0" step="1" value="@Model.CurrentKilometers" required />
+                    <input id="startKilometers" name="startKilometers" type="number" min="0" step="1" value="@Model.Dashboard.CurrentKilometers" required />
                     <small class="field-help">L’ultimo valore è proposto automaticamente, ma puoi modificarlo.</small>
                 </div>
             </div>
@@ -242,7 +266,7 @@
 
             <div class="form-field">
                 <label for="endKilometers">Km finali</label>
-                <input id="endKilometers" name="endKilometers" type="number" min="@(Model.CurrentKilometers ?? 0)" step="1" required />
+                <input id="endKilometers" name="endKilometers" type="number" min="@(Model.Dashboard.CurrentKilometers ?? 0)" step="1" required />
             </div>
 
             <div class="distance-preview" id="distance-preview" aria-live="polite"><span>Km percorsi</span><strong>—</strong></div>
@@ -274,7 +298,7 @@
             <span class="card-kicker">Storico condiviso</span>
             <h2>Ultime percorrenze</h2>
             <p>
-                @Model.RecentEntries.Count registrazioni visualizzate
+                @Model.Dashboard.RecentEntries.Count registrazioni visualizzate
                 @if (gapsCount > 0)
                 {
                     <span> · <strong>@gapsCount slot vuoti</strong> · @missingKilometers.ToString("N0", cultura) km da verificare</span>
@@ -282,11 +306,40 @@
             </p>
         </div>
 
-        <div class="export-actions" aria-label="Esporta percorrenze">
-            <a class="secondary-button export-button" asp-action="ExportMileage" asp-route-format="csv">CSV / Excel</a>
-            <a class="secondary-button export-button" asp-action="ExportMileage" asp-route-format="json">JSON</a>
-            <a class="secondary-button export-button" asp-action="ExportMileage" asp-route-format="xml">XML</a>
-            <button class="secondary-button export-button" type="button" onclick="window.print()">Stampa / PDF</button>
+        <div class="history-tools">
+        <form class="history-filter" method="get" asp-action="Index" aria-label="Filtra lo storico per periodo">
+            <label>
+                <span>Anno</span>
+                <select name="year">
+                    <option value="">Tutti gli anni</option>
+                    @foreach (var availableYear in Model.AvailableYears)
+                    {
+                        <option value="@availableYear" selected="@(Model.SelectedYear == availableYear ? "selected" : null)">@availableYear</option>
+                    }
+                </select>
+            </label>
+            <label>
+                <span>Mese</span>
+                <select name="month" @(Model.SelectedYear.HasValue ? null : "disabled")>
+                    <option value="">Tutti i mesi</option>
+                    @for (var monthNumber = 1; monthNumber <= 12; monthNumber++)
+                    {
+                        <option value="@monthNumber" selected="@(Model.SelectedMonth == monthNumber ? "selected" : null)">@cultura.DateTimeFormat.GetMonthName(monthNumber)</option>
+                    }
+                </select>
+            </label>
+            <button type="submit">Applica</button>
+            @if (Model.SelectedYear.HasValue)
+            {
+                <a asp-action="Index">Azzera</a>
+            }
+        </form>
+            <div class="export-actions" aria-label="Esporta percorrenze">
+                <a class="secondary-button export-button" asp-action="ExportMileage" asp-route-format="csv" asp-route-year="@Model.SelectedYear" asp-route-month="@Model.SelectedMonth">CSV / Excel</a>
+                <a class="secondary-button export-button" asp-action="ExportMileage" asp-route-format="json" asp-route-year="@Model.SelectedYear" asp-route-month="@Model.SelectedMonth">JSON</a>
+                <a class="secondary-button export-button" asp-action="ExportMileage" asp-route-format="xml" asp-route-year="@Model.SelectedYear" asp-route-month="@Model.SelectedMonth">XML</a>
+                <a class="secondary-button export-button report-button" asp-action="MileageReport" asp-route-year="@Model.SelectedYear" asp-route-month="@Model.SelectedMonth" target="_blank">Stampa / PDF</a>
+            </div>
         </div>
     </div>
 
@@ -295,7 +348,7 @@
         <div class="alert alert-error" role="alert">Sono presenti @missingKilometers.ToString("N0", cultura) km non registrati in @gapsCount intervalli. Usa “Inserisci tratto” per completare lo storico.</div>
     }
 
-    @if (Model.RecentEntries.Count == 0)
+    @if (Model.Dashboard.RecentEntries.Count == 0)
     {
         <div class="empty-state"><span class="empty-state-icon" aria-hidden="true">↗</span><div><h3>Nessuna percorrenza presente</h3><p>Inserisci la prima percorrenza dal modulo qui sopra.</p></div></div>
     }
@@ -309,7 +362,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var entry in Model.RecentEntries
+                    @foreach (var entry in Model.Dashboard.RecentEntries
                         .OrderByDescending(entry => entry.EndKilometers)
                         .ThenByDescending(entry => entry.TripDate)
                         .ThenByDescending(entry => entry.Id))
@@ -337,11 +390,11 @@
                         {
                             var gapStart = entry.PreviousEndKilometers.Value;
                             var gapEnd = entry.StartKilometers;
-                            var overlappingEntry = Model.RecentEntries.FirstOrDefault(other =>
+                            var overlappingEntry = Model.Dashboard.RecentEntries.FirstOrDefault(other =>
                                 other.Id != entry.Id &&
                                 other.StartKilometers < gapEnd &&
                                 other.EndKilometers > gapStart);
-                            var previousEntry = Model.RecentEntries.FirstOrDefault(other =>
+                            var previousEntry = Model.Dashboard.RecentEntries.FirstOrDefault(other =>
                                 other.Id != entry.Id &&
                                 other.EndKilometers == gapStart);
                             var minimumGapDate = previousEntry?.TripDate.Date ?? entry.TripDate.Date;
@@ -394,7 +447,7 @@
 {
     <script>
         (() => {
-            const currentKilometers = @(Model.CurrentKilometers?.ToString() ?? "null");
+            const currentKilometers = @(Model.Dashboard.CurrentKilometers?.ToString() ?? "null");
             const form = document.getElementById('mileage-form');
             const tripDate = document.getElementById('tripDate');
             const start = document.getElementById('startKilometers');
