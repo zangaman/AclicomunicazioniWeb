@@ -129,7 +129,7 @@
         <form class="report-filter" method="get" asp-action="MileageReport" aria-label="Filtra il report per periodo">
             <label>
                 <span>Anno</span>
-                <select name="year">
+                <select name="year" onchange="this.form.requestSubmit()">
                     @foreach (var availableYear in Model.AvailableYears)
                     {
                         <option value="@availableYear" selected="@(Model.SelectedYear == availableYear ? "selected" : null)">@availableYear</option>
@@ -138,7 +138,7 @@
             </label>
             <label>
                 <span>Mese</span>
-                <select name="month">
+                <select name="month" onchange="this.form.requestSubmit()">
                     <option value="0" selected="@(Model.SelectedMonth is null && !Model.IsAllHistory ? "selected" : null)">Tutti i mesi</option>
                     @for (var monthNumber = 1; monthNumber <= 12; monthNumber++)
                     {
@@ -146,7 +146,7 @@
                     }
                 </select>
             </label>
-            <button type="submit">Mostra</button>
+            <noscript><button type="submit">Mostra</button></noscript>
             @if (!Model.IsAllHistory)
             {
                 <a asp-action="MileageReport" asp-route-showAll="true">Tutto lo storico</a>
