@@ -11,10 +11,9 @@
 SET NOCOUNT ON;
 SET XACT_ABORT ON;
 
-BEGIN TRY
-    BEGIN TRANSACTION;
-
-    IF COL_LENGTH('dbo.Percorrenze', 'InseritoDaUserId') IS NULL
+/* Batch 1: SQL Server deve creare fisicamente le colonne prima
+   di poterle compilare e usare nelle istruzioni successive. */
+IF COL_LENGTH('dbo.Percorrenze', 'InseritoDaUserId') IS NULL
     BEGIN
         ALTER TABLE dbo.Percorrenze
             ADD InseritoDaUserId INT NULL;
@@ -33,6 +32,10 @@ BEGIN TRY
 
     ALTER TABLE dbo.Percorrenze
         ALTER COLUMN DeletedBy NVARCHAR(150) NULL;
+GO
+
+BEGIN TRY
+    BEGIN TRANSACTION;
 
     /* Per le righe storiche l'utente proprietario è la fonte più affidabile. */
     UPDATE dbo.Percorrenze
