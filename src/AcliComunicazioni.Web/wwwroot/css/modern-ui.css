@@ -1,0 +1,740 @@
+/* Final visual layer for AcliComunicazioni.
+   Loaded after legacy styles to keep desktop and mobile predictable. */
+
+.app-icon {
+    display: block;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+}
+
+.desktop-modern-dashboard { display: none; }
+
+@media (min-width: 681px) {
+    :root {
+        --modern-bg: #f5f8fa;
+        --modern-surface: #ffffff;
+        --modern-border: #dfe7ec;
+        --modern-text: #142f50;
+        --modern-muted: #6d7f8e;
+        --modern-teal: #117b8d;
+        --modern-teal-soft: #e8f5f7;
+        --modern-amber: #d88608;
+    }
+
+    html, body { min-width: 980px; }
+    body { background: var(--modern-bg) !important; }
+
+    .app-shell {
+        display: grid !important;
+        grid-template-columns: 250px minmax(0, 1fr) !important;
+        min-height: 100vh;
+    }
+
+    .app-sidebar {
+        position: sticky !important;
+        inset: 0 auto auto 0;
+        display: flex !important;
+        flex-direction: column;
+        width: auto !important;
+        height: 100vh;
+        padding: 28px 18px 22px !important;
+        color: var(--modern-text) !important;
+        background: #fff !important;
+        border-right: 1px solid var(--modern-border) !important;
+        box-shadow: none !important;
+    }
+
+    .app-sidebar-brand {
+        display: flex !important;
+        align-items: center;
+        gap: 12px;
+        padding: 0 10px 34px !important;
+        color: var(--modern-text) !important;
+    }
+
+    .app-sidebar-brand .brand-mark {
+        width: 42px !important;
+        height: 42px !important;
+        border: 0 !important;
+        border-radius: 10px !important;
+        color: #fff !important;
+        background: var(--modern-teal) !important;
+        box-shadow: 0 6px 14px rgba(17,123,141,.16) !important;
+        font-size: .9rem !important;
+    }
+
+    .app-sidebar-brand strong {
+        font-size: 1rem !important;
+        letter-spacing: -.01em;
+    }
+
+    .app-sidebar-brand small {
+        margin-top: 3px;
+        color: var(--modern-muted) !important;
+        font-size: .76rem !important;
+    }
+
+    .app-sidebar-nav {
+        display: grid !important;
+        gap: 10px !important;
+    }
+
+    .app-sidebar-nav a {
+        display: flex !important;
+        align-items: center;
+        gap: 13px !important;
+        min-height: 54px !important;
+        padding: 0 15px !important;
+        border: 0 !important;
+        border-radius: 11px !important;
+        color: #526979 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        font-size: .96rem !important;
+        font-weight: 650 !important;
+    }
+
+    .app-sidebar-nav a:hover {
+        color: var(--modern-teal) !important;
+        background: #f0f7f8 !important;
+        transform: none !important;
+    }
+
+    .app-sidebar-nav a.active {
+        color: #fff !important;
+        background: var(--modern-teal) !important;
+    }
+
+    .app-sidebar-nav .app-icon {
+        width: 23px !important;
+        height: 23px !important;
+        stroke-width: 1.8 !important;
+    }
+
+    .app-sidebar-footer {
+        margin-top: auto !important;
+        padding: 18px 11px 0 !important;
+        border-top: 1px solid var(--modern-border) !important;
+    }
+
+    .app-sidebar-footer span { color: #82929d !important; font-size: .68rem !important; }
+    .app-sidebar-footer strong { color: var(--modern-text) !important; font-size: .84rem !important; }
+
+    .app-workspace {
+        display: grid !important;
+        grid-template-rows: 78px minmax(0, 1fr) !important;
+        min-width: 0;
+    }
+
+    .topbar {
+        position: sticky !important;
+        top: 0;
+        height: 78px !important;
+        padding: 0 !important;
+        background: rgba(255,255,255,.96) !important;
+        border-bottom: 1px solid var(--modern-border) !important;
+        box-shadow: 0 2px 8px rgba(26,52,72,.025) !important;
+        backdrop-filter: blur(12px);
+    }
+
+    .topbar .topbar-content {
+        width: 100% !important;
+        max-width: none !important;
+        height: 100%;
+        padding: 0 34px !important;
+    }
+
+    .topbar-brand { display: none !important; }
+    .user-copy span { font-size: .72rem !important; }
+    .user-copy strong { font-size: .9rem !important; }
+    .desktop-logout .secondary-button {
+        min-height: 40px !important;
+        padding: 0 16px !important;
+        border-radius: 9px !important;
+        font-size: .82rem !important;
+    }
+
+    .main-content {
+        width: auto !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 34px clamp(28px, 3vw, 52px) 60px !important;
+    }
+
+    .desktop-modern-dashboard { display: block !important; }
+
+    .page-heading,
+    .mobile-home-intro,
+    .mileage-status-card,
+    .desktop-period-kilometers,
+    .mileage-dashboard-grid > .summary-card {
+        display: none !important;
+    }
+
+    .modern-dashboard-heading {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        margin: 0 0 26px !important;
+    }
+
+    .modern-dashboard-heading > div > span {
+        color: #70818e !important;
+        font-size: .76rem !important;
+        font-weight: 800 !important;
+        letter-spacing: .09em !important;
+    }
+
+    .modern-title-row { gap: 14px !important; margin-top: 5px !important; }
+    .modern-title-row h1 {
+        color: var(--modern-text) !important;
+        font-size: clamp(2rem, 2.25vw, 2.65rem) !important;
+        line-height: 1.05 !important;
+    }
+
+    .modern-dashboard-heading p {
+        margin-top: 8px !important;
+        color: #7a8a97 !important;
+        font-size: 1rem !important;
+    }
+
+    .modern-status {
+        padding: 7px 11px !important;
+        border-radius: 8px !important;
+        font-size: .78rem !important;
+    }
+
+    .modern-primary-action {
+        min-height: 50px !important;
+        padding: 0 21px !important;
+        border-radius: 11px !important;
+        color: #fff !important;
+        background: var(--modern-teal) !important;
+        box-shadow: 0 8px 18px rgba(17,123,141,.16) !important;
+        font-size: .92rem !important;
+    }
+
+    .modern-primary-action .app-icon { width: 21px !important; height: 21px !important; }
+
+    .modern-kpi-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 22px !important;
+        margin-bottom: 24px !important;
+    }
+
+    .modern-kpi-card {
+        min-height: 132px !important;
+        gap: 19px !important;
+        padding: 23px 25px !important;
+        border: 1px solid var(--modern-border) !important;
+        border-radius: 15px !important;
+        background: #fff !important;
+        box-shadow: 0 7px 20px rgba(28,55,75,.05) !important;
+    }
+
+    .modern-kpi-icon {
+        width: 66px !important;
+        height: 66px !important;
+        color: var(--modern-text) !important;
+        background: var(--modern-teal-soft) !important;
+    }
+
+    .modern-kpi-icon .app-icon { width: 34px !important; height: 34px !important; }
+    .modern-kpi-card small { color: #40576a !important; font-size: .88rem !important; }
+    .modern-kpi-card strong { color: var(--modern-teal) !important; font-size: 2.25rem !important; }
+    .modern-kpi-card em { font-size: .8rem !important; }
+
+    .modern-dashboard-content {
+        grid-template-columns: minmax(500px, 1.15fr) minmax(390px, .85fr) !important;
+        gap: 24px !important;
+    }
+
+    .modern-dashboard-side { gap: 20px !important; }
+
+    .modern-panel {
+        border: 1px solid var(--modern-border) !important;
+        border-radius: 15px !important;
+        background: #fff !important;
+        box-shadow: 0 7px 20px rgba(28,55,75,.05) !important;
+    }
+
+    .modern-panel > header {
+        min-height: 70px !important;
+        padding: 0 25px !important;
+    }
+
+    .modern-panel h2 { font-size: 1.08rem !important; }
+    .modern-panel header .app-icon { width: 23px !important; height: 23px !important; }
+    .modern-panel header a { font-size: .84rem !important; }
+    .modern-panel header > span { padding: 8px 12px !important; font-size: .78rem !important; }
+
+    .modern-trip-list { padding: 0 24px 10px !important; }
+    .modern-trip-list a {
+        grid-template-columns: 142px minmax(0, 1fr) auto !important;
+        min-height: 67px !important;
+        gap: 18px !important;
+    }
+
+    .modern-trip-date {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: #587080;
+    }
+
+    .modern-trip-date .app-icon {
+        width: 20px;
+        height: 20px;
+        color: var(--modern-teal);
+    }
+
+    .modern-trip-list time { font-size: .82rem !important; }
+    .modern-trip-list strong { font-size: .92rem !important; }
+    .modern-trip-list > a > span:last-child { font-size: .9rem !important; }
+
+    .modern-chart-panel { min-height: 330px !important; }
+    .modern-bar-chart {
+        height: 250px !important;
+        gap: clamp(18px, 2.2vw, 36px) !important;
+        padding: 34px 30px 22px !important;
+    }
+    .modern-bar-item { width: 34px !important; }
+    .modern-bar { width: 18px !important; }
+    .modern-bar-item small { font-size: .7rem !important; }
+
+    .modern-gap-card {
+        min-height: 110px !important;
+        padding: 18px 21px !important;
+        border-radius: 15px !important;
+    }
+    .modern-gap-card > .app-icon { width: 39px !important; height: 39px !important; }
+    .modern-gap-card strong { font-size: 1rem !important; }
+    .modern-gap-card span { font-size: .8rem !important; }
+
+    .dashboard-grid.mileage-dashboard-grid {
+        display: block !important;
+        grid-template-columns: none !important;
+        margin-top: 28px !important;
+    }
+
+    .mileage-dashboard-grid > .quick-entry-card {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    .history-card { margin-top: 28px !important; }
+}
+
+@media (max-width: 680px) {
+    :root {
+        --mobile-bg: #f4f7f9;
+        --mobile-surface: #fff;
+        --mobile-border: #dfe7eb;
+        --mobile-navy: #112d50;
+        --mobile-teal: #117b8d;
+        --mobile-teal-soft: #e7f4f6;
+        --mobile-muted: #687c8b;
+    }
+
+    html, body {
+        width: 100%;
+        min-width: 0 !important;
+        overflow-x: hidden !important;
+        background: var(--mobile-bg) !important;
+        font-size: 16px !important;
+    }
+
+    .app-shell,
+    .app-workspace {
+        display: block !important;
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .app-sidebar,
+    .desktop-modern-dashboard,
+    .page-heading,
+    .mobile-home-intro,
+    .mileage-status-card,
+    .desktop-period-kilometers,
+    .mileage-dashboard-grid > .summary-card,
+    .history-card {
+        display: none !important;
+    }
+
+    .topbar {
+        position: sticky !important;
+        top: 0;
+        z-index: 50;
+        width: 100% !important;
+        height: 64px !important;
+        padding: 0 !important;
+        background: rgba(255,255,255,.97) !important;
+        border-bottom: 1px solid var(--mobile-border) !important;
+        box-shadow: 0 2px 9px rgba(20,48,70,.05) !important;
+    }
+
+    .topbar .topbar-content {
+        width: 100% !important;
+        max-width: none !important;
+        height: 64px !important;
+        padding: 0 16px !important;
+    }
+
+    .topbar-brand {
+        display: flex !important;
+        align-items: center;
+        gap: 10px !important;
+        color: var(--mobile-navy) !important;
+    }
+
+    .topbar-brand .brand-mark.small {
+        width: 36px !important;
+        height: 36px !important;
+        border-radius: 9px !important;
+        color: #fff !important;
+        background: var(--mobile-teal) !important;
+        font-size: .82rem !important;
+    }
+
+    .topbar-brand strong { font-size: .9rem !important; }
+    .user-copy, .desktop-logout { display: none !important; }
+    .mobile-account-menu { display: block !important; }
+    .mobile-account-menu summary {
+        display: grid !important;
+        place-items: center;
+        width: 44px !important;
+        height: 44px !important;
+        color: var(--mobile-navy) !important;
+    }
+    .mobile-account-menu summary .app-icon { width: 26px !important; height: 26px !important; }
+
+    .main-content {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 0 92px !important;
+        overflow: visible !important;
+    }
+
+    .alert { margin: 12px 14px !important; }
+
+    .mobile-mileage-app {
+        display: block !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .mobile-screen {
+        width: 100% !important;
+        padding: 22px 14px 18px !important;
+    }
+
+    .mobile-operation-heading {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 11px !important;
+        padding: 0 2px !important;
+        margin: 0 0 18px !important;
+    }
+
+    .mobile-operation-heading > div > span {
+        color: #70818e !important;
+        font-size: .76rem !important;
+        font-weight: 800 !important;
+        letter-spacing: .08em !important;
+    }
+
+    .mobile-operation-heading h1 {
+        margin-top: 5px !important;
+        color: var(--mobile-navy) !important;
+        font-size: 2rem !important;
+        line-height: 1.08 !important;
+        letter-spacing: -.035em !important;
+    }
+
+    .mobile-operation-heading p {
+        margin-top: 4px !important;
+        color: var(--mobile-muted) !important;
+        font-size: .9rem !important;
+    }
+
+    .mobile-operation-status {
+        justify-self: start !important;
+        min-height: 36px !important;
+        padding: 0 11px !important;
+        border-radius: 9px !important;
+        font-size: .82rem !important;
+        font-weight: 750 !important;
+    }
+
+    .mobile-operation-status.status-complete {
+        color: #24744e !important;
+        border: 1px solid #bee3cc !important;
+        background: #eff9f3 !important;
+    }
+
+    .mobile-operation-status.status-incomplete {
+        color: #995b05 !important;
+        border: 1px solid #f0cd92 !important;
+        background: #fff8eb !important;
+    }
+
+    .mobile-odometer-hero {
+        position: relative !important;
+        display: grid !important;
+        grid-template-columns: 82px minmax(0, 1fr) !important;
+        grid-template-areas:
+            "icon label"
+            "icon value"
+            "meta meta"
+            "action action";
+        align-items: center !important;
+        gap: 4px 16px !important;
+        min-height: 244px !important;
+        margin: 0 !important;
+        padding: 22px 20px !important;
+        border: 1px solid var(--mobile-border) !important;
+        border-radius: 16px !important;
+        color: var(--mobile-navy) !important;
+        background: #fff !important;
+        box-shadow: 0 6px 18px rgba(24,52,72,.055) !important;
+        overflow: visible !important;
+    }
+
+    .mobile-odometer-hero > span {
+        grid-area: label;
+        color: #40576a !important;
+        font-size: .95rem !important;
+    }
+
+    .mobile-odometer-hero > strong {
+        grid-area: value;
+        color: var(--mobile-teal) !important;
+        font-size: 2.8rem !important;
+        line-height: 1 !important;
+        letter-spacing: -.05em !important;
+    }
+
+    .mobile-odometer-hero > strong small {
+        color: var(--mobile-teal) !important;
+        font-size: .9rem !important;
+    }
+
+    .mobile-odometer-hero > p {
+        grid-area: meta;
+        margin: 12px 0 0 !important;
+        color: var(--mobile-muted) !important;
+        font-size: .78rem !important;
+    }
+
+    .mobile-hero-ring {
+        position: static !important;
+        grid-area: icon;
+        display: grid !important;
+        place-items: center;
+        width: 78px !important;
+        height: 78px !important;
+        border-radius: 50% !important;
+        color: var(--mobile-navy) !important;
+        background: var(--mobile-teal-soft) !important;
+        opacity: 1 !important;
+    }
+
+    .mobile-hero-ring::before,
+    .mobile-hero-ring::after { display: none !important; }
+
+    .mobile-hero-ring .app-icon { width: 43px !important; height: 43px !important; }
+
+    .mobile-home-register {
+        position: static !important;
+        grid-area: action;
+        width: 100% !important;
+        min-height: 52px !important;
+        margin: 17px 0 0 !important;
+        border: 0 !important;
+        border-radius: 11px !important;
+        color: #fff !important;
+        background: var(--mobile-teal) !important;
+        box-shadow: 0 7px 16px rgba(17,123,141,.15) !important;
+        font-size: .98rem !important;
+        font-weight: 800 !important;
+    }
+
+    .mobile-home-register .app-icon { width: 22px !important; height: 22px !important; }
+
+    .mobile-kpi-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 11px;
+        margin: 13px 0 !important;
+    }
+
+    .mobile-kpi-grid article {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 103px;
+        padding: 14px 12px;
+        border: 1px solid var(--mobile-border);
+        border-radius: 14px;
+        background: #fff;
+        box-shadow: 0 4px 13px rgba(24,52,72,.04);
+    }
+
+    .mobile-kpi-icon {
+        flex: 0 0 auto;
+        display: grid;
+        place-items: center;
+        width: 43px;
+        height: 43px;
+        border-radius: 50%;
+        color: var(--mobile-navy);
+        background: var(--mobile-teal-soft);
+    }
+
+    .mobile-kpi-icon .app-icon { width: 24px; height: 24px; }
+    .mobile-kpi-grid article > span:last-child { display: grid; gap: 4px; min-width: 0; }
+    .mobile-kpi-grid small {
+        overflow: hidden;
+        color: #425a6c;
+        font-size: .73rem;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .mobile-kpi-grid strong {
+        color: var(--mobile-teal);
+        font-size: 1.65rem;
+        line-height: 1;
+    }
+    .mobile-kpi-grid em { font-size: .67rem; font-style: normal; }
+
+    .mobile-activity-log {
+        margin: 0 !important;
+        padding: 0 15px 5px !important;
+        border: 1px solid var(--mobile-border) !important;
+        border-radius: 15px !important;
+        background: #fff !important;
+        box-shadow: 0 5px 16px rgba(24,52,72,.045) !important;
+    }
+
+    .mobile-activity-log > header {
+        min-height: 58px !important;
+        padding: 0 !important;
+        border-bottom: 1px solid #e7edef !important;
+    }
+
+    .mobile-activity-log h2 {
+        color: var(--mobile-navy) !important;
+        font-size: 1rem !important;
+    }
+
+    .mobile-view-all { color: var(--mobile-teal) !important; font-size: .78rem !important; }
+
+    .mobile-activity-list { padding: 0 !important; }
+    .mobile-trip-row {
+        grid-template-columns: 42px minmax(0, 1fr) auto 18px !important;
+        gap: 10px !important;
+        min-height: 68px !important;
+        padding: 7px 0 !important;
+        border-bottom: 1px solid #e9eef0 !important;
+    }
+    .mobile-trip-row:last-child { border-bottom: 0 !important; }
+    .mobile-trip-icon {
+        width: 38px !important;
+        height: 38px !important;
+        color: var(--mobile-teal) !important;
+        background: var(--mobile-teal-soft) !important;
+    }
+    .mobile-trip-icon .app-icon { width: 21px !important; height: 21px !important; }
+    .mobile-trip-copy strong { color: var(--mobile-navy) !important; font-size: .87rem !important; }
+    .mobile-trip-copy small { color: var(--mobile-muted) !important; font-size: .7rem !important; }
+    .mobile-trip-distance { color: var(--mobile-teal) !important; font-size: .82rem !important; }
+    .mobile-trip-chevron { width: 17px !important; height: 17px !important; }
+
+    .mobile-home-gap-card {
+        display: grid;
+        grid-template-columns: 40px minmax(0, 1fr) 18px;
+        align-items: center;
+        gap: 11px;
+        width: 100%;
+        min-height: 82px;
+        margin: 13px 0 0;
+        padding: 13px 14px;
+        border: 1px solid #f0cd92;
+        border-radius: 14px;
+        color: #8e5705;
+        text-align: left;
+        background: #fff8eb;
+    }
+
+    .mobile-home-gap-card > .app-icon:first-child { width: 36px; height: 36px; color: #df8b06; }
+    .mobile-home-gap-card > .app-icon:last-child { width: 17px; height: 17px; }
+    .mobile-home-gap-card span { display: grid; gap: 4px; }
+    .mobile-home-gap-card strong { font-size: .88rem; }
+    .mobile-home-gap-card small { color: #826b45; font-size: .72rem; }
+
+    .mobile-bottom-nav {
+        position: fixed !important;
+        inset: auto 0 0 0 !important;
+        z-index: 60;
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr);
+        width: 100% !important;
+        height: 72px !important;
+        padding: 6px max(18px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left)) !important;
+        border-top: 1px solid var(--mobile-border) !important;
+        background: rgba(255,255,255,.98) !important;
+        box-shadow: 0 -6px 18px rgba(24,52,72,.05) !important;
+    }
+
+    .mobile-bottom-nav button {
+        min-height: 58px !important;
+        color: #6e7f89 !important;
+        background: transparent !important;
+    }
+
+    .mobile-bottom-nav button.active { color: var(--mobile-teal) !important; }
+    .mobile-bottom-nav .app-icon { width: 24px !important; height: 24px !important; }
+    .mobile-bottom-nav button strong { font-size: .76rem !important; }
+
+    .dashboard-grid.mileage-dashboard-grid {
+        display: block !important;
+        margin: 0 !important;
+    }
+
+    .mileage-dashboard-grid > .quick-entry-card {
+        display: none !important;
+    }
+
+    .mileage-dashboard-grid > .quick-entry-card.mobile-form-open {
+        display: block !important;
+        position: fixed !important;
+        inset: auto 0 0 0 !important;
+        z-index: 80 !important;
+        width: 100% !important;
+        max-height: 91vh !important;
+        margin: 0 !important;
+        padding: 20px 16px calc(22px + env(safe-area-inset-bottom)) !important;
+        border-radius: 20px 20px 0 0 !important;
+        overflow-y: auto !important;
+    }
+
+    .mobile-trips-screen .mobile-trips-heading h1 { font-size: 1.8rem !important; }
+    .mobile-trip-results,
+    .mobile-period-kilometers { border-radius: 14px !important; }
+}
+
+@media (max-width: 390px) {
+    .topbar-brand strong { font-size: .82rem !important; }
+    .mobile-operation-heading h1 { font-size: 1.8rem !important; }
+    .mobile-odometer-hero > strong { font-size: 2.45rem !important; }
+    .mobile-kpi-grid article { padding: 12px 9px; }
+    .mobile-kpi-icon { width: 38px; height: 38px; }
+}
