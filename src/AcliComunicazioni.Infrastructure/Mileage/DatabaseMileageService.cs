@@ -55,7 +55,6 @@ public sealed class DatabaseMileageService : IMileageService
                     Tragitto,
                     Descrizione,
                     DataCreazione,
-                    InseritoDa,
                     InseritoDaUserId,
                     LAG(KmArrivo) OVER (ORDER BY KmPartenza, KmArrivo, DataPercorrenza, Id) AS KmArrivoPrecedente
                 FROM dbo.Percorrenze
@@ -72,8 +71,7 @@ public sealed class DatabaseMileageService : IMileageService
                 p.DataCreazione,
                 COALESCE(
                     NULLIF(LTRIM(RTRIM(CONCAT(u.Nome, ' ', u.Cognome))), ''),
-                    NULLIF(LTRIM(RTRIM(p.InseritoDa)), ''),
-                    CONCAT('Utente ', COALESCE(CONVERT(NVARCHAR(12), p.InseritoDaUserId), CONVERT(NVARCHAR(12), p.IdUtente)))
+                    CONCAT('Utente ', CONVERT(NVARCHAR(12), p.InseritoDaUserId))
                 ) AS InseritoDa,
                 p.KmArrivoPrecedente
             FROM Ordinato AS p
@@ -271,7 +269,6 @@ public sealed class DatabaseMileageService : IMileageService
                     Tragitto,
                     Descrizione,
                     DataCreazione,
-                    InseritoDa,
                     InseritoDaUserId,
                     LAG(KmArrivo) OVER (ORDER BY KmPartenza, KmArrivo, DataPercorrenza, Id) AS KmArrivoPrecedente
                 FROM dbo.Percorrenze
@@ -288,8 +285,7 @@ public sealed class DatabaseMileageService : IMileageService
                 p.DataCreazione,
                 COALESCE(
                     NULLIF(LTRIM(RTRIM(CONCAT(u.Nome, ' ', u.Cognome))), ''),
-                    NULLIF(LTRIM(RTRIM(p.InseritoDa)), ''),
-                    CONCAT('Utente ', COALESCE(CONVERT(NVARCHAR(12), p.InseritoDaUserId), CONVERT(NVARCHAR(12), p.IdUtente)))
+                    CONCAT('Utente ', CONVERT(NVARCHAR(12), p.InseritoDaUserId))
                 ) AS InseritoDa,
                 p.KmArrivoPrecedente
             FROM Ordinato AS p
