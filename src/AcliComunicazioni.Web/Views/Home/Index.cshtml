@@ -129,7 +129,7 @@
             </label>
             <label>
                 <span>Mese</span>
-                <select name="month" @(Model.SelectedYear.HasValue ? null : "disabled")>
+                <select name="month">
                     <option value="">Tutti i mesi</option>
                     @for (var monthNumber = 1; monthNumber <= 12; monthNumber++)
                     {
@@ -321,7 +321,7 @@
             </label>
             <label>
                 <span>Mese</span>
-                <select name="month" @(Model.SelectedYear.HasValue ? null : "disabled")>
+                <select name="month">
                     <option value="">Tutti i mesi</option>
                     @for (var monthNumber = 1; monthNumber <= 12; monthNumber++)
                     {
