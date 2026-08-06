@@ -49,7 +49,7 @@
         .route { font-weight: 700; }
         .note { display: block; margin-top: 2px; color: #697987; font-size: 8px; line-height: 1.25; }
         .empty { padding: 32px; border: 1px dashed #cbd7dc; color: #687987; text-align: center; }
-        .actions { width: min(1120px, calc(100% - 40px)); margin: 24px auto 0; display: flex; justify-content: flex-end; gap: 10px; }
+        .actions { width: min(210mm, calc(100% - 32px)); margin: 24px auto 10px; display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
         button { padding: 11px 16px; border: 0; border-radius: 8px; background: #176b7a; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
         button.secondary { background: #fff; color: #17324d; border: 1px solid #ccdadd; }
         .report-footer { margin-top: 22px; padding-top: 12px; border-top: 1px solid #dfe7ea; color: #71808b; font-size: 10px; }
@@ -57,7 +57,13 @@
             .report {
                 width: min(210mm, calc(100% - 32px));
                 min-height: 297mm;
+                margin-top: 0;
             }
+        }
+
+        @@media screen and (max-width: 520px) {
+            .actions { margin-top: 14px; }
+            .actions button { min-height: 42px; padding: 9px 12px; }
         }
 
         @@media print {
