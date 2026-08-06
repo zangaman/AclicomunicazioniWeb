@@ -2487,3 +2487,227 @@ h2 { letter-spacing: -.025em; }
 
     .mobile-bottom-nav button strong { font-size: .75rem; }
 }
+
+
+/* Desktop workspace — reusable corporate shell */
+@media (min-width: 681px) {
+    :root {
+        --workspace-navy: #123448;
+        --workspace-petrol: #176b7a;
+        --workspace-soft: #f3f7f8;
+        --workspace-line: #dce6e9;
+    }
+
+    body { background: var(--workspace-soft); }
+
+    .app-shell {
+        display: grid;
+        grid-template-columns: 252px minmax(0, 1fr);
+        min-height: 100vh;
+    }
+
+    .app-sidebar {
+        position: sticky;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        padding: 28px 16px 20px;
+        color: #e8f2f4;
+        background: linear-gradient(180deg, #123448 0%, #0c2638 100%);
+        box-shadow: 8px 0 28px rgba(9, 37, 53, .08);
+        z-index: 4;
+    }
+
+    .app-sidebar-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 11px;
+        padding: 0 10px 28px;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .app-sidebar-brand .brand-mark {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(255,255,255,.34);
+        border-radius: 11px;
+        background: rgba(255,255,255,.09);
+        font-size: .82rem;
+        letter-spacing: .02em;
+    }
+
+    .app-sidebar-brand strong,
+    .app-sidebar-brand small { display: block; line-height: 1.05; }
+    .app-sidebar-brand strong { font-size: 1rem; }
+    .app-sidebar-brand small { margin-top: 3px; color: #b9d0d6; font-size: .78rem; }
+
+    .app-sidebar-nav { display: grid; gap: 7px; }
+    .app-sidebar-nav a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 47px;
+        padding: 0 13px;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        color: #c4d6db;
+        font-size: .92rem;
+        font-weight: 650;
+        text-decoration: none;
+        transition: background .18s ease, color .18s ease, transform .18s ease;
+    }
+
+    .app-sidebar-nav a:hover {
+        color: #fff;
+        background: rgba(255,255,255,.08);
+        transform: translateX(2px);
+    }
+
+    .app-sidebar-nav a.active {
+        color: #fff;
+        border-color: rgba(95, 210, 212, .27);
+        background: linear-gradient(90deg, rgba(23,107,122,.96), rgba(21,82,100,.82));
+        box-shadow: 0 8px 19px rgba(0,0,0,.12);
+    }
+
+    .app-sidebar-nav .app-icon { width: 19px; height: 19px; stroke-width: 1.9; }
+    .app-sidebar-footer {
+        display: grid;
+        gap: 4px;
+        margin-top: auto;
+        padding: 17px 12px 2px;
+        border-top: 1px solid rgba(255,255,255,.13);
+    }
+    .app-sidebar-footer span { color: #94b0ba; font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; }
+    .app-sidebar-footer strong { color: #fff; font-size: .87rem; }
+
+    .app-workspace { min-width: 0; }
+    .topbar {
+        position: sticky;
+        top: 0;
+        height: 76px;
+        padding: 0;
+        border-bottom: 1px solid var(--workspace-line);
+        background: rgba(255,255,255,.94);
+        backdrop-filter: blur(12px);
+        z-index: 3;
+    }
+
+    .topbar .topbar-content {
+        max-width: none;
+        height: 100%;
+        margin: 0;
+        padding: 0 38px;
+    }
+
+    .topbar-brand { display: none; }
+    .user-area { margin-left: auto; }
+    .user-copy { padding-right: 7px; }
+    .user-copy span { color: #6d7c84; font-size: .72rem; }
+    .user-copy strong { color: #183449; font-size: .88rem; }
+    .secondary-button {
+        min-height: 38px;
+        padding: 0 15px;
+        border-radius: 9px;
+        font-size: .82rem;
+    }
+
+    .main-content {
+        max-width: 1480px;
+        margin: 0 auto;
+        padding: 38px 42px 58px;
+    }
+
+    .page-heading {
+        align-items: flex-end;
+        margin: 0 0 25px;
+        padding: 0;
+    }
+
+    .page-heading h1 {
+        margin-top: 5px;
+        color: #17324d;
+        font-size: clamp(2rem, 2.5vw, 2.7rem);
+        letter-spacing: -.045em;
+    }
+
+    .page-heading p { max-width: 690px; color: #62747d; font-size: .98rem; }
+    .page-heading .eyebrow { color: var(--workspace-petrol); }
+    .primary-button.page-action {
+        min-height: 46px;
+        border-radius: 10px;
+        padding: 0 19px;
+        background: var(--workspace-petrol);
+        box-shadow: 0 10px 20px rgba(23,107,122,.18);
+    }
+
+    .mileage-status-card {
+        display: grid;
+        grid-template-columns: minmax(255px, .8fr) minmax(360px, 1.2fr);
+        min-height: 166px;
+        border: 1px solid #d6e4e6;
+        border-radius: 15px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 9px 26px rgba(18,52,72,.055);
+    }
+
+    .mileage-status-main {
+        display: grid;
+        align-content: center;
+        gap: 6px;
+        padding: 26px 30px;
+        color: #fff;
+        background: linear-gradient(135deg, #123448, #176b7a);
+    }
+
+    .mileage-status-main .card-kicker { color: #b8e5e5; }
+    .mileage-status-main strong { font-size: 2.45rem; letter-spacing: -.05em; }
+    .mileage-status-main > span:last-child { color: #d0e3e6; font-size: .84rem; }
+
+    .mileage-status-detail {
+        align-self: center;
+        padding: 30px 34px;
+        border: 0;
+        background: #fff;
+    }
+    .mileage-status-detail strong { font-size: 1.08rem; color: #17324d; }
+    .mileage-status-detail span { margin-top: 7px; color: #63747c; }
+
+    .desktop-period-kilometers {
+        margin-top: 24px;
+        border: 1px solid #dce6e9;
+        border-radius: 15px;
+        box-shadow: 0 8px 22px rgba(18,52,72,.04);
+    }
+
+    .dashboard-grid.mileage-dashboard-grid {
+        grid-template-columns: minmax(320px, .8fr) minmax(460px, 1.2fr);
+        gap: 24px;
+        margin-top: 25px;
+    }
+
+    .dashboard-card,
+    .quick-entry-card,
+    .history-card {
+        border: 1px solid #dce6e9;
+        border-radius: 15px;
+        box-shadow: 0 8px 22px rgba(18,52,72,.04);
+    }
+
+    .summary-main-value {
+        border-radius: 12px;
+        background: #f0f7f8;
+    }
+
+    .history-card { margin-top: 25px; }
+}
+
+@media (max-width: 680px) {
+    .app-sidebar { display: none; }
+    .app-shell, .app-workspace { display: block; }
+}
