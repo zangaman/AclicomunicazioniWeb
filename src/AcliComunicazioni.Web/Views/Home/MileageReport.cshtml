@@ -1,6 +1,6 @@
 @model AcliComunicazioni.Web.Models.MileageHistoryViewModel
 @{
-    Layout = null;
+    ViewData["Title"] = "Report percorrenze";
     var cultura = new System.Globalization.CultureInfo("it-IT");
     var entries = Model.Dashboard.RecentEntries
         .OrderByDescending(entry => entry.TripDate)
@@ -18,13 +18,7 @@
             ? $"Anno {Model.SelectedYear}"
             : $"{cultura.DateTimeFormat.GetMonthName(Model.SelectedMonth.Value)} {Model.SelectedYear}";
 }
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Report percorrenze — @period</title>
-    <style>
+<style>
         :root { color: #17324d; font-family: Inter, "Segoe UI", Arial, sans-serif; }
         * { box-sizing: border-box; }
         body { margin: 0; background: #eef3f5; font-size: 13px; }
@@ -69,7 +63,10 @@
         @@media print {
             @@page { size: A4 portrait; margin: 10mm; }
             body { background: #fff; }
-            .actions { display: none; }
+            .app-sidebar, .topbar, .actions { display: none !important; }
+            .app-shell, .app-workspace { display: block !important; }
+            .main-content { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important; }
+            .report-page-shell { width: 100%; }
             .report { width: 100%; margin: 0; padding: 0; box-shadow: none; }
             .report-header { padding-bottom: 12px; }
             .report { font-size: 10pt; }
@@ -94,8 +91,7 @@
             tr { break-inside: avoid; }
         }
     </style>
-</head>
-<body>
+<div class="report-page-shell">
     <div class="actions">
         <button type="button" class="secondary" onclick="window.close()">Chiudi</button>
         <button type="button" onclick="window.print()">Salva come PDF / Stampa</button>
@@ -148,5 +144,4 @@
 
         <footer class="report-footer">Report generato da AcliComunicazioni · Periodo: @period</footer>
     </main>
-</body>
-</html>
+</div>
