@@ -289,6 +289,7 @@ public sealed class HomeController : Controller
 
         return new MileageHistoryViewModel(
             dashboard with { RecentEntries = entries },
+            dashboard.RecentEntries,
             selectedYear,
             selectedMonth,
             availableYears,
