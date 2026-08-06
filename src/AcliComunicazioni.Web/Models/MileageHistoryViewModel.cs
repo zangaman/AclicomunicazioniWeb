@@ -4,6 +4,7 @@ namespace AcliComunicazioni.Web.Models;
 
 public sealed record MileageHistoryViewModel(
     MileageDashboard Dashboard,
+    IReadOnlyList<MileageEntry> AllEntries,
     int? SelectedYear,
     int? SelectedMonth,
     IReadOnlyList<int> AvailableYears,
