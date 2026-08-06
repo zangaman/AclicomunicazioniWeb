@@ -5,11 +5,17 @@ using AcliComunicazioni.Infrastructure.Authentication;
 using AcliComunicazioni.Infrastructure.Mileage;
 using AcliComunicazioni.Web.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using PdfSharp.Fonts;
 using System.Data.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
 ValidateEnvironmentConfiguration(builder.Environment, builder.Configuration);
+
+if (OperatingSystem.IsWindows())
+{
+    GlobalFontSettings.UseWindowsFontsUnderWindows = true;
+}
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();

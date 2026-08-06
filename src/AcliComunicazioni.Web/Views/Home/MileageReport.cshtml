@@ -50,7 +50,7 @@
         .note { display: block; margin-top: 2px; color: #697987; font-size: 8px; line-height: 1.25; }
         .empty { padding: 32px; border: 1px dashed #cbd7dc; color: #687987; text-align: center; }
         .actions { width: min(210mm, calc(100% - 32px)); margin: 24px auto 10px; display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
-        button { padding: 11px 16px; border: 0; border-radius: 8px; background: #176b7a; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+        button, .download-pdf { display: inline-flex; align-items: center; justify-content: center; padding: 11px 16px; border: 0; border-radius: 8px; background: #176b7a; color: #fff; font: inherit; font-weight: 700; line-height: normal; text-decoration: none; cursor: pointer; }
         button.secondary { background: #fff; color: #17324d; border: 1px solid #ccdadd; }
         .report-footer { margin-top: 22px; padding-top: 12px; border-top: 1px solid #dfe7ea; color: #71808b; font-size: 10px; }
         @@media screen {
@@ -63,7 +63,20 @@
 
         @@media screen and (max-width: 520px) {
             .actions { margin-top: 14px; }
-            .actions button { min-height: 42px; padding: 9px 12px; }
+            .actions button, .actions .download-pdf { min-height: 42px; padding: 9px 12px; }
+            .report { min-height: 0; padding: 18px 16px; }
+            .report-header { display: block; padding-bottom: 16px; }
+            .report-date { margin-top: 14px; text-align: left; }
+            .summary { grid-template-columns: 1fr; }
+            .report-note { margin-top: 0; line-height: 1.4; }
+            table, tbody, tr, td { display: block; width: 100%; }
+            thead { display: none; }
+            tbody { display: grid; gap: 10px; }
+            tbody tr { padding: 7px 12px; border: 1px solid #dbe5e8; border-radius: 9px; background: #fff !important; }
+            td { display: grid; grid-template-columns: 105px minmax(0, 1fr); gap: 10px; padding: 7px 0; border-bottom: 1px solid #edf1f3; font-size: 11px; text-align: left !important; }
+            td:last-child { border-bottom: 0; }
+            td::before { content: attr(data-label); color: #6a7a88; font-size: 9px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+            .note { font-size: 9px; }
         }
 
         @@media print {
@@ -100,7 +113,11 @@
 <div class="report-page-shell">
     <div class="actions">
         <button type="button" class="secondary" onclick="window.close()">Chiudi</button>
-        <button type="button" onclick="window.print()">Salva come PDF / Stampa</button>
+        <a class="download-pdf"
+           asp-action="DownloadMileagePdf"
+           asp-route-year="@Model.SelectedYear"
+           asp-route-month="@Model.SelectedMonth"
+           asp-route-showAll="@Model.IsAllHistory">Scarica PDF</a>
     </div>
     <main class="report">
         <header class="report-header">
@@ -136,12 +153,12 @@
                 @foreach (var entry in entries)
                 {
                     <tr>
-                        <td>@entry.TripDate.ToString("dd/MM/yyyy")</td>
-                        <td><span class="route">@entry.Route</span>@if (!string.IsNullOrWhiteSpace(entry.Description)) { <span class="note">@entry.Description</span> }</td>
-                        <td class="numeric">@entry.StartKilometers.ToString("N0", cultura)</td>
-                        <td class="numeric">@entry.EndKilometers.ToString("N0", cultura)</td>
-                        <td class="numeric">@entry.DistanceKilometers.ToString("N0", cultura) km</td>
-                        <td>@entry.InsertedBy</td>
+                        <td data-label="Data">@entry.TripDate.ToString("dd/MM/yyyy")</td>
+                        <td data-label="Tragitto"><span class="route">@entry.Route</span>@if (!string.IsNullOrWhiteSpace(entry.Description)) { <span class="note">@entry.Description</span> }</td>
+                        <td data-label="Km iniziali" class="numeric">@entry.StartKilometers.ToString("N0", cultura)</td>
+                        <td data-label="Km finali" class="numeric">@entry.EndKilometers.ToString("N0", cultura)</td>
+                        <td data-label="Percorsi" class="numeric">@entry.DistanceKilometers.ToString("N0", cultura) km</td>
+                        <td data-label="Conducente">@entry.InsertedBy</td>
                     </tr>
                 }
                 </tbody>

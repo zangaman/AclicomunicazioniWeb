@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using AcliComunicazioni.Application.Common.Interfaces;
 using AcliComunicazioni.Application.Mileage;
 using AcliComunicazioni.Web.Models;
+using AcliComunicazioni.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -252,6 +253,36 @@ public sealed class HomeController : Controller
             cancellationToken);
 
         return View(CreateHistoryViewModel(dashboard, year, month, showAll == true));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> DownloadMileagePdf(
+        int? year,
+        int? month,
+        bool? showAll,
+        CancellationToken cancellationToken)
+    {
+        var userId = _currentUser.UserId;
+
+        if (userId is null)
+        {
+            return Challenge();
+        }
+
+        var dashboard = await _mileageService.GetDashboardAsync(
+            userId.Value,
+            cancellationToken);
+        var history = CreateHistoryViewModel(dashboard, year, month, showAll == true);
+        var period = history.IsAllHistory
+            ? "tutto-storico"
+            : history.SelectedMonth.HasValue
+                ? $"{history.SelectedYear!.Value}-{history.SelectedMonth.Value:00}"
+                : history.SelectedYear?.ToString() ?? DateTime.Today.ToString("yyyy-MM");
+
+        return File(
+            MileagePdfGenerator.Create(history),
+            "application/pdf",
+            $"percorrenze-{period}.pdf");
     }
 
     private static MileageHistoryViewModel CreateHistoryViewModel(
