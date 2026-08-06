@@ -2711,3 +2711,76 @@ h2 { letter-spacing: -.025em; }
     .app-sidebar { display: none; }
     .app-shell, .app-workspace { display: block; }
 }
+
+
+/* Lighter desktop direction: quiet navigation, focus on content. */
+@media (min-width: 681px) {
+    body { background: #f6f8f9; }
+
+    .app-shell { grid-template-columns: 224px minmax(0, 1fr); }
+
+    .app-sidebar {
+        color: #314c5d;
+        background: #ffffff;
+        border-right: 1px solid #e1e8eb;
+        box-shadow: none;
+    }
+
+    .app-sidebar-brand { color: #17324d; }
+    .app-sidebar-brand .brand-mark {
+        color: #fff;
+        border: 0;
+        background: #176b7a;
+        box-shadow: 0 5px 12px rgba(23,107,122,.14);
+    }
+    .app-sidebar-brand small { color: #778993; }
+
+    .app-sidebar-nav a { color: #637983; }
+    .app-sidebar-nav a:hover {
+        color: #176b7a;
+        background: #f1f7f7;
+        transform: none;
+    }
+    .app-sidebar-nav a.active {
+        color: #176b7a;
+        border-color: transparent;
+        background: #eaf6f6;
+        box-shadow: inset 3px 0 0 #176b7a;
+    }
+
+    .app-sidebar-footer { border-color: #e5ecee; }
+    .app-sidebar-footer span { color: #81929a; }
+    .app-sidebar-footer strong { color: #274556; }
+
+    .topbar {
+        background: rgba(255,255,255,.88);
+        box-shadow: none;
+    }
+
+    .main-content { padding-top: 34px; }
+    .page-heading { margin-bottom: 22px; }
+    .page-heading h1 { font-size: clamp(1.9rem, 2.3vw, 2.45rem); }
+    .page-heading p { color: #73838b; }
+
+    .mileage-status-card {
+        min-height: 148px;
+        border-color: #e0e8eb;
+        box-shadow: none;
+    }
+    .mileage-status-main {
+        padding: 23px 28px;
+        background: #176b7a;
+    }
+    .mileage-status-detail { padding: 26px 31px; }
+
+    .desktop-period-kilometers,
+    .dashboard-card,
+    .quick-entry-card,
+    .history-card {
+        border-color: #e0e8eb;
+        box-shadow: none;
+    }
+
+    .dashboard-grid.mileage-dashboard-grid { gap: 20px; }
+    .primary-button.page-action { box-shadow: none; }
+}
