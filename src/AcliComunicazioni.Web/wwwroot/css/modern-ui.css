@@ -959,3 +959,319 @@
         stroke-width: 1.7 !important;
     }
 }
+
+
+/* Complete the Modernize visual language below the dashboard */
+@media (min-width: 681px) {
+    .quick-entry-card,
+    .trips-card {
+        border: 1px solid var(--modern-border) !important;
+        border-radius: 15px !important;
+        background: #fff !important;
+        box-shadow: 0 7px 20px rgba(28,55,75,.045) !important;
+        overflow: hidden;
+    }
+
+    .quick-entry-card {
+        padding: 28px 30px 30px !important;
+    }
+
+    .quick-entry-card .card-heading-row {
+        margin-bottom: 24px !important;
+        padding-bottom: 19px;
+        border-bottom: 1px solid #e7edef;
+    }
+
+    .quick-entry-card .card-kicker,
+    .trips-card .card-kicker {
+        color: #71828e !important;
+        font-size: .7rem !important;
+        letter-spacing: .09em !important;
+    }
+
+    .quick-entry-card h2,
+    .trips-card h2 {
+        color: var(--modern-text) !important;
+        font-size: 1.25rem !important;
+        letter-spacing: -.025em;
+    }
+
+    .quick-entry-form {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 19px 22px !important;
+    }
+
+    .quick-entry-form .form-row {
+        display: contents !important;
+    }
+
+    .quick-entry-form .form-field {
+        display: grid;
+        align-content: start;
+        gap: 7px;
+        margin: 0 !important;
+    }
+
+    .quick-entry-form .form-field:nth-of-type(3),
+    .quick-entry-form .form-field:nth-of-type(4),
+    .quick-entry-form .driver-detail,
+    .quick-entry-form > .primary-button,
+    .quick-entry-form .distance-preview,
+    .quick-entry-form .gap-warning {
+        grid-column: 1 / -1;
+    }
+
+    .quick-entry-form label {
+        color: #2c4558 !important;
+        font-size: .8rem !important;
+        font-weight: 750 !important;
+    }
+
+    .quick-entry-form input,
+    .quick-entry-form textarea,
+    .history-filter select {
+        width: 100% !important;
+        border: 1px solid #d6e1e6 !important;
+        border-radius: 10px !important;
+        color: var(--modern-text) !important;
+        background: #fbfcfd !important;
+        box-shadow: none !important;
+        font-size: .9rem !important;
+        outline: none;
+        transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    .quick-entry-form input {
+        min-height: 48px !important;
+        padding: 0 14px !important;
+    }
+
+    .quick-entry-form textarea {
+        min-height: 100px !important;
+        padding: 13px 14px !important;
+        resize: vertical;
+    }
+
+    .quick-entry-form input:focus,
+    .quick-entry-form textarea:focus,
+    .history-filter select:focus {
+        border-color: #55a9b6 !important;
+        background: #fff !important;
+        box-shadow: 0 0 0 3px rgba(17,123,141,.1) !important;
+    }
+
+    .quick-entry-form .field-help {
+        color: #7a8b96 !important;
+        font-size: .72rem !important;
+    }
+
+    .distance-preview {
+        min-height: 58px !important;
+        padding: 0 17px !important;
+        border: 1px solid #d9e7ea !important;
+        border-radius: 10px !important;
+        color: #486171 !important;
+        background: #f2f8f9 !important;
+    }
+
+    .distance-preview strong {
+        color: var(--modern-teal) !important;
+        font-size: 1.05rem !important;
+    }
+
+    .driver-detail {
+        padding: 16px 18px !important;
+        border: 1px solid #e0e7ea !important;
+        border-radius: 11px !important;
+        background: #f8fafb !important;
+    }
+
+    .driver-detail-label {
+        color: #71838e !important;
+        font-size: .67rem !important;
+        letter-spacing: .08em !important;
+    }
+
+    .driver-detail strong {
+        color: var(--modern-text) !important;
+        font-size: .9rem !important;
+    }
+
+    .driver-detail small {
+        color: #788a95 !important;
+        font-size: .72rem !important;
+    }
+
+    .quick-entry-form > .primary-button {
+        justify-self: end;
+        min-width: 210px !important;
+        min-height: 48px !important;
+        margin: 0 !important;
+        border-radius: 10px !important;
+        background: var(--modern-teal) !important;
+        box-shadow: 0 7px 16px rgba(17,123,141,.14) !important;
+        font-size: .86rem !important;
+    }
+
+    .trips-card {
+        padding: 0 !important;
+    }
+
+    .trips-card .table-toolbar {
+        align-items: flex-start !important;
+        gap: 24px !important;
+        padding: 25px 28px 22px !important;
+        border-bottom: 1px solid #e5ecef;
+    }
+
+    .trips-card .table-toolbar p {
+        margin-top: 6px !important;
+        color: #71828e !important;
+        font-size: .77rem !important;
+    }
+
+    .history-tools { gap: 13px !important; }
+
+    .history-filter {
+        display: flex !important;
+        align-items: flex-end !important;
+        flex-wrap: wrap;
+        gap: 9px !important;
+        padding: 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+    }
+
+    .history-filter label {
+        min-width: 120px;
+    }
+
+    .history-filter label > span {
+        margin-bottom: 5px;
+        color: #71828e !important;
+        font-size: .65rem !important;
+        font-weight: 750;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+    }
+
+    .history-filter select {
+        min-height: 40px !important;
+        padding: 0 32px 0 11px !important;
+        font-size: .76rem !important;
+    }
+
+    .history-filter button,
+    .history-filter > a,
+    .export-actions .secondary-button {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        min-height: 40px !important;
+        padding: 0 12px !important;
+        border: 1px solid #d7e2e6 !important;
+        border-radius: 9px !important;
+        color: #365166 !important;
+        background: #fff !important;
+        box-shadow: none !important;
+        font-size: .72rem !important;
+        font-weight: 700 !important;
+        text-decoration: none;
+    }
+
+    .history-filter button {
+        color: #fff !important;
+        border-color: var(--modern-teal) !important;
+        background: var(--modern-teal) !important;
+    }
+
+    .export-actions {
+        display: flex !important;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 7px !important;
+    }
+
+    .export-actions .report-button {
+        color: var(--modern-teal) !important;
+        border-color: #acd2d8 !important;
+        background: #eff8f9 !important;
+    }
+
+    .trips-card > .alert {
+        margin: 18px 26px !important;
+        border-radius: 10px !important;
+        font-size: .8rem !important;
+    }
+
+    .mileage-table-wrapper {
+        margin: 0 !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+    }
+
+    .mileage-table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+
+    .mileage-table thead th {
+        height: 48px !important;
+        padding: 0 15px !important;
+        border-bottom: 1px solid #dfe7ea !important;
+        color: #6c7f8d !important;
+        background: #f8fafb !important;
+        font-size: .67rem !important;
+        font-weight: 800 !important;
+        letter-spacing: .055em !important;
+        text-transform: uppercase;
+    }
+
+    .mileage-table tbody td {
+        min-height: 62px !important;
+        padding: 13px 15px !important;
+        border-bottom: 1px solid #e8edef !important;
+        color: #314b5e !important;
+        background: #fff !important;
+        font-size: .78rem !important;
+    }
+
+    .mileage-table tbody tr:hover td { background: #fbfdfd !important; }
+    .mileage-table .route-name { color: var(--modern-text) !important; font-size: .82rem !important; }
+    .mileage-table .route-description { color: #788a95 !important; font-size: .68rem !important; }
+
+    .distance-badge,
+    .user-badge,
+    .no-gap,
+    .gap-badge {
+        border-radius: 999px !important;
+        font-size: .68rem !important;
+        font-weight: 750 !important;
+    }
+
+    .table-action {
+        min-height: 34px !important;
+        padding: 0 10px !important;
+        border: 1px solid #d6e2e6 !important;
+        border-radius: 8px !important;
+        color: #365166 !important;
+        background: #fff !important;
+        font-size: .7rem !important;
+        font-weight: 700 !important;
+    }
+
+    .missing-mileage-row td {
+        background: #fffaf1 !important;
+    }
+}
+
+@media (max-width: 980px) and (min-width: 681px) {
+    .quick-entry-form { grid-template-columns: 1fr !important; }
+    .quick-entry-form .form-field,
+    .quick-entry-form .driver-detail,
+    .quick-entry-form > .primary-button,
+    .quick-entry-form .distance-preview,
+    .quick-entry-form .gap-warning { grid-column: 1 !important; }
+    .quick-entry-form > .primary-button { width: 100%; }
+}
