@@ -59,13 +59,10 @@ public sealed class HomeController : Controller
             return Challenge();
         }
 
-        var insertedBy = CurrentDisplayName(userId.Value);
-
         try
         {
             await _mileageService.AddAsync(
                 userId.Value,
-                insertedBy,
                 startKilometers,
                 endKilometers,
                 tripDate == default ? DateTime.Today : tripDate,
@@ -178,7 +175,6 @@ public sealed class HomeController : Controller
             await _mileageService.DeleteAsync(
                 userId.Value,
                 id,
-                CurrentDisplayName(userId.Value),
                 cancellationToken);
 
             TempData["MileageSuccess"] = "Percorrenza eliminata correttamente. Lo storico è stato conservato.";
