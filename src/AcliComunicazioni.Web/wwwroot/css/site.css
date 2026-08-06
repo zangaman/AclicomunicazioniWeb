@@ -2440,3 +2440,10 @@ h2 { letter-spacing: -.025em; }
     .mobile-period-kilometers .period-kilometers-row span { font-size: .73rem; }
     .mobile-period-kilometers .period-kilometers-row strong { font-size: .74rem; }
 }
+
+
+@media (max-width: 680px) {
+    .mobile-trip-filters button.active {
+        color: #ffffff;
+    }
+}
