@@ -17,7 +17,6 @@ public interface IMileageService
 
     Task AddAsync(
         int userId,
-        string insertedBy,
         int startKilometers,
         int endKilometers,
         DateTime tripDate,
@@ -38,6 +37,5 @@ public interface IMileageService
     Task DeleteAsync(
         int userId,
         int id,
-        string deletedBy,
         CancellationToken cancellationToken = default);
 }
