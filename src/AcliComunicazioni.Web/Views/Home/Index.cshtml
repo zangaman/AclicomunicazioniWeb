@@ -156,10 +156,11 @@
 
         @if (gapsCount > 0 && firstGap is not null)
         {
+            var firstGapStart = firstGap.PreviousEndKilometers.GetValueOrDefault();
             <article class="mobile-gap-summary" id="mobile-gap-summary">
                 <div>
                     <span>Tratto da completare</span>
-                    <strong>@firstGap.PreviousEndKilometers.Value.ToString("N0", cultura) → @firstGap.StartKilometers.ToString("N0", cultura)</strong>
+                    <strong>@firstGapStart.ToString("N0", cultura) → @firstGap.StartKilometers.ToString("N0", cultura)</strong>
                     <small>@firstGap.GapKilometers.ToString("N0", cultura) km mancanti</small>
                 </div>
                 <button type="button" class="mobile-gap-complete">Completa</button>
