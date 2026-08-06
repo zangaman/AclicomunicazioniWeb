@@ -303,7 +303,7 @@ public sealed class HomeController : Controller
             : year is >= 2000 and <= 2100
                 ? year
                 : DateTime.Today.Year;
-        var selectedMonth = showAll
+        var selectedMonth = showAll || month == 0
             ? null
             : month is >= 1 and <= 12
                 ? month

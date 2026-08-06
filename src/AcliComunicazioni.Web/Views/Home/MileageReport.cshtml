@@ -17,12 +17,14 @@
         : Model.SelectedMonth is null
             ? $"Anno {Model.SelectedYear}"
             : $"{cultura.DateTimeFormat.GetMonthName(Model.SelectedMonth.Value)} {Model.SelectedYear}";
+    var reportMonth = Model.IsAllHistory ? null : Model.SelectedMonth ?? 0;
 }
 <style>
         :root { color: #17324d; font-family: Inter, "Segoe UI", Arial, sans-serif; }
         * { box-sizing: border-box; }
         body { margin: 0; background: #eef3f5; font-size: 13px; }
-        .report { width: min(850px, calc(100% - 32px)); margin: 24px auto; padding: 30px; background: #fff; box-shadow: 0 14px 42px rgba(18, 45, 61, .12); }
+        .report-page-shell { width: 100%; }
+        .report { width: 100%; margin: 0; padding: 30px; border: 1px solid #dce6ea; border-radius: 14px; background: #fff; box-shadow: 0 8px 28px rgba(18, 45, 61, .07); }
         .report-header { display: flex; justify-content: space-between; gap: 28px; padding-bottom: 25px; border-bottom: 2px solid #176b7a; }
         .brand { display: flex; align-items: center; gap: 12px; font-weight: 760; }
         .brand-mark { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; background: #176b7a; color: #fff; }
@@ -42,27 +44,39 @@
         .metric.warning { border-color: #f0d39d; background: #fff9ef; }
         .metric.warning strong { color: #9a5b00; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        th { padding: 8px 6px; background: #17324d; color: #fff; font-size: 8px; letter-spacing: .04em; text-align: left; text-transform: uppercase; }
-        td { padding: 7px 6px; border-bottom: 1px solid #e1e8eb; font-size: 9px; vertical-align: top; overflow-wrap: anywhere; }
+        th { padding: 11px 9px; background: #17324d; color: #fff; font-size: 10px; letter-spacing: .04em; text-align: left; text-transform: uppercase; }
+        td { padding: 11px 9px; border-bottom: 1px solid #e1e8eb; font-size: 11px; vertical-align: top; overflow-wrap: anywhere; }
         tbody tr:nth-child(even) { background: #f8fafb; }
         .numeric { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
         .route { font-weight: 700; }
-        .note { display: block; margin-top: 2px; color: #697987; font-size: 8px; line-height: 1.25; }
+        .note { display: block; margin-top: 3px; color: #697987; font-size: 9px; line-height: 1.3; }
         .empty { padding: 32px; border: 1px dashed #cbd7dc; color: #687987; text-align: center; }
-        .actions { width: min(210mm, calc(100% - 32px)); margin: 24px auto 10px; display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+        .report-controls { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; margin: 0 0 18px; padding: 18px 20px; border: 1px solid #dce6ea; border-radius: 13px; background: #fff; box-shadow: 0 5px 18px rgba(18, 45, 61, .05); }
+        .report-filter { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 10px; }
+        .report-filter label { display: grid; gap: 6px; color: #6a7a88; font-size: 10px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+        .report-filter select { min-width: 150px; height: 42px; padding: 0 34px 0 12px; border: 1px solid #ccdadd; border-radius: 8px; color: #17324d; background: #fff; font: inherit; font-size: 13px; text-transform: none; }
+        .report-filter a { display: inline-flex; align-items: center; min-height: 42px; padding: 0 4px; color: #176b7a; font-weight: 750; text-decoration: none; }
+        .actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 10px; }
         button, .download-pdf { display: inline-flex; align-items: center; justify-content: center; padding: 11px 16px; border: 0; border-radius: 8px; background: #176b7a; color: #fff; font: inherit; font-weight: 700; line-height: normal; text-decoration: none; cursor: pointer; }
         button.secondary { background: #fff; color: #17324d; border: 1px solid #ccdadd; }
         .report-footer { margin-top: 22px; padding-top: 12px; border-top: 1px solid #dfe7ea; color: #71808b; font-size: 10px; }
         @@media screen {
             .report {
-                width: min(210mm, calc(100% - 32px));
-                min-height: 297mm;
-                margin-top: 0;
+                width: 100%;
+                min-height: 0;
             }
         }
 
+        @@media screen and (max-width: 760px) {
+            .report-controls { display: grid; align-items: stretch; padding: 14px; }
+            .report-filter { display: grid; grid-template-columns: 1fr 1fr; }
+            .report-filter label, .report-filter select { width: 100%; min-width: 0; }
+            .report-filter button { align-self: end; }
+            .actions { justify-content: stretch; }
+            .actions button, .actions .download-pdf { flex: 1; }
+        }
+
         @@media screen and (max-width: 520px) {
-            .actions { margin-top: 14px; }
             .actions button, .actions .download-pdf { min-height: 42px; padding: 9px 12px; }
             .report { min-height: 0; padding: 18px 16px; }
             .report-header { display: block; padding-bottom: 16px; }
@@ -82,7 +96,7 @@
         @@media print {
             @@page { size: A4 portrait; margin: 10mm; }
             body { background: #fff; }
-            .app-sidebar, .topbar, .actions { display: none !important; }
+            .app-sidebar, .topbar, .report-controls { display: none !important; }
             .app-shell, .app-workspace { display: block !important; }
             .main-content { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important; }
             .report-page-shell { width: 100%; }
@@ -111,13 +125,45 @@
         }
     </style>
 <div class="report-page-shell">
-    <div class="actions">
-        <button type="button" class="secondary" onclick="window.close()">Chiudi</button>
-        <a class="download-pdf"
-           asp-action="DownloadMileagePdf"
-           asp-route-year="@Model.SelectedYear"
-           asp-route-month="@Model.SelectedMonth"
-           asp-route-showAll="@Model.IsAllHistory">Scarica PDF</a>
+    <div class="report-controls">
+        <form class="report-filter" method="get" asp-action="MileageReport" aria-label="Filtra il report per periodo">
+            <label>
+                <span>Anno</span>
+                <select name="year">
+                    @foreach (var availableYear in Model.AvailableYears)
+                    {
+                        <option value="@availableYear" selected="@(Model.SelectedYear == availableYear ? "selected" : null)">@availableYear</option>
+                    }
+                </select>
+            </label>
+            <label>
+                <span>Mese</span>
+                <select name="month">
+                    <option value="0" selected="@(Model.SelectedMonth is null && !Model.IsAllHistory ? "selected" : null)">Tutti i mesi</option>
+                    @for (var monthNumber = 1; monthNumber <= 12; monthNumber++)
+                    {
+                        <option value="@monthNumber" selected="@(Model.SelectedMonth == monthNumber ? "selected" : null)">@cultura.DateTimeFormat.GetMonthName(monthNumber)</option>
+                    }
+                </select>
+            </label>
+            <button type="submit">Mostra</button>
+            @if (!Model.IsAllHistory)
+            {
+                <a asp-action="MileageReport" asp-route-showAll="true">Tutto lo storico</a>
+            }
+            else
+            {
+                <a asp-action="MileageReport">Mese corrente</a>
+            }
+        </form>
+        <div class="actions">
+            <button type="button" class="secondary" onclick="window.close()">Chiudi</button>
+            <a class="download-pdf"
+               asp-action="DownloadMileagePdf"
+               asp-route-year="@Model.SelectedYear"
+               asp-route-month="@reportMonth"
+               asp-route-showAll="@Model.IsAllHistory">Scarica PDF</a>
+        </div>
     </div>
     <main class="report">
         <header class="report-header">
