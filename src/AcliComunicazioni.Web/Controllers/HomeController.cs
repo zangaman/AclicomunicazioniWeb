@@ -25,6 +25,7 @@ public sealed class HomeController : Controller
     public async Task<IActionResult> Index(
         int? year,
         int? month,
+        bool? showAll,
         CancellationToken cancellationToken)
     {
         var userId = _currentUser.UserId;
@@ -38,7 +39,7 @@ public sealed class HomeController : Controller
             userId.Value,
             cancellationToken);
 
-        return View(CreateHistoryViewModel(dashboard, year, month));
+        return View(CreateHistoryViewModel(dashboard, year, month, showAll == true));
     }
 
     [HttpPost]
@@ -207,7 +208,7 @@ public sealed class HomeController : Controller
         var dashboard = await _mileageService.GetDashboardAsync(
             userId.Value,
             cancellationToken);
-        var history = CreateHistoryViewModel(dashboard, year, month);
+        var history = CreateHistoryViewModel(dashboard, year, month, showAll == true);
         var entries = history.Dashboard.RecentEntries;
 
         var fileDate = DateTime.Today.ToString("yyyyMMdd");
@@ -252,26 +253,32 @@ public sealed class HomeController : Controller
             userId.Value,
             cancellationToken);
 
-        return View(CreateHistoryViewModel(dashboard, year, month));
+        return View(CreateHistoryViewModel(dashboard, year, month, showAll == true));
     }
 
     private static MileageHistoryViewModel CreateHistoryViewModel(
         MileageDashboard dashboard,
         int? year,
-        int? month)
+        int? month,
+        bool showAll)
     {
         var availableYears = dashboard.RecentEntries
             .Select(entry => entry.TripDate.Year)
+            .Append(DateTime.Today.Year)
             .Distinct()
             .OrderByDescending(value => value)
             .ToArray();
 
-        var selectedYear = year.HasValue && availableYears.Contains(year.Value)
-            ? year
-            : null;
-        var selectedMonth = month is >= 1 and <= 12
-            ? month
-            : null;
+        var selectedYear = showAll
+            ? null
+            : year is >= 2000 and <= 2100
+                ? year
+                : DateTime.Today.Year;
+        var selectedMonth = showAll
+            ? null
+            : month is >= 1 and <= 12
+                ? month
+                : DateTime.Today.Month;
 
         var entries = dashboard.RecentEntries
             .Where(entry => !selectedYear.HasValue || entry.TripDate.Year == selectedYear.Value)
@@ -282,7 +289,8 @@ public sealed class HomeController : Controller
             dashboard with { RecentEntries = entries },
             selectedYear,
             selectedMonth,
-            availableYears);
+            availableYears,
+            showAll);
     }
 
     private string CurrentDisplayName(int userId) =>
