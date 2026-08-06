@@ -196,6 +196,7 @@ public sealed class HomeController : Controller
         string? format,
         int? year,
         int? month,
+        bool? showAll,
         CancellationToken cancellationToken)
     {
         var userId = _currentUser.UserId;
@@ -240,6 +241,7 @@ public sealed class HomeController : Controller
     public async Task<IActionResult> MileageReport(
         int? year,
         int? month,
+        bool? showAll,
         CancellationToken cancellationToken)
     {
         var userId = _currentUser.UserId;
