@@ -59,6 +59,13 @@
         button { padding: 11px 16px; border: 0; border-radius: 8px; background: #176b7a; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
         button.secondary { background: #fff; color: #17324d; border: 1px solid #ccdadd; }
         .report-footer { margin-top: 22px; padding-top: 12px; border-top: 1px solid #dfe7ea; color: #71808b; font-size: 10px; }
+        @@media screen {
+            .report {
+                width: min(210mm, calc(100% - 32px));
+                min-height: 297mm;
+            }
+        }
+
         @@media print {
             @@page { size: A4 portrait; margin: 10mm; }
             body { background: #fff; }
