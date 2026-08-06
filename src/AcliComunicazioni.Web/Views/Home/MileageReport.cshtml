@@ -27,44 +27,52 @@
     <style>
         :root { color: #17324d; font-family: Inter, "Segoe UI", Arial, sans-serif; }
         * { box-sizing: border-box; }
-        body { margin: 0; background: #eef3f5; }
-        .report { width: min(1120px, calc(100% - 40px)); margin: 32px auto; padding: 42px; background: #fff; box-shadow: 0 14px 42px rgba(18, 45, 61, .12); }
+        body { margin: 0; background: #eef3f5; font-size: 13px; }
+        .report { width: min(850px, calc(100% - 32px)); margin: 24px auto; padding: 30px; background: #fff; box-shadow: 0 14px 42px rgba(18, 45, 61, .12); }
         .report-header { display: flex; justify-content: space-between; gap: 28px; padding-bottom: 25px; border-bottom: 2px solid #176b7a; }
         .brand { display: flex; align-items: center; gap: 12px; font-weight: 760; }
         .brand-mark { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; background: #176b7a; color: #fff; }
         .eyebrow { color: #176b7a; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
-        h1 { margin: 7px 0 4px; font-size: 30px; letter-spacing: -.035em; }
-        .period { margin: 0; color: #617080; font-size: 15px; }
-        .report-date { text-align: right; color: #667887; font-size: 13px; }
-        .report-date strong { display: block; margin-bottom: 4px; color: #17324d; font-size: 15px; }
-        .summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 25px 0; }
-        .metric { padding: 17px 18px; border: 1px solid #dbe5e8; border-radius: 10px; background: #f7fafb; }
-        .metric span { display: block; color: #6a7a88; font-size: 12px; }
-        .metric strong { display: block; margin-top: 7px; color: #17324d; font-size: 22px; letter-spacing: -.025em; }
-        .metric small { display: block; margin-top: 5px; color: #748492; font-size: 11px; }
+        h1 { margin: 5px 0 3px; font-size: 24px; letter-spacing: -.035em; }
+        .period { margin: 0; color: #617080; font-size: 12px; }
+        .report-date { text-align: right; color: #667887; font-size: 11px; }
+        .report-date strong { display: block; margin-bottom: 3px; color: #17324d; font-size: 12px; }
+        .summary { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 16px 0; }
+        .metric { padding: 10px 12px; border: 1px solid #dbe5e8; border-radius: 8px; background: #f7fafb; }
+        .metric span { display: block; color: #6a7a88; font-size: 10px; }
+        .metric strong { display: block; margin-top: 4px; color: #17324d; font-size: 16px; letter-spacing: -.025em; }
+        .metric small { display: block; margin-top: 3px; color: #748492; font-size: 9px; }
         .report-note { display: flex; align-items: center; gap: 8px; margin: -8px 0 20px; padding: 10px 13px; border: 1px solid #cce0e4; border-radius: 9px; background: #f2fafb; color: #245866; font-size: 12px; }
         .report-note.warning { border-color: #f0d39d; background: #fff9ef; color: #8d5700; }
         .report-note i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
         .metric.warning { border-color: #f0d39d; background: #fff9ef; }
         .metric.warning strong { color: #9a5b00; }
-        table { width: 100%; border-collapse: collapse; }
-        th { padding: 11px 10px; background: #17324d; color: #fff; font-size: 11px; letter-spacing: .05em; text-align: left; text-transform: uppercase; }
-        td { padding: 12px 10px; border-bottom: 1px solid #e1e8eb; font-size: 13px; vertical-align: top; }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        th { padding: 8px 6px; background: #17324d; color: #fff; font-size: 8px; letter-spacing: .04em; text-align: left; text-transform: uppercase; }
+        td { padding: 7px 6px; border-bottom: 1px solid #e1e8eb; font-size: 9px; vertical-align: top; overflow-wrap: anywhere; }
         tbody tr:nth-child(even) { background: #f8fafb; }
         .numeric { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
         .route { font-weight: 700; }
-        .note { display: block; margin-top: 4px; color: #697987; font-size: 11px; line-height: 1.35; }
+        .note { display: block; margin-top: 2px; color: #697987; font-size: 8px; line-height: 1.25; }
         .empty { padding: 32px; border: 1px dashed #cbd7dc; color: #687987; text-align: center; }
         .actions { width: min(1120px, calc(100% - 40px)); margin: 24px auto 0; display: flex; justify-content: flex-end; gap: 10px; }
         button { padding: 11px 16px; border: 0; border-radius: 8px; background: #176b7a; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
         button.secondary { background: #fff; color: #17324d; border: 1px solid #ccdadd; }
         .report-footer { margin-top: 22px; padding-top: 12px; border-top: 1px solid #dfe7ea; color: #71808b; font-size: 10px; }
         @@media print {
-            @@page { size: A4 landscape; margin: 12mm; }
+            @@page { size: A4 portrait; margin: 10mm; }
             body { background: #fff; }
             .actions { display: none; }
             .report { width: 100%; margin: 0; padding: 0; box-shadow: none; }
-            .report-header { padding-bottom: 14px; }
+            .report-header { padding-bottom: 10px; }
+            .report { font-size: 9px; }
+            th { font-size: 7px; }
+            td { padding: 5px 4px; font-size: 8px; }
+            th:nth-child(1) { width: 11%; }
+            th:nth-child(2) { width: 31%; }
+            th:nth-child(3), th:nth-child(4) { width: 14%; }
+            th:nth-child(5) { width: 12%; }
+            th:nth-child(6) { width: 18%; }
             .summary { margin: 16px 0; }
             .report-note { margin: -6px 0 14px; }
             .metric { padding: 11px 13px; }
