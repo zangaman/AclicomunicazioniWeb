@@ -2251,3 +2251,86 @@ h2 { letter-spacing: -.025em; }
     .mobile-trip-copy small { font-size: .73rem; }
     .mobile-trip-distance { font-size: .81rem; }
 }
+
+
+/* History period controls. */
+.history-tools {
+    display: grid;
+    justify-items: end;
+    gap: 10px;
+}
+.history-filter {
+    display: flex;
+    align-items: end;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 9px;
+}
+.history-filter label {
+    display: grid;
+    gap: 4px;
+    color: #6a7883;
+    font-size: .68rem;
+    font-weight: 760;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+.history-filter select {
+    min-height: 36px;
+    min-width: 136px;
+    padding: 0 29px 0 10px;
+    border: 1px solid #d5e0e6;
+    border-radius: 9px;
+    background: #fff;
+    color: #263a49;
+    font: inherit;
+    font-size: .82rem;
+    font-weight: 650;
+    text-transform: none;
+}
+.history-filter select:disabled { opacity: .52; }
+.history-filter button,
+.history-filter a {
+    min-height: 36px;
+    padding: 0 12px;
+    border: 1px solid #d5e0e6;
+    border-radius: 9px;
+    background: #176b7a;
+    color: #fff;
+    font: inherit;
+    font-size: .8rem;
+    font-weight: 750;
+    text-decoration: none;
+    cursor: pointer;
+}
+.history-filter a {
+    display: inline-flex;
+    align-items: center;
+    background: #f3f7f8;
+    color: #314654;
+}
+.report-button { background: #17324d; color: #fff; }
+
+@media (max-width: 680px) {
+    .mobile-history-filter {
+        display: grid;
+        grid-template-columns: 1fr 1.28fr auto;
+        align-items: end;
+        gap: 8px;
+        margin: 12px 0;
+    }
+    .mobile-history-filter label { min-width: 0; }
+    .mobile-history-filter label span { font-size: .64rem; }
+    .mobile-history-filter select {
+        width: 100%;
+        min-width: 0;
+        min-height: 40px;
+        padding-left: 9px;
+        font-size: .78rem;
+    }
+    .mobile-history-filter button {
+        min-height: 40px;
+        padding-inline: 10px;
+        font-size: .76rem;
+    }
+}
