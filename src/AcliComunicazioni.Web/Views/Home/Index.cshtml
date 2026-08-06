@@ -330,16 +330,20 @@
                 </select>
             </label>
             <button type="submit">Applica</button>
-            @if (Model.SelectedYear.HasValue)
+            @if (!Model.IsAllHistory)
             {
-                <a asp-action="Index">Azzera</a>
+                <a asp-action="Index" asp-route-showAll="true">Tutto lo storico</a>
+            }
+            else
+            {
+                <a asp-action="Index">Mese corrente</a>
             }
         </form>
             <div class="export-actions" aria-label="Esporta percorrenze">
-                <a class="secondary-button export-button" asp-action="ExportMileage" asp-route-format="csv" asp-route-year="@Model.SelectedYear" asp-route-month="@Model.SelectedMonth">CSV / Excel</a>
-                <a class="secondary-button export-button" asp-action="ExportMileage" asp-route-format="json" asp-route-year="@Model.SelectedYear" asp-route-month="@Model.SelectedMonth">JSON</a>
-                <a class="secondary-button export-button" asp-action="ExportMileage" asp-route-format="xml" asp-route-year="@Model.SelectedYear" asp-route-month="@Model.SelectedMonth">XML</a>
-                <a class="secondary-button export-button report-button" asp-action="MileageReport" asp-route-year="@Model.SelectedYear" asp-route-month="@Model.SelectedMonth" target="_blank">Stampa / PDF</a>
+                <a class="secondary-button export-button" asp-action="ExportMileage" asp-route-format="csv" asp-route-year="@Model.SelectedYear" asp-route-month="@Model.SelectedMonth" asp-route-showAll="@Model.IsAllHistory">CSV / Excel</a>
+                <a class="secondary-button export-button" asp-action="ExportMileage" asp-route-format="json" asp-route-year="@Model.SelectedYear" asp-route-month="@Model.SelectedMonth" asp-route-showAll="@Model.IsAllHistory">JSON</a>
+                <a class="secondary-button export-button" asp-action="ExportMileage" asp-route-format="xml" asp-route-year="@Model.SelectedYear" asp-route-month="@Model.SelectedMonth" asp-route-showAll="@Model.IsAllHistory">XML</a>
+                <a class="secondary-button export-button report-button" asp-action="MileageReport" asp-route-year="@Model.SelectedYear" asp-route-month="@Model.SelectedMonth" asp-route-showAll="@Model.IsAllHistory" target="_blank">Stampa / PDF</a>
             </div>
         </div>
     </div>
