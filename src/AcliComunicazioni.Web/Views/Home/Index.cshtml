@@ -12,6 +12,19 @@
         .Where(entry => entry.GapKilometers > 0 && entry.PreviousEndKilometers.HasValue)
         .OrderByDescending(entry => entry.StartKilometers)
         .FirstOrDefault();
+    var summaryYear = Model.SelectedYear ?? DateTime.Today.Year;
+    var monthlyTotals = Model.AllEntries
+        .Where(entry => entry.TripDate.Year == summaryYear)
+        .GroupBy(entry => entry.TripDate.Month)
+        .OrderBy(group => group.Key)
+        .Select(group => new { Month = group.Key, Kilometers = group.Sum(entry => entry.DistanceKilometers), Trips = group.Count() })
+        .ToArray();
+    var annualTotals = Model.AllEntries
+        .GroupBy(entry => entry.TripDate.Year)
+        .OrderByDescending(group => group.Key)
+        .Select(group => new { Year = group.Key, Kilometers = group.Sum(entry => entry.DistanceKilometers), Trips = group.Count() })
+        .Take(6)
+        .ToArray();
 }
 
 <section class="page-heading">
@@ -115,6 +128,33 @@
                 <span>· Sequenza completa</span>
             }
         </p>
+
+        <section class="period-kilometers-summary mobile-period-kilometers">
+            <header><h2>Riepilogo km</h2><span>@summaryYear</span></header>
+            <div class="period-kilometers-columns">
+                <article>
+                    <h3>Per mese</h3>
+                    @if (monthlyTotals.Length == 0)
+                    {
+                        <p>Nessun viaggio nel @summaryYear.</p>
+                    }
+                    else
+                    {
+                        @foreach (var total in monthlyTotals)
+                        {
+                            <div class="period-kilometers-row"><span>@cultura.DateTimeFormat.GetAbbreviatedMonthName(total.Month)</span><strong>@total.Kilometers.ToString("N0", cultura) km</strong></div>
+                        }
+                    }
+                </article>
+                <article>
+                    <h3>Per anno</h3>
+                    @foreach (var total in annualTotals)
+                    {
+                        <div class="period-kilometers-row"><span>@total.Year</span><strong>@total.Kilometers.ToString("N0", cultura) km</strong></div>
+                    }
+                </article>
+            </div>
+        </section>
 
         <form class="history-filter mobile-history-filter" method="get" asp-action="Index" aria-label="Filtra lo storico per periodo">
             <label>
@@ -221,6 +261,33 @@
             <strong>⚠ Sequenza da completare</strong>
             <span>@missingKilometers.ToString("N0", cultura) km da verificare in @gapsCount intervallo@(gapsCount == 1 ? "" : "i").</span>
         }
+    </div>
+</section>
+
+<section class="period-kilometers-summary desktop-period-kilometers">
+    <header><div><span class="card-kicker">Analisi percorrenze</span><h2>Chilometri per periodo</h2></div><span>Anno di riferimento: @summaryYear</span></header>
+    <div class="period-kilometers-columns">
+        <article>
+            <h3>Per mese · @summaryYear</h3>
+            @if (monthlyTotals.Length == 0)
+            {
+                <p>Nessun viaggio nel @summaryYear.</p>
+            }
+            else
+            {
+                @foreach (var total in monthlyTotals)
+                {
+                    <div class="period-kilometers-row"><span>@cultura.DateTimeFormat.GetMonthName(total.Month)</span><small>@total.Trips viaggio@(total.Trips == 1 ? "" : "i")</small><strong>@total.Kilometers.ToString("N0", cultura) km</strong></div>
+                }
+            }
+        </article>
+        <article>
+            <h3>Per anno</h3>
+            @foreach (var total in annualTotals)
+            {
+                <div class="period-kilometers-row"><span>@total.Year</span><small>@total.Trips viaggio@(total.Trips == 1 ? "" : "i")</small><strong>@total.Kilometers.ToString("N0", cultura) km</strong></div>
+            }
+        </article>
     </div>
 </section>
 
