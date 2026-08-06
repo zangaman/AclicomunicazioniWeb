@@ -1,0 +1,118 @@
+@model AcliComunicazioni.Web.Models.MileageHistoryViewModel
+@{
+    Layout = null;
+    var cultura = new System.Globalization.CultureInfo("it-IT");
+    var entries = Model.Dashboard.RecentEntries
+        .OrderByDescending(entry => entry.TripDate)
+        .ThenByDescending(entry => entry.Id)
+        .ToArray();
+    var totalKilometers = entries.Sum(entry => entry.DistanceKilometers);
+    var gaps = entries.Sum(entry => entry.GapKilometers);
+    var period = Model.SelectedYear is null
+        ? "Tutto lo storico"
+        : Model.SelectedMonth is null
+            ? $"Anno {Model.SelectedYear}"
+            : $"{cultura.DateTimeFormat.GetMonthName(Model.SelectedMonth.Value)} {Model.SelectedYear}";
+}
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Report percorrenze — @period</title>
+    <style>
+        :root { color: #17324d; font-family: Inter, "Segoe UI", Arial, sans-serif; }
+        * { box-sizing: border-box; }
+        body { margin: 0; background: #eef3f5; }
+        .report { width: min(1120px, calc(100% - 40px)); margin: 32px auto; padding: 42px; background: #fff; box-shadow: 0 14px 42px rgba(18, 45, 61, .12); }
+        .report-header { display: flex; justify-content: space-between; gap: 28px; padding-bottom: 25px; border-bottom: 2px solid #176b7a; }
+        .brand { display: flex; align-items: center; gap: 12px; font-weight: 760; }
+        .brand-mark { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; background: #176b7a; color: #fff; }
+        .eyebrow { color: #176b7a; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+        h1 { margin: 7px 0 4px; font-size: 30px; letter-spacing: -.035em; }
+        .period { margin: 0; color: #617080; font-size: 15px; }
+        .report-date { text-align: right; color: #667887; font-size: 13px; }
+        .report-date strong { display: block; margin-bottom: 4px; color: #17324d; font-size: 15px; }
+        .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 25px 0; }
+        .metric { padding: 17px 18px; border: 1px solid #dbe5e8; border-radius: 10px; background: #f7fafb; }
+        .metric span { display: block; color: #6a7a88; font-size: 12px; }
+        .metric strong { display: block; margin-top: 7px; color: #17324d; font-size: 23px; letter-spacing: -.025em; }
+        .metric.warning { border-color: #f0d39d; background: #fff9ef; }
+        .metric.warning strong { color: #9a5b00; }
+        table { width: 100%; border-collapse: collapse; }
+        th { padding: 11px 10px; background: #17324d; color: #fff; font-size: 11px; letter-spacing: .05em; text-align: left; text-transform: uppercase; }
+        td { padding: 12px 10px; border-bottom: 1px solid #e1e8eb; font-size: 13px; vertical-align: top; }
+        tbody tr:nth-child(even) { background: #f8fafb; }
+        .numeric { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+        .route { font-weight: 700; }
+        .note { display: block; margin-top: 4px; color: #697987; font-size: 11px; line-height: 1.35; }
+        .empty { padding: 32px; border: 1px dashed #cbd7dc; color: #687987; text-align: center; }
+        .actions { width: min(1120px, calc(100% - 40px)); margin: 24px auto 0; display: flex; justify-content: flex-end; gap: 10px; }
+        button { padding: 11px 16px; border: 0; border-radius: 8px; background: #176b7a; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+        button.secondary { background: #fff; color: #17324d; border: 1px solid #ccdadd; }
+        .report-footer { margin-top: 22px; padding-top: 12px; border-top: 1px solid #dfe7ea; color: #71808b; font-size: 10px; }
+        @media print {
+            @page { size: A4 landscape; margin: 12mm; }
+            body { background: #fff; }
+            .actions { display: none; }
+            .report { width: 100%; margin: 0; padding: 0; box-shadow: none; }
+            .report-header { padding-bottom: 14px; }
+            .summary { margin: 16px 0; }
+            .metric { padding: 11px 13px; }
+            td { padding: 8px 7px; }
+            tr { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="actions">
+        <button type="button" class="secondary" onclick="window.close()">Chiudi</button>
+        <button type="button" onclick="window.print()">Salva come PDF / Stampa</button>
+    </div>
+    <main class="report">
+        <header class="report-header">
+            <div>
+                <div class="brand"><span class="brand-mark">AC</span> AcliComunicazioni</div>
+                <span class="eyebrow">Gestione trasferte</span>
+                <h1>Report percorrenze</h1>
+                <p class="period">@period</p>
+            </div>
+            <div class="report-date"><strong>Estratto il @DateTime.Today.ToString("dd/MM/yyyy")</strong>Storico condiviso del mezzo</div>
+        </header>
+
+        <section class="summary" aria-label="Riepilogo del periodo">
+            <article class="metric"><span>Registrazioni</span><strong>@entries.Length</strong></article>
+            <article class="metric"><span>Chilometri percorsi</span><strong>@totalKilometers.ToString("N0", cultura) km</strong></article>
+            <article class="metric @(gaps > 0 ? "warning" : "")"><span>Chilometri da verificare</span><strong>@gaps.ToString("N0", cultura) km</strong></article>
+        </section>
+
+        @if (entries.Length == 0)
+        {
+            <p class="empty">Nessuna percorrenza nel periodo selezionato.</p>
+        }
+        else
+        {
+            <table>
+                <thead>
+                    <tr><th>Data</th><th>Tragitto</th><th class="numeric">Km iniziali</th><th class="numeric">Km finali</th><th class="numeric">Percorsi</th><th>Conducente</th></tr>
+                </thead>
+                <tbody>
+                @foreach (var entry in entries)
+                {
+                    <tr>
+                        <td>@entry.TripDate.ToString("dd/MM/yyyy")</td>
+                        <td><span class="route">@entry.Route</span>@if (!string.IsNullOrWhiteSpace(entry.Description)) { <span class="note">@entry.Description</span> }</td>
+                        <td class="numeric">@entry.StartKilometers.ToString("N0", cultura)</td>
+                        <td class="numeric">@entry.EndKilometers.ToString("N0", cultura)</td>
+                        <td class="numeric">@entry.DistanceKilometers.ToString("N0", cultura) km</td>
+                        <td>@entry.InsertedBy</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        }
+
+        <footer class="report-footer">Report generato da AcliComunicazioni · Periodo: @period</footer>
+    </main>
+</body>
+</html>
