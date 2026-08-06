@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AcliComunicazioni.Web.Controllers;
 
-[AllowAnonymous]
 public sealed class AccountController(IUserAuthenticationService authenticationService) : Controller
 {
+    [AllowAnonymous]
     [HttpGet]
     public IActionResult Login(string? returnUrl = null)
     {
@@ -22,6 +22,7 @@ public sealed class AccountController(IUserAuthenticationService authenticationS
         return View(new LoginViewModel { ReturnUrl = returnUrl });
     }
 
+    [AllowAnonymous]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(
@@ -85,6 +86,7 @@ public sealed class AccountController(IUserAuthenticationService authenticationS
         return RedirectToAction(nameof(Login));
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public IActionResult AccessDenied() => View();
 }

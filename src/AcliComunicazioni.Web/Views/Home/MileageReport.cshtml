@@ -17,7 +17,7 @@
         : Model.SelectedMonth is null
             ? $"Anno {Model.SelectedYear}"
             : $"{cultura.DateTimeFormat.GetMonthName(Model.SelectedMonth.Value)} {Model.SelectedYear}";
-    var reportMonth = Model.IsAllHistory ? null : Model.SelectedMonth ?? 0;
+    int? reportMonth = Model.IsAllHistory ? null : Model.SelectedMonth ?? 0;
 }
 <style>
         :root { color: #17324d; font-family: Inter, "Segoe UI", Arial, sans-serif; }
