@@ -2346,3 +2346,97 @@ h2 { letter-spacing: -.025em; }
         text-decoration: none;
     }
 }
+
+/* Mileage totals by month and year. */
+.mobile-period-kilometers { display: none; }
+.period-kilometers-summary {
+    margin: 24px 0;
+    padding: 22px;
+    border: 1px solid #dbe5e8;
+    border-radius: 17px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(21, 50, 70, .05);
+}
+.period-kilometers-summary > header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 16px;
+}
+.period-kilometers-summary h2,
+.period-kilometers-summary h3 { margin: 0; color: #17324d; }
+.period-kilometers-summary h2 { font-size: 1.12rem; }
+.period-kilometers-summary h3 { font-size: .83rem; }
+.period-kilometers-summary > header > span {
+    padding: 6px 9px;
+    border-radius: 999px;
+    background: #eef6f7;
+    color: #176b7a;
+    font-size: .76rem;
+    font-weight: 750;
+}
+.period-kilometers-columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+.period-kilometers-columns article {
+    overflow: hidden;
+    border: 1px solid #e1e9ec;
+    border-radius: 12px;
+}
+.period-kilometers-columns h3 {
+    padding: 11px 13px;
+    border-bottom: 1px solid #e1e9ec;
+    background: #f7fafb;
+}
+.period-kilometers-columns article > p {
+    margin: 0;
+    padding: 15px 13px;
+    color: #71808b;
+    font-size: .85rem;
+}
+.period-kilometers-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 10px;
+    margin: 0 13px;
+    padding: 10px 0;
+    border-top: 1px solid #edf1f2;
+}
+.period-kilometers-row:first-of-type { border-top: 0; }
+.period-kilometers-row span { color: #263f53; font-size: .88rem; font-weight: 680; text-transform: capitalize; }
+.period-kilometers-row small { color: #75838c; font-size: .73rem; }
+.period-kilometers-row strong { color: #176b7a; font-size: .87rem; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 680px) {
+    .desktop-period-kilometers { display: none; }
+    .mobile-period-kilometers {
+        display: block;
+        margin: 12px 0;
+        padding: 13px;
+        border-radius: 12px;
+        box-shadow: 0 3px 11px rgba(21,50,70,.035);
+    }
+    .mobile-period-kilometers > header {
+        margin-bottom: 10px;
+    }
+    .mobile-period-kilometers h2 { font-size: .94rem; }
+    .mobile-period-kilometers > header > span { font-size: .68rem; }
+    .mobile-period-kilometers .period-kilometers-columns { gap: 9px; }
+    .mobile-period-kilometers .period-kilometers-columns article { border-radius: 9px; }
+    .mobile-period-kilometers .period-kilometers-columns h3 {
+        padding: 8px 9px;
+        font-size: .71rem;
+    }
+    .mobile-period-kilometers .period-kilometers-row {
+        grid-template-columns: minmax(0,1fr) auto;
+        gap: 6px;
+        margin: 0 9px;
+        padding: 8px 0;
+    }
+    .mobile-period-kilometers .period-kilometers-row span { font-size: .73rem; }
+    .mobile-period-kilometers .period-kilometers-row strong { font-size: .74rem; }
+}
