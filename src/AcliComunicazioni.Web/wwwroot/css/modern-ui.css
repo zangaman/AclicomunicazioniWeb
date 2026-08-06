@@ -12,6 +12,23 @@
 
 .desktop-modern-dashboard { display: none; }
 
+.environment-banner {
+    position: fixed;
+    z-index: 10000;
+    right: 12px;
+    bottom: 12px;
+    padding: 6px 10px;
+    border: 1px solid rgba(255, 255, 255, .45);
+    border-radius: 7px;
+    color: #fff;
+    background: #b26700;
+    box-shadow: 0 4px 14px rgba(20, 47, 80, .18);
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
 @media (min-width: 681px) {
     :root {
         --modern-bg: #f5f8fa;

@@ -4,3 +4,4 @@
 *.user
 *.suo
 appsettings.Development.json
+!src/AcliComunicazioni.Web/appsettings.Development.json

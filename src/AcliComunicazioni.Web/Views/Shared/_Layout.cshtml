@@ -13,6 +13,12 @@
         var displayName = User.FindFirst("display_name")?.Value ?? User.Identity?.Name ?? "Utente";
         var displayInitial = displayName.Trim().Length > 0 ? displayName.Trim()[0].ToString().ToUpperInvariant() : "U";
         var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+        var environmentLabel = Context.RequestServices.GetRequiredService<IConfiguration>()["ApplicationEnvironment:Label"];
+        var showEnvironmentBanner = Context.RequestServices.GetRequiredService<IConfiguration>().GetValue<bool>("ApplicationEnvironment:ShowBanner");
+    }
+    @if (showEnvironmentBanner && !string.IsNullOrWhiteSpace(environmentLabel))
+    {
+        <div class="environment-banner" role="status">Ambiente @environmentLabel</div>
     }
     <div class="app-shell">
         <aside class="app-sidebar" aria-label="Navigazione principale">

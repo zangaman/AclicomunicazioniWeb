@@ -5,8 +5,11 @@ using AcliComunicazioni.Infrastructure.Authentication;
 using AcliComunicazioni.Infrastructure.Mileage;
 using AcliComunicazioni.Web.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Data.Common;
 
 var builder = WebApplication.CreateBuilder(args);
+
+ValidateEnvironmentConfiguration(builder.Environment, builder.Configuration);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
@@ -59,3 +62,43 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+static void ValidateEnvironmentConfiguration(
+    IWebHostEnvironment environment,
+    IConfiguration configuration)
+{
+    var expectedDatabase = environment.EnvironmentName switch
+    {
+        Environments.Development => "AcliComunicazioni_Sviluppo",
+        "Test" => "AcliComunicazioni_Test",
+        Environments.Production => "AcliComunicazioni_Produzione",
+        _ => throw new InvalidOperationException(
+            $"Ambiente '{environment.EnvironmentName}' non supportato. " +
+            "Usare Development, Test oppure Production.")
+    };
+
+    var connectionString = configuration.GetConnectionString("DefaultConnection");
+    if (string.IsNullOrWhiteSpace(connectionString))
+    {
+        throw new InvalidOperationException(
+            $"Connection string 'DefaultConnection' non configurata per l'ambiente {environment.EnvironmentName}.");
+    }
+
+    var connectionData = new DbConnectionStringBuilder
+    {
+        ConnectionString = connectionString
+    };
+
+    var configuredDatabase = connectionData.TryGetValue("Database", out var database)
+        ? database?.ToString()
+        : connectionData.TryGetValue("Initial Catalog", out var initialCatalog)
+            ? initialCatalog?.ToString()
+            : null;
+
+    if (!string.Equals(configuredDatabase, expectedDatabase, StringComparison.OrdinalIgnoreCase))
+    {
+        throw new InvalidOperationException(
+            $"Configurazione bloccata: l'ambiente {environment.EnvironmentName} deve usare " +
+            $"il database '{expectedDatabase}', non '{configuredDatabase ?? "non specificato"}'.");
+    }
+}

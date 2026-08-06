@@ -1,12 +1,28 @@
 {
   "profiles": {
-    "AcliComunicazioni.Web": {
+    "AcliComunicazioni.Web - Sviluppo": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "https://localhost:61528;http://0.0.0.0:61529"
+    },
+    "AcliComunicazioni.Web - Test": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Test"
+      },
+      "applicationUrl": "https://localhost:62528;http://0.0.0.0:62529"
+    },
+    "AcliComunicazioni.Web - Produzione": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      },
+      "applicationUrl": "https://localhost:63528;http://0.0.0.0:63529"
     }
   }
 }
