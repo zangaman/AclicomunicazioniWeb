@@ -32,6 +32,12 @@
         .ToArray();
     var dashboardMonthKilometers = dashboardMonthEntries.Sum(entry => entry.DistanceKilometers);
     var chartMaximum = Math.Max(1, monthlyTotals.Select(total => total.Kilometers).DefaultIfEmpty(0).Max());
+    var dashboardGapPreviousEntry = firstGap is null || !firstGap.PreviousEndKilometers.HasValue
+        ? null
+        : Model.Dashboard.RecentEntries.FirstOrDefault(entry =>
+            entry.Id != firstGap.Id && entry.EndKilometers == firstGap.PreviousEndKilometers.Value);
+    var dashboardGapMinimumDate = dashboardGapPreviousEntry?.TripDate.Date ?? firstGap?.TripDate.Date ?? DateTime.Today;
+    var dashboardGapMaximumDate = firstGap?.TripDate.Date ?? DateTime.Today;
 }
 
 <section class="page-heading">
@@ -142,8 +148,8 @@
                             data-start="@firstGap.PreviousEndKilometers.GetValueOrDefault()"
                             data-end="@firstGap.StartKilometers"
                             data-date="@firstGap.TripDate.ToString("yyyy-MM-dd")"
-                            data-min-date="@firstGap.TripDate.ToString("yyyy-MM-dd")"
-                            data-max-date="@firstGap.TripDate.ToString("yyyy-MM-dd")">Completa</button>
+                            data-min-date="@dashboardGapMinimumDate.ToString("yyyy-MM-dd")"
+                            data-max-date="@dashboardGapMaximumDate.ToString("yyyy-MM-dd")">Completa</button>
                 </article>
             }
         </div>
