@@ -110,7 +110,7 @@
                     .Take(5))
                 {
                     <a asp-action="EditMileage" asp-route-id="@entry.Id">
-                        <time datetime="@entry.TripDate.ToString("yyyy-MM-dd")">@entry.TripDate.ToString("dd MMM yyyy", cultura)</time>
+                        <span class="modern-trip-date"><svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg><time datetime="@entry.TripDate.ToString("yyyy-MM-dd")">@entry.TripDate.ToString("dd MMM yyyy", cultura)</time></span>
                         <strong>@entry.Route</strong>
                         <span>@entry.DistanceKilometers.ToString("N0", cultura) km</span>
                     </a>
@@ -164,7 +164,14 @@
                 <h1>Furgone ACLI</h1>
                 <p>Mezzo operativo</p>
             </div>
-            <span class="mobile-operation-status"><i aria-hidden="true"></i> Attivo</span>
+            @if (gapsCount == 0)
+            {
+                <span class="mobile-operation-status status-complete"><i aria-hidden="true"></i> Sequenza coerente</span>
+            }
+            else
+            {
+                <span class="mobile-operation-status status-incomplete">⚠ Sequenza da completare</span>
+            }
         </header>
 
         <article class="mobile-odometer-hero">
@@ -178,21 +185,22 @@
                 </svg>
             </div>
 
-            @if (gapsCount > 0)
-            {
-                <button type="button" class="mobile-hero-gap" id="mobile-gap-action" aria-label="Completa il primo tratto chilometrico mancante">
-                    <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 3 20h18L12 4zM12 9v5M12 17h.01"/></svg>
-                    <span>@missingKilometers.ToString("N0", cultura) km da completare</span>
-                    <svg class="app-icon mobile-hero-gap-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-                </button>
-            }
-
+            <button type="button" class="mobile-add-mileage mobile-home-register" id="mobile-add-mileage" aria-label="Aggiungi percorrenza" aria-expanded="false">
+                <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                <span>Registra viaggio</span>
+            </button>
         </article>
 
-        <button type="button" class="mobile-add-mileage mobile-home-register" id="mobile-add-mileage" aria-label="Aggiungi percorrenza" aria-expanded="false">
-            <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-            <span>Registra viaggio</span>
-        </button>
+        <section class="mobile-kpi-grid" aria-label="Riepilogo del mese">
+            <article>
+                <span class="mobile-kpi-icon"><svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="8" width="14" height="11" rx="2"/><path d="M9 8V6.5A1.5 1.5 0 0 1 10.5 5h3A1.5 1.5 0 0 1 15 6.5V8"/></svg></span>
+                <span><small>Viaggi · @cultura.DateTimeFormat.GetAbbreviatedMonthName(dashboardMonth)</small><strong>@dashboardMonthEntries.Length</strong></span>
+            </article>
+            <article>
+                <span class="mobile-kpi-icon"><svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 20 9 4M18 20 15 4M12 20V4"/></svg></span>
+                <span><small>Km · @cultura.DateTimeFormat.GetAbbreviatedMonthName(dashboardMonth)</small><strong>@dashboardMonthKilometers.ToString("N0", cultura) <em>km</em></strong></span>
+            </article>
+        </section>
 
         <section class="mobile-activity-log">
             <header>
@@ -204,7 +212,7 @@
             @foreach (var entry in Model.Dashboard.RecentEntries
                 .OrderByDescending(entry => entry.EndKilometers)
                 .ThenByDescending(entry => entry.TripDate)
-                .Take(3))
+                .Take(4))
             {
                 <a class="mobile-trip-row" asp-action="EditMileage" asp-route-id="@entry.Id">
                     <span class="mobile-trip-icon" aria-hidden="true"><svg class="app-icon vehicle-icon" viewBox="0 0 24 24"><path d="M4 15.5h16M5.5 15.5l1.2-5.2A2 2 0 0 1 8.65 8.8h6.7a2 2 0 0 1 1.95 1.5l1.2 5.2M7 12h10"/><circle cx="7" cy="17.5" r="1.5"/><circle cx="17" cy="17.5" r="1.5"/></svg></span>
@@ -218,6 +226,15 @@
             }
             </div>
         </section>
+
+        @if (gapsCount > 0 && firstGap is not null)
+        {
+            <button type="button" class="mobile-home-gap-card" id="mobile-gap-action" aria-label="Completa il primo tratto chilometrico mancante">
+                <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 3 20h18L12 4zM12 9v5M12 17h.01"/></svg>
+                <span><strong>@missingKilometers.ToString("N0", cultura) km da completare</strong><small>Tratto @firstGap.PreviousEndKilometers.GetValueOrDefault().ToString("N0", cultura) → @firstGap.StartKilometers.ToString("N0", cultura)</small></span>
+                <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+        }
     </section>
 
     <section class="mobile-screen mobile-trips-screen" data-mobile-screen="trips" hidden>
