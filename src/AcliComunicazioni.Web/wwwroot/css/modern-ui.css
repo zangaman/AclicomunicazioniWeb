@@ -761,3 +761,201 @@
         display: none;
     }
 }
+
+
+/* Refined navigation icons and account menu */
+@media (min-width: 681px) {
+    .app-sidebar-footer {
+        display: grid !important;
+        gap: 18px !important;
+    }
+
+    .sidebar-support-link {
+        display: grid;
+        grid-template-columns: 22px minmax(0, 1fr) 16px;
+        align-items: center;
+        gap: 10px;
+        min-height: 44px;
+        color: #526979;
+        font-size: .78rem;
+        font-weight: 650;
+        text-decoration: none;
+    }
+
+    .sidebar-support-link:hover { color: var(--modern-teal); }
+    .sidebar-support-link .app-icon:first-child { width: 21px; height: 21px; }
+    .sidebar-support-link .app-icon:last-child { width: 15px; height: 15px; }
+    .app-sidebar-footer .sidebar-support-link span {
+        color: inherit !important;
+        font-size: inherit !important;
+        letter-spacing: 0 !important;
+        text-transform: none !important;
+    }
+
+    .sidebar-vehicle {
+        display: grid;
+        gap: 4px;
+        padding-top: 16px;
+        border-top: 1px solid var(--modern-border);
+    }
+
+    .user-area {
+        display: flex !important;
+        align-items: center;
+        gap: 14px !important;
+        margin-left: auto;
+    }
+
+    .desktop-notification-button {
+        position: relative;
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        padding: 0;
+        border: 0;
+        border-radius: 10px;
+        color: #17324d;
+        background: transparent;
+        cursor: pointer;
+    }
+
+    .desktop-notification-button:hover { background: #f0f6f7; }
+    .desktop-notification-button .app-icon { width: 23px; height: 23px; }
+
+    .desktop-account-menu {
+        position: relative;
+        display: block !important;
+        padding-left: 15px;
+        border-left: 1px solid #e2e9ec;
+    }
+
+    .desktop-account-menu > summary {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 48px;
+        padding: 4px 5px;
+        border-radius: 10px;
+        color: #17324d;
+        list-style: none;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .desktop-account-menu > summary::-webkit-details-marker { display: none; }
+    .desktop-account-menu > summary:hover { background: #f3f7f8; }
+
+    .desktop-user-avatar {
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        color: #fff;
+        background: #176b7a;
+        font-size: .78rem;
+        font-weight: 800;
+    }
+
+    .desktop-user-name {
+        max-width: 220px;
+        overflow: hidden;
+        font-size: .88rem;
+        font-weight: 700;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .desktop-user-chevron {
+        width: 17px;
+        height: 17px;
+        transition: transform .18s ease;
+    }
+
+    .desktop-account-menu[open] .desktop-user-chevron { transform: rotate(180deg); }
+
+    .desktop-account-popover {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        z-index: 100;
+        display: grid;
+        gap: 5px;
+        min-width: 235px;
+        padding: 16px;
+        border: 1px solid #dce5e9;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 15px 35px rgba(20,48,70,.13);
+    }
+
+    .desktop-account-popover > span {
+        color: #7a8a95;
+        font-size: .7rem;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+    }
+
+    .desktop-account-popover > strong {
+        overflow: hidden;
+        color: #17324d;
+        font-size: .9rem;
+        text-overflow: ellipsis;
+    }
+
+    .desktop-account-popover form {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid #e7edef;
+    }
+
+    .desktop-account-popover button {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        width: 100%;
+        min-height: 40px;
+        padding: 0 10px;
+        border: 0;
+        border-radius: 8px;
+        color: #9a3c3c;
+        background: #fff5f5;
+        font-size: .8rem;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .desktop-account-popover button .app-icon { width: 18px; height: 18px; }
+
+    .mobile-account-menu,
+    .user-copy,
+    .desktop-logout { display: none !important; }
+
+    .modern-kpi-icon,
+    .mobile-kpi-icon,
+    .mobile-trip-icon {
+        border: 1px solid rgba(17,123,141,.08);
+    }
+
+    .modern-kpi-icon .app-icon,
+    .modern-panel header .app-icon,
+    .modern-trip-date .app-icon {
+        stroke-width: 1.65;
+    }
+}
+
+@media (max-width: 680px) {
+    .desktop-notification-button,
+    .desktop-account-menu { display: none !important; }
+
+    .mobile-account-menu { display: block !important; }
+    .app-sidebar-footer { display: none !important; }
+
+    .mobile-hero-ring .app-icon,
+    .mobile-kpi-icon .app-icon,
+    .mobile-trip-icon .app-icon,
+    .mobile-bottom-nav .app-icon {
+        stroke-width: 1.7 !important;
+    }
+}
