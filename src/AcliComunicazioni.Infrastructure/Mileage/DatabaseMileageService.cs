@@ -89,7 +89,6 @@ public sealed class DatabaseMileageService : IMileageService
 
     public async Task AddAsync(
         int userId,
-        string insertedBy,
         int startKilometers,
         int endKilometers,
         DateTime tripDate,
@@ -103,10 +102,6 @@ public sealed class DatabaseMileageService : IMileageService
             tripDate,
             route,
             description);
-
-        var normalizedInsertedBy = string.IsNullOrWhiteSpace(insertedBy)
-            ? $"Utente {userId}"
-            : insertedBy.Trim();
 
         await using var connection = new SqlConnection(_connectionString);
         await connection.OpenAsync(cancellationToken);
@@ -128,9 +123,9 @@ public sealed class DatabaseMileageService : IMileageService
 
         const string sql = """
             INSERT INTO dbo.Percorrenze
-                (IdUtente, DataPercorrenza, KmPartenza, KmArrivo, Tragitto, Descrizione, InseritoDa, DataCreazione)
+                (IdUtente, InseritoDaUserId, DataPercorrenza, KmPartenza, KmArrivo, Tragitto, Descrizione, DataCreazione)
             VALUES
-                (@UserId, @TripDate, @StartKilometers, @EndKilometers, @Route, @Description, @InsertedBy, SYSUTCDATETIME());
+                (@UserId, @InseritoDaUserId, @TripDate, @StartKilometers, @EndKilometers, @Route, @Description, SYSUTCDATETIME());
             """;
 
         await using var command = new SqlCommand(sql, connection);
@@ -143,7 +138,7 @@ public sealed class DatabaseMileageService : IMileageService
             values.Route,
             values.Description);
 
-        command.Parameters.Add("@InsertedBy", SqlDbType.NVarChar, 150).Value = normalizedInsertedBy;
+        command.Parameters.Add("@InseritoDaUserId", SqlDbType.Int).Value = userId;
 
         await command.ExecuteNonQueryAsync(cancellationToken);
     }
@@ -219,13 +214,8 @@ public sealed class DatabaseMileageService : IMileageService
     public async Task DeleteAsync(
         int userId,
         int id,
-        string deletedBy,
         CancellationToken cancellationToken = default)
     {
-        var normalizedDeletedBy = string.IsNullOrWhiteSpace(deletedBy)
-            ? $"Utente {userId}"
-            : deletedBy.Trim();
-
         await using var connection = new SqlConnection(_connectionString);
         await connection.OpenAsync(cancellationToken);
 
@@ -233,7 +223,7 @@ public sealed class DatabaseMileageService : IMileageService
             UPDATE dbo.Percorrenze
             SET IsDeleted = 1,
                 DeletedAt = SYSUTCDATETIME(),
-                DeletedBy = @DeletedBy
+                DeletedByUserId = @DeletedByUserId
             WHERE Id = @Id
               AND IdUtente = @UserId
               AND IsDeleted = 0;
@@ -242,7 +232,7 @@ public sealed class DatabaseMileageService : IMileageService
         await using var command = new SqlCommand(sql, connection);
         command.Parameters.Add("@Id", SqlDbType.Int).Value = id;
         command.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
-        command.Parameters.Add("@DeletedBy", SqlDbType.NVarChar, 150).Value = normalizedDeletedBy;
+        command.Parameters.Add("@DeletedByUserId", SqlDbType.Int).Value = userId;
 
         var affectedRows = await command.ExecuteNonQueryAsync(cancellationToken);
 
