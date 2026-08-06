@@ -2334,3 +2334,15 @@ h2 { letter-spacing: -.025em; }
         font-size: .76rem;
     }
 }
+
+
+@media (max-width: 680px) {
+    .mobile-history-all {
+        display: inline-flex;
+        margin: -4px 0 10px;
+        color: #176b7a;
+        font-size: .73rem;
+        font-weight: 720;
+        text-decoration: none;
+    }
+}
