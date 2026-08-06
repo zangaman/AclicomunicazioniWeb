@@ -22,7 +22,6 @@
                         <span>Connesso come</span>
                         <strong>@(User.FindFirst("display_name")?.Value ?? User.Identity.Name)</strong>
                     </div>
-                    <a class="secondary-button desktop-admin-link" asp-controller="Administration" asp-action="Index">Utenti</a>
                     <form class="desktop-logout" asp-controller="Account" asp-action="Logout" method="post">
                         @Html.AntiForgeryToken()
                         <button type="submit" class="secondary-button">Esci</button>
@@ -35,7 +34,6 @@
                         <div class="mobile-account-popover">
                             <span>Utente collegato</span>
                             <strong>@(User.FindFirst("display_name")?.Value ?? User.Identity.Name)</strong>
-                            <a class="mobile-admin-link" asp-controller="Administration" asp-action="Index">Utenti e attività</a>
                             <form asp-controller="Account" asp-action="Logout" method="post">
                                 @Html.AntiForgeryToken()
                                 <button type="submit">Esci</button>
