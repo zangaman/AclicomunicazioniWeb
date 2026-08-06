@@ -69,9 +69,9 @@ static void ValidateEnvironmentConfiguration(
 {
     var expectedDatabase = environment.EnvironmentName switch
     {
-        Environments.Development => "AcliComunicazioni_Sviluppo",
+        "Development" => "AcliComunicazioni_Sviluppo",
         "Test" => "AcliComunicazioni_Test",
-        Environments.Production => "AcliComunicazioni_Produzione",
+        "Production" => "AcliComunicazioni_Produzione",
         _ => throw new InvalidOperationException(
             $"Ambiente '{environment.EnvironmentName}' non supportato. " +
             "Usare Development, Test oppure Production.")
