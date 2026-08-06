@@ -25,6 +25,13 @@
         .Select(group => new { Year = group.Key, Kilometers = group.Sum(entry => entry.DistanceKilometers), Trips = group.Count() })
         .Take(6)
         .ToArray();
+    var dashboardMonth = Model.SelectedMonth ?? DateTime.Today.Month;
+    var dashboardYear = Model.SelectedYear ?? DateTime.Today.Year;
+    var dashboardMonthEntries = Model.AllEntries
+        .Where(entry => entry.TripDate.Year == dashboardYear && entry.TripDate.Month == dashboardMonth)
+        .ToArray();
+    var dashboardMonthKilometers = dashboardMonthEntries.Sum(entry => entry.DistanceKilometers);
+    var chartMaximum = Math.Max(1, monthlyTotals.Select(total => total.Kilometers).DefaultIfEmpty(0).Max());
 }
 
 <section class="page-heading">
@@ -45,6 +52,103 @@
 {
     <div class="alert alert-error" role="alert">@errorMessage</div>
 }
+
+<section class="desktop-modern-dashboard" aria-label="Panoramica del furgone">
+    <header class="modern-dashboard-heading">
+        <div>
+            <span>Gestione trasferte</span>
+            <div class="modern-title-row">
+                <h1>Furgone ACLI</h1>
+                @if (gapsCount == 0)
+                {
+                    <strong class="modern-status status-complete">✓ Sequenza coerente</strong>
+                }
+                else
+                {
+                    <strong class="modern-status status-incomplete">⚠ Sequenza da completare</strong>
+                }
+            </div>
+            <p>Panoramica operativa del mezzo</p>
+        </div>
+        <a class="modern-primary-action" href="#quick-entry">
+            <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            Registra viaggio
+        </a>
+    </header>
+
+    <div class="modern-kpi-grid">
+        <article class="modern-kpi-card">
+            <span class="modern-kpi-icon" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><path d="M4 17a8 8 0 0 1 16 0M6 12l-1.5-1M9 9l-.7-1.7M12 8V6M15 9l.7-1.7M18 12l1.5-1M12 17l4-4"/><circle cx="12" cy="17" r="1.4"/></svg></span>
+            <span><small>Chilometraggio attuale</small><strong>@(Model.Dashboard.CurrentKilometers?.ToString("N0", cultura) ?? "—") <em>km</em></strong></span>
+        </article>
+        <article class="modern-kpi-card">
+            <span class="modern-kpi-icon" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><rect x="5" y="8" width="14" height="11" rx="2"/><path d="M9 8V6.5A1.5 1.5 0 0 1 10.5 5h3A1.5 1.5 0 0 1 15 6.5V8"/></svg></span>
+            <span><small>Viaggi · @cultura.DateTimeFormat.GetMonthName(dashboardMonth)</small><strong>@dashboardMonthEntries.Length</strong></span>
+        </article>
+        <article class="modern-kpi-card">
+            <span class="modern-kpi-icon" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><path d="M6 20 9 4M18 20 15 4M12 20V4"/></svg></span>
+            <span><small>Km · @cultura.DateTimeFormat.GetMonthName(dashboardMonth)</small><strong>@dashboardMonthKilometers.ToString("N0", cultura) <em>km</em></strong></span>
+        </article>
+    </div>
+
+    <div class="modern-dashboard-content">
+        <article class="modern-panel modern-recent-panel">
+            <header>
+                <div><svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><h2>Ultime percorrenze</h2></div>
+                <a href="#latest-trips">Vedi tutte <span aria-hidden="true">›</span></a>
+            </header>
+            <div class="modern-trip-list">
+                @foreach (var entry in Model.Dashboard.RecentEntries
+                    .OrderByDescending(entry => entry.EndKilometers)
+                    .ThenByDescending(entry => entry.TripDate)
+                    .Take(5))
+                {
+                    <a asp-action="EditMileage" asp-route-id="@entry.Id">
+                        <time datetime="@entry.TripDate.ToString("yyyy-MM-dd")">@entry.TripDate.ToString("dd MMM yyyy", cultura)</time>
+                        <strong>@entry.Route</strong>
+                        <span>@entry.DistanceKilometers.ToString("N0", cultura) km</span>
+                    </a>
+                }
+            </div>
+        </article>
+
+        <div class="modern-dashboard-side">
+            <article class="modern-panel modern-chart-panel">
+                <header>
+                    <div><svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5M4 19h16M7 15l4-4 3 2 5-6"/></svg><h2>Andamento km</h2></div>
+                    <span>@cultura.DateTimeFormat.GetMonthName(dashboardMonth) @dashboardYear</span>
+                </header>
+                <div class="modern-bar-chart" aria-label="Chilometri percorsi per mese nel @summaryYear">
+                    @foreach (var total in monthlyTotals)
+                    {
+                        var barHeight = Math.Max(8, (int)Math.Round(total.Kilometers * 100d / chartMaximum));
+                        <div class="modern-bar-item">
+                            <span class="modern-bar" style="height: @barHeight%" title="@total.Kilometers.ToString("N0", cultura) km"></span>
+                            <small>@cultura.DateTimeFormat.GetAbbreviatedMonthName(total.Month)</small>
+                        </div>
+                    }
+                </div>
+            </article>
+
+            @if (gapsCount > 0 && firstGap is not null)
+            {
+                <article class="modern-gap-card">
+                    <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 3 20h18L12 4zM12 9v5M12 17h.01"/></svg>
+                    <div>
+                        <strong>@missingKilometers.ToString("N0", cultura) km da completare</strong>
+                        <span>Primo tratto non registrato: @firstGap.PreviousEndKilometers.GetValueOrDefault().ToString("N0", cultura) → @firstGap.StartKilometers.ToString("N0", cultura)</span>
+                    </div>
+                    <button type="button" class="fill-gap-button"
+                            data-start="@firstGap.PreviousEndKilometers.GetValueOrDefault()"
+                            data-end="@firstGap.StartKilometers"
+                            data-date="@firstGap.TripDate.ToString("yyyy-MM-dd")"
+                            data-min-date="@firstGap.TripDate.ToString("yyyy-MM-dd")"
+                            data-max-date="@firstGap.TripDate.ToString("yyyy-MM-dd")">Completa</button>
+                </article>
+            }
+        </div>
+    </div>
+</section>
 
 <section class="mobile-mileage-app">
     <section class="mobile-screen mobile-home-screen" data-mobile-screen="home">
