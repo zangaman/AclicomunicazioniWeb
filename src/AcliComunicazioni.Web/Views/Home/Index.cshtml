@@ -139,6 +139,14 @@
             </label>
             <button type="submit">Mostra</button>
         </form>
+        @if (!Model.IsAllHistory)
+        {
+            <a class="mobile-history-all" asp-action="Index" asp-route-showAll="true">Visualizza tutto lo storico</a>
+        }
+        else
+        {
+            <a class="mobile-history-all" asp-action="Index">Torna al mese corrente</a>
+        }
 
         <label class="mobile-trip-search">
             <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
