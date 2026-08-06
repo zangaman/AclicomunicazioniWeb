@@ -8,45 +8,76 @@
     <link rel="stylesheet" href="~/css/mileage.css" asp-append-version="true" />
 </head>
 <body>
-    <header class="topbar">
-        <div class="container topbar-content">
-            <a class="topbar-brand" asp-controller="Home" asp-action="Index">
-                <span class="brand-mark small">AC</span>
-                <strong>AcliComunicazioni</strong>
+    <div class="app-shell">
+        <aside class="app-sidebar" aria-label="Navigazione principale">
+            <a class="app-sidebar-brand" asp-controller="Home" asp-action="Index">
+                <span class="brand-mark">AC</span>
+                <span><strong>Acli</strong><small>Comunicazioni</small></span>
             </a>
 
-            @if (User.Identity?.IsAuthenticated == true)
-            {
-                <div class="user-area">
-                    <div class="user-copy">
-                        <span>Connesso come</span>
-                        <strong>@(User.FindFirst("display_name")?.Value ?? User.Identity.Name)</strong>
-                    </div>
-                    <form class="desktop-logout" asp-controller="Account" asp-action="Logout" method="post">
-                        @Html.AntiForgeryToken()
-                        <button type="submit" class="secondary-button">Esci</button>
-                    </form>
+            <nav class="app-sidebar-nav">
+                <a class="active" asp-controller="Home" asp-action="Index">
+                    <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10z"/></svg>
+                    <span>Home</span>
+                </a>
+                <a asp-controller="Home" asp-action="Index" asp-fragment="quick-entry">
+                    <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9l2-4h12l2 4v10M4 13h16M8 19v-4h8v4M8 9h.01M16 9h.01"/></svg>
+                    <span>Percorrenze</span>
+                </a>
+                <a asp-controller="Home" asp-action="MileageReport">
+                    <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7M3 20h18"/></svg>
+                    <span>Report</span>
+                </a>
+            </nav>
 
-                    <details class="mobile-account-menu">
-                        <summary aria-label="Apri menu utente">
-                            <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-                        </summary>
-                        <div class="mobile-account-popover">
-                            <span>Utente collegato</span>
-                            <strong>@(User.FindFirst("display_name")?.Value ?? User.Identity.Name)</strong>
-                            <form asp-controller="Account" asp-action="Logout" method="post">
+            <div class="app-sidebar-footer">
+                <span>Gestione trasferte</span>
+                <strong>Furgone ACLI</strong>
+            </div>
+        </aside>
+
+        <div class="app-workspace">
+            <header class="topbar">
+                <div class="topbar-content">
+                    <a class="topbar-brand" asp-controller="Home" asp-action="Index">
+                        <span class="brand-mark small">AC</span>
+                        <strong>AcliComunicazioni</strong>
+                    </a>
+
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <div class="user-area">
+                            <div class="user-copy">
+                                <span>Utente collegato</span>
+                                <strong>@(User.FindFirst("display_name")?.Value ?? User.Identity.Name)</strong>
+                            </div>
+                            <form class="desktop-logout" asp-controller="Account" asp-action="Logout" method="post">
                                 @Html.AntiForgeryToken()
-                                <button type="submit">Esci</button>
+                                <button type="submit" class="secondary-button">Esci</button>
                             </form>
+
+                            <details class="mobile-account-menu">
+                                <summary aria-label="Apri menu utente">
+                                    <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+                                </summary>
+                                <div class="mobile-account-popover">
+                                    <span>Utente collegato</span>
+                                    <strong>@(User.FindFirst("display_name")?.Value ?? User.Identity.Name)</strong>
+                                    <form asp-controller="Account" asp-action="Logout" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit">Esci</button>
+                                    </form>
+                                </div>
+                            </details>
                         </div>
-                    </details>
+                    }
                 </div>
-            }
+            </header>
+            <main class="main-content">
+                @RenderBody()
+            </main>
         </div>
-    </header>
-    <main class="container main-content">
-        @RenderBody()
-    </main>
+    </div>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
