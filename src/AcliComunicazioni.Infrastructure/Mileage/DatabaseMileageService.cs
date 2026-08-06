@@ -19,7 +19,7 @@ public sealed class DatabaseMileageService : IMileageService
         int userId,
         CancellationToken cancellationToken = default)
     {
-        var entries = await GetEntriesAsync(50, cancellationToken);
+        var entries = await GetEntriesAsync(null, cancellationToken);
         var latest = entries.FirstOrDefault();
         var current = entries.MaxBy(entry => entry.EndKilometers);
 
