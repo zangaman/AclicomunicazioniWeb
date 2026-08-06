@@ -2812,3 +2812,253 @@ h2 { letter-spacing: -.025em; }
         }
     }
 }
+
+
+/* Modernize-inspired desktop dashboard */
+@media (min-width: 681px) {
+    .page-heading,
+    .mobile-home-intro,
+    .mileage-status-card,
+    .desktop-period-kilometers,
+    .mileage-dashboard-grid .summary-card {
+        display: none;
+    }
+
+    .app-shell { grid-template-columns: 214px minmax(0, 1fr); }
+    .app-sidebar { padding: 22px 14px 18px; }
+    .app-sidebar-brand { padding: 0 9px 26px; }
+    .app-sidebar-nav a {
+        min-height: 48px;
+        border-radius: 10px;
+    }
+    .app-sidebar-nav a.active {
+        color: #fff;
+        background: #13798a;
+        box-shadow: none;
+    }
+
+    .topbar { height: 68px; }
+    .app-workspace { grid-template-rows: 68px minmax(0, 1fr); }
+    .main-content {
+        width: min(1260px, calc(100vw - 286px));
+        padding-top: 30px;
+    }
+
+    .desktop-modern-dashboard { display: block; }
+    .modern-dashboard-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 24px;
+    }
+    .modern-dashboard-heading > div > span {
+        color: #6c7c8a;
+        font-size: .72rem;
+        font-weight: 750;
+        letter-spacing: .09em;
+        text-transform: uppercase;
+    }
+    .modern-title-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 4px;
+    }
+    .modern-title-row h1 {
+        margin: 0;
+        color: #132d4f;
+        font-size: 2rem;
+        letter-spacing: -.04em;
+    }
+    .modern-dashboard-heading p {
+        margin: 5px 0 0;
+        color: #7a8995;
+        font-size: .92rem;
+    }
+    .modern-status {
+        padding: 6px 10px;
+        border: 1px solid;
+        border-radius: 8px;
+        font-size: .74rem;
+    }
+    .modern-status.status-complete { color: #24744e; border-color: #bfe4cf; background: #f0faf4; }
+    .modern-status.status-incomplete { color: #9a5b05; border-color: #f1d19c; background: #fff8eb; }
+
+    .modern-primary-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 46px;
+        padding: 0 18px;
+        border-radius: 10px;
+        color: #fff;
+        background: #13798a;
+        font-size: .88rem;
+        font-weight: 750;
+        text-decoration: none;
+        box-shadow: 0 7px 15px rgba(19,121,138,.16);
+    }
+    .modern-primary-action .app-icon { width: 18px; height: 18px; }
+
+    .modern-kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+        margin-bottom: 22px;
+    }
+    .modern-kpi-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        min-height: 112px;
+        padding: 19px 21px;
+        border: 1px solid #dfe7ec;
+        border-radius: 14px;
+        background: #fff;
+        box-shadow: 0 5px 15px rgba(35,59,78,.045);
+    }
+    .modern-kpi-icon {
+        flex: 0 0 auto;
+        display: grid;
+        place-items: center;
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        color: #176b7a;
+        background: #e9f5f6;
+    }
+    .modern-kpi-icon .app-icon { width: 28px; height: 28px; }
+    .modern-kpi-card > span:last-child { display: grid; gap: 3px; min-width: 0; }
+    .modern-kpi-card small { color: #4f6170; font-size: .78rem; }
+    .modern-kpi-card strong {
+        color: #13798a;
+        font-size: 1.85rem;
+        line-height: 1;
+        letter-spacing: -.04em;
+        font-variant-numeric: tabular-nums;
+    }
+    .modern-kpi-card em { font-size: .72rem; font-style: normal; letter-spacing: 0; }
+
+    .modern-dashboard-content {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(330px, .85fr);
+        gap: 20px;
+        align-items: stretch;
+    }
+    .modern-dashboard-side { display: grid; gap: 18px; }
+    .modern-panel {
+        border: 1px solid #dfe7ec;
+        border-radius: 14px;
+        background: #fff;
+        box-shadow: 0 5px 15px rgba(35,59,78,.045);
+        overflow: hidden;
+    }
+    .modern-panel > header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        min-height: 62px;
+        padding: 0 21px;
+        border-bottom: 1px solid #e7edef;
+    }
+    .modern-panel > header > div { display: flex; align-items: center; gap: 9px; }
+    .modern-panel h2 { margin: 0; color: #17324d; font-size: .98rem; }
+    .modern-panel header .app-icon { width: 20px; color: #17324d; }
+    .modern-panel header a { color: #13798a; font-size: .78rem; font-weight: 700; text-decoration: none; }
+    .modern-panel header > span {
+        padding: 7px 10px;
+        border: 1px solid #dce5e9;
+        border-radius: 8px;
+        color: #425968;
+        font-size: .74rem;
+    }
+
+    .modern-trip-list { padding: 0 21px 9px; }
+    .modern-trip-list a {
+        display: grid;
+        grid-template-columns: 108px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 14px;
+        min-height: 58px;
+        border-bottom: 1px solid #e9eef0;
+        color: #17324d;
+        text-decoration: none;
+    }
+    .modern-trip-list a:last-child { border-bottom: 0; }
+    .modern-trip-list time { color: #60727e; font-size: .76rem; }
+    .modern-trip-list strong { overflow: hidden; font-size: .84rem; text-overflow: ellipsis; white-space: nowrap; }
+    .modern-trip-list span { color: #13798a; font-size: .82rem; font-weight: 800; }
+
+    .modern-chart-panel { min-height: 288px; }
+    .modern-bar-chart {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: clamp(12px, 2vw, 25px);
+        height: 205px;
+        padding: 28px 24px 20px;
+        border-bottom: 1px solid #eef2f3;
+        background: repeating-linear-gradient(to top, transparent 0, transparent 45px, #edf2f4 46px);
+    }
+    .modern-bar-item {
+        display: grid;
+        grid-template-rows: minmax(0, 1fr) 18px;
+        justify-items: center;
+        align-items: end;
+        width: 28px;
+        height: 100%;
+    }
+    .modern-bar {
+        display: block;
+        width: 15px;
+        min-height: 8px;
+        border-radius: 4px 4px 1px 1px;
+        background: #13798a;
+    }
+    .modern-bar-item small { color: #6c7c86; font-size: .64rem; text-transform: capitalize; }
+
+    .modern-gap-card {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 14px;
+        min-height: 92px;
+        padding: 15px 17px;
+        border: 1px solid #f0cd92;
+        border-radius: 14px;
+        color: #704600;
+        background: #fff9ee;
+    }
+    .modern-gap-card > .app-icon { width: 31px; color: #d68b08; }
+    .modern-gap-card div { display: grid; gap: 4px; }
+    .modern-gap-card strong { font-size: .9rem; }
+    .modern-gap-card span { color: #846a3f; font-size: .72rem; }
+    .modern-gap-card button {
+        padding: 8px 10px;
+        border: 1px solid #e0aa4d;
+        border-radius: 8px;
+        color: #81520a;
+        background: #fff;
+        font-size: .72rem;
+        font-weight: 750;
+        cursor: pointer;
+    }
+
+    .dashboard-grid.mileage-dashboard-grid {
+        display: block;
+        margin-top: 24px;
+    }
+    .quick-entry-card { width: 100%; }
+    .history-card { margin-top: 24px; }
+}
+
+@media (max-width: 980px) and (min-width: 681px) {
+    .main-content { width: calc(100% - 40px); }
+    .modern-kpi-grid { grid-template-columns: 1fr 1fr; }
+    .modern-kpi-card:first-child { grid-column: 1 / -1; }
+    .modern-dashboard-content { grid-template-columns: 1fr; }
+}
