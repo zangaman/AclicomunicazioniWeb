@@ -8,6 +8,10 @@
         .ToArray();
     var totalKilometers = entries.Sum(entry => entry.DistanceKilometers);
     var gaps = entries.Sum(entry => entry.GapKilometers);
+    var firstTripDate = entries.Length > 0 ? entries.Min(entry => entry.TripDate) : (DateTime?)null;
+    var lastTripDate = entries.Length > 0 ? entries.Max(entry => entry.TripDate) : (DateTime?)null;
+    var minimumKilometers = entries.Length > 0 ? entries.Min(entry => entry.StartKilometers) : (int?)null;
+    var maximumKilometers = entries.Length > 0 ? entries.Max(entry => entry.EndKilometers) : (int?)null;
     var period = Model.SelectedYear is null
         ? "Tutto lo storico"
         : Model.SelectedMonth is null
@@ -33,10 +37,14 @@
         .period { margin: 0; color: #617080; font-size: 15px; }
         .report-date { text-align: right; color: #667887; font-size: 13px; }
         .report-date strong { display: block; margin-bottom: 4px; color: #17324d; font-size: 15px; }
-        .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 25px 0; }
+        .summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 25px 0; }
         .metric { padding: 17px 18px; border: 1px solid #dbe5e8; border-radius: 10px; background: #f7fafb; }
         .metric span { display: block; color: #6a7a88; font-size: 12px; }
-        .metric strong { display: block; margin-top: 7px; color: #17324d; font-size: 23px; letter-spacing: -.025em; }
+        .metric strong { display: block; margin-top: 7px; color: #17324d; font-size: 22px; letter-spacing: -.025em; }
+        .metric small { display: block; margin-top: 5px; color: #748492; font-size: 11px; }
+        .report-note { display: flex; align-items: center; gap: 8px; margin: -8px 0 20px; padding: 10px 13px; border: 1px solid #cce0e4; border-radius: 9px; background: #f2fafb; color: #245866; font-size: 12px; }
+        .report-note.warning { border-color: #f0d39d; background: #fff9ef; color: #8d5700; }
+        .report-note i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
         .metric.warning { border-color: #f0d39d; background: #fff9ef; }
         .metric.warning strong { color: #9a5b00; }
         table { width: 100%; border-collapse: collapse; }
@@ -58,6 +66,7 @@
             .report { width: 100%; margin: 0; padding: 0; box-shadow: none; }
             .report-header { padding-bottom: 14px; }
             .summary { margin: 16px 0; }
+            .report-note { margin: -6px 0 14px; }
             .metric { padding: 11px 13px; }
             td { padding: 8px 7px; }
             tr { break-inside: avoid; }
@@ -81,10 +90,13 @@
         </header>
 
         <section class="summary" aria-label="Riepilogo del periodo">
-            <article class="metric"><span>Registrazioni</span><strong>@entries.Length</strong></article>
-            <article class="metric"><span>Chilometri percorsi</span><strong>@totalKilometers.ToString("N0", cultura) km</strong></article>
-            <article class="metric @(gaps > 0 ? "warning" : "")"><span>Chilometri da verificare</span><strong>@gaps.ToString("N0", cultura) km</strong></article>
+            <article class="metric"><span>Registrazioni</span><strong>@entries.Length</strong><small>@(firstTripDate?.ToString("dd/MM/yyyy") ?? "—") – @(lastTripDate?.ToString("dd/MM/yyyy") ?? "—")</small></article>
+            <article class="metric"><span>Chilometri percorsi</span><strong>@totalKilometers.ToString("N0", cultura) km</strong><small>Totale nel periodo</small></article>
+            <article class="metric"><span>Intervallo contachilometri</span><strong>@(minimumKilometers?.ToString("N0", cultura) ?? "—") – @(maximumKilometers?.ToString("N0", cultura) ?? "—")</strong><small>Km iniziali e finali</small></article>
+            <article class="metric @(gaps > 0 ? "warning" : "")"><span>Da verificare</span><strong>@gaps.ToString("N0", cultura) km</strong><small>@(gaps > 0 ? "Sono presenti intervalli mancanti" : "Sequenza coerente nel periodo")</small></article>
         </section>
+
+        <p class="report-note @(gaps > 0 ? "warning" : "")"><i aria-hidden="true"></i>@(gaps > 0 ? "Attenzione: il report segnala chilometri non registrati nel periodo selezionato." : "Controllo completato: non risultano intervalli chilometrici mancanti nel periodo.")</p>
 
         @if (entries.Length == 0)
         {
