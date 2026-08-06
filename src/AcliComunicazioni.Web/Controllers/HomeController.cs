@@ -269,7 +269,7 @@ public sealed class HomeController : Controller
         var selectedYear = year.HasValue && availableYears.Contains(year.Value)
             ? year
             : null;
-        var selectedMonth = selectedYear.HasValue && month is >= 1 and <= 12
+        var selectedMonth = month is >= 1 and <= 12
             ? month
             : null;
 
