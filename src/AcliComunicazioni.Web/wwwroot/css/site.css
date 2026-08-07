@@ -289,7 +289,7 @@ h2 { letter-spacing: -.025em; }
         grid-column: 2;
         grid-row: 1 / span 2;
         align-self: center;
-        font-size: 1.32rem;
+        font-size: 1.08rem;
         letter-spacing: -.035em;
         color: #143f66;
         white-space: nowrap;
@@ -1564,7 +1564,7 @@ h2 { letter-spacing: -.025em; }
     .mobile-trip-results > h2 {
         margin: 0 0 8px;
         color: #172b46;
-        font-size: .86rem;
+        font-size: .76rem;
         font-weight: 730;
     }
     .mobile-trip-list {
@@ -2410,7 +2410,7 @@ h2 { letter-spacing: -.025em; }
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 18px;
+    gap: 14px;
     margin-bottom: 16px;
 }
 .period-kilometers-summary h2,
@@ -3127,28 +3127,28 @@ h2 { letter-spacing: -.025em; }
 }
 
 .login-page .login-experience {
-    grid-template-columns: minmax(460px, 1fr) minmax(430px, 1fr);
-    width: min(1180px, 100%);
-    min-height: 640px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: min(1080px, 100%);
+    min-height: 650px;
     border-color: #cbd7de;
-    border-radius: 24px;
-    box-shadow: 0 24px 64px rgba(18, 58, 90, .13);
+    border-radius: 22px;
+    box-shadow: 0 24px 64px rgba(18, 58, 90, .12);
 }
 
 .login-page .login-story {
     justify-content: space-between;
-    padding: 48px 56px 54px;
+    padding: 42px 44px 48px;
     background: linear-gradient(145deg, #123a5a 0%, #0e5570 58%, #0b6f7a 100%);
 }
 
 .login-page .login-story::before,
 .login-page .login-story::after {
-    border-color: rgba(255, 255, 255, .1);
+    display: none;
 }
 
 .login-page .login-official-logo {
-    width: 72px;
-    height: 82px;
+    width: 58px;
+    height: 66px;
     border-color: rgba(255, 255, 255, .28);
     border-radius: 13px;
     box-shadow: 0 12px 28px rgba(5, 30, 48, .24);
@@ -3168,14 +3168,15 @@ h2 { letter-spacing: -.025em; }
 }
 
 .login-page .login-story-copy {
-    max-width: 100%;
-    padding: 76px 0 90px;
+    max-width: 440px;
+    margin: auto 0;
+    padding: 36px 0 82px;
 }
 
 .login-page .login-story-copy h2 {
     max-width: 100%;
     color: #fff;
-    font-size: clamp(2.35rem, 3.55vw, 3.35rem);
+    font-size: clamp(2.25rem, 3.55vw, 2.75rem);
     line-height: 1.05;
     letter-spacing: -.045em;
     white-space: nowrap;
@@ -3183,24 +3184,24 @@ h2 { letter-spacing: -.025em; }
 
 .login-page .login-story-kicker {
     display: block;
-    margin: 24px 0 0;
+    margin: 20px 0 0;
     color: #fff;
-    font-size: 1.28rem;
+    font-size: 1.05rem;
     font-weight: 650;
     letter-spacing: -.01em;
     text-transform: none;
 }
 
 .login-page .login-story-copy p {
-    max-width: 430px;
-    margin-top: 23px;
+    max-width: 390px;
+    margin-top: 20px;
     color: rgba(255, 255, 255, .82);
-    font-size: 1rem;
+    font-size: .94rem;
     line-height: 1.6;
 }
 
 .login-page .login-panel {
-    padding: 58px clamp(50px, 5vw, 72px);
+    padding: 54px clamp(42px, 5vw, 58px);
     background: #fff;
 }
 
