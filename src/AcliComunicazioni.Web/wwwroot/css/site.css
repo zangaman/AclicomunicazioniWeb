@@ -164,7 +164,7 @@ h2 { letter-spacing: -.025em; }
 .login-story-brand span { color: rgba(255,255,255,.66); font-size: .78rem; }
 .login-story-copy { position: relative; z-index: 1; max-width: 440px; padding: 70px 0 42px; }
 .login-story-kicker { display: inline-block; margin-bottom: 16px; color: #79d8df; font-size: .75rem; font-weight: 800; text-transform: uppercase; letter-spacing: .13em; }
-.login-story-copy h2 { margin: 0; font-size: clamp(2.75rem, 4.5vw, 4rem); line-height: 1; letter-spacing: -.055em; }
+.login-story-copy h2 { margin: 0; max-width: 100%; font-size: clamp(2rem, 3.8vw, 2.65rem); line-height: 1.05; letter-spacing: -.045em; white-space: nowrap; }
 .login-story-copy p { max-width: 370px; margin: 20px 0 0; color: rgba(255,255,255,.76); font-size: 1.05rem; line-height: 1.65; }
 .login-panel { display: flex; flex-direction: column; justify-content: center; padding: 58px clamp(38px, 5vw, 64px); background: #fff; }
 .login-mobile-brand { display: none; }
@@ -196,7 +196,7 @@ h2 { letter-spacing: -.025em; }
     .export-actions { justify-content: flex-start; }
     .login-experience { grid-template-columns: minmax(340px, .85fr) minmax(390px, 1fr); }
     .login-story { padding: 38px; }
-    .login-story-copy h2 { font-size: 3.2rem; }
+    .login-story-copy h2 { font-size: clamp(1.7rem, 3vw, 2.15rem); }
 }
 
 @media (max-width: 680px) {
