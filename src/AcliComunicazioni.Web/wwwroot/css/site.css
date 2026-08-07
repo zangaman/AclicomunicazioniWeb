@@ -156,6 +156,8 @@ h2 { letter-spacing: -.025em; }
 .login-story-brand { position: relative; z-index: 1; display: flex; align-items: center; gap: 14px; }
 .login-official-logo { display: grid; width: 54px; height: 62px; flex: 0 0 auto; place-items: center; padding: 5px; border: 1px solid rgba(255,255,255,.2); border-radius: 14px; background: rgba(255,255,255,.97); box-shadow: 0 12px 28px rgba(0, 20, 35, .22); }
 .login-official-logo img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.login-mobile-official-logo { display: grid; width: 44px; height: 50px; flex: 0 0 auto; place-items: center; padding: 3px; border: 1px solid #e0e7eb; border-radius: 10px; background: #fff; box-shadow: 0 5px 14px rgba(16, 40, 72, .09); }
+.login-mobile-official-logo img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .login-logo { display: grid; width: 48px; height: 48px; flex: 0 0 auto; place-items: center; border-radius: 13px; background: linear-gradient(145deg, #19a1af, #087183); color: white; font-weight: 850; letter-spacing: -.04em; box-shadow: 0 10px 26px rgba(0, 20, 35, .22); }
 .login-story-brand > div { display: grid; gap: 2px; }
 .login-story-brand strong { font-size: 1.08rem; }
@@ -534,7 +536,6 @@ h2 { letter-spacing: -.025em; }
     .login-story { display: none; }
     .login-panel { min-height: 100vh; justify-content: flex-start; padding: max(28px, env(safe-area-inset-top)) 24px max(28px, env(safe-area-inset-bottom)); }
     .login-mobile-brand { display: flex; align-items: center; gap: 11px; margin-bottom: clamp(54px, 12vh, 96px); color: #102848; }
-    .login-mobile-brand .login-logo { width: 42px; height: 42px; border-radius: 11px; }
     .login-mobile-brand strong { font-size: 1rem; }
     .login-heading h1 { font-size: 2.35rem; }
     .login-heading p { margin-bottom: 30px; font-size: .98rem; }
