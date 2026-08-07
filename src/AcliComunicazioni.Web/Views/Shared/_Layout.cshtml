@@ -18,7 +18,9 @@
 </head>
 <body>
     @{
-        var displayName = User.FindFirst("display_name")?.Value ?? User.Identity?.Name ?? "Utente";
+        var rawDisplayName = User.FindFirst("display_name")?.Value ?? User.Identity?.Name ?? "Utente";
+        var italianTextInfo = System.Globalization.CultureInfo.GetCultureInfo("it-IT").TextInfo;
+        var displayName = italianTextInfo.ToTitleCase(rawDisplayName.Trim().ToLowerInvariant());
         var displayInitial = displayName.Trim().Length > 0 ? displayName.Trim()[0].ToString().ToUpperInvariant() : "U";
         var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
         var environmentLabel = Context.RequestServices.GetRequiredService<IConfiguration>()["ApplicationEnvironment:Label"];

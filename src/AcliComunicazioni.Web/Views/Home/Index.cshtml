@@ -283,7 +283,7 @@
             </div>
         </section>
 
-        <form class="history-filter mobile-history-filter" method="get" asp-action="Index" aria-label="Filtra lo storico per periodo">
+        <form class="history-filter mobile-history-filter" method="get" asp-action="Index" asp-fragment="latest-trips" data-auto-history-filter aria-label="Filtra lo storico per periodo">
             <label>
                 <span>Anno</span>
                 <select name="year">
@@ -304,7 +304,7 @@
                     }
                 </select>
             </label>
-            <button type="submit">Mostra</button>
+            <noscript><button type="submit">Mostra</button></noscript>
         </form>
         @if (!Model.IsAllHistory)
         {
@@ -510,7 +510,7 @@
         </div>
 
         <div class="history-tools">
-        <form class="history-filter" method="get" asp-action="Index" aria-label="Filtra lo storico per periodo">
+        <form class="history-filter" method="get" asp-action="Index" asp-fragment="latest-trips" data-auto-history-filter aria-label="Filtra lo storico per periodo">
             <label>
                 <span>Anno</span>
                 <select name="year">
@@ -531,7 +531,7 @@
                     }
                 </select>
             </label>
-            <button type="submit">Applica</button>
+            <noscript><button type="submit">Applica</button></noscript>
             @if (!Model.IsAllHistory)
             {
                 <a asp-action="Index" asp-route-showAll="true">Tutto lo storico</a>
@@ -680,6 +680,7 @@
             const mobileTripEmpty = document.getElementById('mobile-trip-empty');
             const mobileTripResults = document.querySelector('.mobile-trip-results');
             const mobileTripFilters = document.querySelectorAll('[data-trip-filter]');
+            const automaticHistoryFilters = document.querySelectorAll('[data-auto-history-filter]');
             let activeTripFilter = 'all';
 
             const setMobileFormOpen = open => {
@@ -724,6 +725,16 @@
                 button.addEventListener('click', () => setMobileScreen(button.dataset.mobileNav));
             });
             mobileOpenTrips?.addEventListener('click', () => setMobileScreen('trips'));
+
+            automaticHistoryFilters.forEach(historyFilter => {
+                historyFilter.querySelectorAll('select').forEach(select => {
+                    select.addEventListener('change', () => historyFilter.requestSubmit());
+                });
+            });
+
+            if (window.location.hash === '#latest-trips' && window.matchMedia('(max-width: 680px)').matches) {
+                setMobileScreen('trips');
+            }
 
             const applyTripFilters = () => {
                 const query = mobileTripSearch?.value.trim().toLocaleLowerCase('it-IT') ?? '';
