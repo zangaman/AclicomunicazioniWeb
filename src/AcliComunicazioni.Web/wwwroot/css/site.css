@@ -3247,13 +3247,18 @@ h2 { letter-spacing: -.025em; }
 }
 
 .login-page .login-submit {
-    background: #0b6f7a;
-    box-shadow: none;
+    background: #1786b4;
+    box-shadow: 0 8px 20px rgba(23, 134, 180, .22);
 }
 
 .login-page .login-submit:not(:disabled):hover {
-    background: #08535c;
-    box-shadow: 0 9px 22px rgba(8, 83, 92, .2);
+    background: #126f96;
+    box-shadow: 0 10px 24px rgba(23, 134, 180, .28);
+}
+
+.login-page .login-submit:focus-visible {
+    outline: 3px solid rgba(23, 134, 180, .28);
+    outline-offset: 3px;
 }
 
 .login-page .login-security-note {
