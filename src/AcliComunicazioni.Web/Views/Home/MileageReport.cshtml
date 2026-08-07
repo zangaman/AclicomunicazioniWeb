@@ -27,7 +27,7 @@
         .report { width: 100%; margin: 0; padding: 30px; border: 1px solid #dce6ea; border-radius: 14px; background: #fff; box-shadow: 0 8px 28px rgba(18, 45, 61, .07); }
         .report-header { display: flex; justify-content: space-between; gap: 28px; padding-bottom: 25px; border-bottom: 2px solid #176b7a; }
         .brand { display: flex; align-items: center; gap: 12px; font-weight: 760; }
-        .brand-mark { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; background: #176b7a; color: #fff; }
+        .report-brand-logo { display: block; width: 42px; height: 48px; object-fit: contain; }
         .eyebrow { color: #176b7a; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
         h1 { margin: 5px 0 3px; font-size: 24px; letter-spacing: -.035em; }
         .period { margin: 0; color: #617080; font-size: 12px; }
@@ -104,6 +104,7 @@
             .report-header { padding-bottom: 12px; }
             .report { font-size: 10pt; }
             .brand { font-size: 11pt; }
+            .report-brand-logo { width: 36px; height: 42px; }
             h1 { font-size: 21pt; }
             .period, .report-date { font-size: 9pt; }
             .summary { margin: 14px 0; }
@@ -168,7 +169,7 @@
     <main class="report">
         <header class="report-header">
             <div>
-                <div class="brand"><span class="brand-mark">AC</span> AcliComunicazioni</div>
+                <div class="brand"><img class="report-brand-logo" src="~/images/logo-acli.svg" alt="Logo ACLI" /> AcliComunicazioni</div>
                 <span class="eyebrow">Gestione trasferte</span>
                 <h1>Report percorrenze</h1>
                 <p class="period">@period</p>

@@ -15,11 +15,16 @@ public sealed class HomeController : Controller
 {
     private readonly IMileageService _mileageService;
     private readonly ICurrentUser _currentUser;
+    private readonly IWebHostEnvironment _environment;
 
-    public HomeController(IMileageService mileageService, ICurrentUser currentUser)
+    public HomeController(
+        IMileageService mileageService,
+        ICurrentUser currentUser,
+        IWebHostEnvironment environment)
     {
         _mileageService = mileageService;
         _currentUser = currentUser;
+        _environment = environment;
     }
 
     [HttpGet]
@@ -280,7 +285,9 @@ public sealed class HomeController : Controller
                 : history.SelectedYear?.ToString() ?? DateTime.Today.ToString("yyyy-MM");
 
         return File(
-            MileagePdfGenerator.Create(history),
+            MileagePdfGenerator.Create(
+                history,
+                Path.Combine(_environment.WebRootPath, "images", "logo-acli.png")),
             "application/pdf",
             $"percorrenze-{period}.pdf");
     }

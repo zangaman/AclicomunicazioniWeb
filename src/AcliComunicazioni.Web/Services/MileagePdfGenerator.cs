@@ -17,7 +17,7 @@ public static class MileagePdfGenerator
     private static readonly XColor Warning = XColor.FromArgb(154, 91, 0);
     private static readonly XColor WarningSurface = XColor.FromArgb(255, 249, 239);
 
-    public static byte[] Create(MileageHistoryViewModel model)
+    public static byte[] Create(MileageHistoryViewModel model, string logoPath)
     {
         var entries = model.Dashboard.RecentEntries
             .OrderByDescending(entry => entry.TripDate)
@@ -58,7 +58,7 @@ public static class MileagePdfGenerator
             page.Orientation = PdfSharp.PageOrientation.Portrait;
             graphics = XGraphics.FromPdfPage(page);
             pageNumber++;
-            y = DrawHeader(graphics, page, period, title, regular, bold);
+            y = DrawHeader(graphics, page, period, logoPath, title, regular, bold);
 
             if (includeSummary)
             {
@@ -116,15 +116,25 @@ public static class MileagePdfGenerator
         XGraphics graphics,
         PdfPage page,
         string period,
+        string logoPath,
         XFont title,
         XFont regular,
         XFont bold)
     {
         const double margin = 36;
-        graphics.DrawRoundedRectangle(new XSolidBrush(Teal), margin, 32, 34, 34, 7, 7);
-        graphics.DrawString("AC", bold, XBrushes.White, new XRect(margin, 32, 34, 34), CenterFormat());
-        graphics.DrawString("AcliComunicazioni", bold, new XSolidBrush(Navy), new XRect(80, 32, 220, 17), LeftFormat());
-        graphics.DrawString("GESTIONE TRASFERTE", regular, new XSolidBrush(Teal), new XRect(80, 49, 220, 17), LeftFormat());
+        if (File.Exists(logoPath))
+        {
+            using var logo = XImage.FromFile(logoPath);
+            graphics.DrawImage(logo, margin, 27, 38, 44);
+        }
+        else
+        {
+            graphics.DrawRoundedRectangle(new XSolidBrush(Teal), margin, 32, 34, 34, 7, 7);
+            graphics.DrawString("AC", bold, XBrushes.White, new XRect(margin, 32, 34, 34), CenterFormat());
+        }
+
+        graphics.DrawString("AcliComunicazioni", bold, new XSolidBrush(Navy), new XRect(84, 32, 220, 17), LeftFormat());
+        graphics.DrawString("GESTIONE TRASFERTE", regular, new XSolidBrush(Teal), new XRect(84, 49, 220, 17), LeftFormat());
         graphics.DrawString("Report percorrenze", title, new XSolidBrush(Navy), new XRect(margin, 78, 360, 30), LeftFormat());
         graphics.DrawString(period, regular, new XSolidBrush(Muted), new XRect(margin, 108, 360, 18), LeftFormat());
         graphics.DrawString($"Estratto il {DateTime.Today:dd/MM/yyyy}", regular, new XSolidBrush(Muted), new XRect(page.Width.Point - 220, 83, 184, 20), RightFormat());
