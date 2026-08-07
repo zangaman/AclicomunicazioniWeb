@@ -1431,3 +1431,133 @@
     .quick-entry-form .gap-warning { grid-column: 1 !important; }
     .quick-entry-form > .primary-button { width: 100%; }
 }
+
+/* Installed web app and compact desktop windows.
+   Keep the desktop navigation, but remove the minimum widths that caused
+   the dashboard to extend beyond the visible application window. */
+@media (min-width: 681px) and (max-width: 1280px) {
+    html,
+    body {
+        min-width: 0 !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+    }
+
+    .app-shell {
+        grid-template-columns: 210px minmax(0, 1fr) !important;
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+
+    .app-sidebar {
+        padding: 22px 12px 18px !important;
+    }
+
+    .app-sidebar-brand {
+        gap: 9px;
+        padding: 0 8px 26px !important;
+    }
+
+    .app-sidebar-nav a {
+        min-height: 49px !important;
+        padding: 0 12px !important;
+        font-size: .88rem !important;
+    }
+
+    .app-workspace,
+    .main-content,
+    .desktop-modern-dashboard,
+    .dashboard-grid {
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .topbar .topbar-content {
+        padding-inline: 24px !important;
+    }
+
+    .main-content {
+        padding: 28px 24px 52px !important;
+        overflow-x: hidden;
+    }
+
+    .modern-dashboard-heading {
+        gap: 16px;
+    }
+
+    .modern-title-row h1 {
+        font-size: clamp(1.75rem, 3vw, 2.2rem) !important;
+    }
+
+    .modern-primary-action {
+        flex: 0 0 auto;
+        padding-inline: 17px !important;
+    }
+
+    .modern-kpi-grid {
+        gap: 14px !important;
+    }
+
+    .modern-kpi-card {
+        min-width: 0 !important;
+        min-height: 116px !important;
+        gap: 13px !important;
+        padding: 18px !important;
+    }
+
+    .modern-kpi-icon {
+        width: 54px !important;
+        height: 54px !important;
+        flex: 0 0 54px;
+    }
+
+    .modern-kpi-icon .app-icon {
+        width: 28px !important;
+        height: 28px !important;
+    }
+
+    .modern-kpi-card strong {
+        font-size: 1.85rem !important;
+    }
+
+    .modern-dashboard-content {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .modern-dashboard-side {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) minmax(250px, .55fr);
+        align-items: stretch;
+    }
+
+    .modern-chart-panel {
+        min-width: 0 !important;
+    }
+
+    .modern-gap-card {
+        align-self: stretch;
+    }
+}
+
+@media (min-width: 681px) and (max-width: 920px) {
+    .app-shell {
+        grid-template-columns: 176px minmax(0, 1fr) !important;
+    }
+
+    .app-sidebar-brand small {
+        display: none;
+    }
+
+    .modern-kpi-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .modern-dashboard-side {
+        grid-template-columns: 1fr;
+    }
+
+    .modern-dashboard-heading {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+}
