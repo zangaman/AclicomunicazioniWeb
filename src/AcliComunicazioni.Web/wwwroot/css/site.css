@@ -289,7 +289,7 @@ h2 { letter-spacing: -.025em; }
         grid-column: 2;
         grid-row: 1 / span 2;
         align-self: center;
-        font-size: 1.08rem;
+        font-size: 1.32rem;
         letter-spacing: -.035em;
         color: #143f66;
         white-space: nowrap;
@@ -1564,7 +1564,7 @@ h2 { letter-spacing: -.025em; }
     .mobile-trip-results > h2 {
         margin: 0 0 8px;
         color: #172b46;
-        font-size: .76rem;
+        font-size: .86rem;
         font-weight: 730;
     }
     .mobile-trip-list {
@@ -3155,16 +3155,16 @@ h2 { letter-spacing: -.025em; }
 }
 
 .login-page .login-story-brand {
-    gap: 18px;
+    gap: 14px;
 }
 
 .login-page .login-story-brand strong {
-    font-size: 1.32rem;
+    font-size: 1.08rem;
 }
 
 .login-page .login-story-brand span {
     color: rgba(255, 255, 255, .78);
-    font-size: .86rem;
+    font-size: .76rem;
 }
 
 .login-page .login-story-copy {
