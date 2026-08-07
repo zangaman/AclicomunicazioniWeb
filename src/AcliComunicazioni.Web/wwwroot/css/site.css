@@ -2410,7 +2410,7 @@ h2 { letter-spacing: -.025em; }
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 14px;
+    gap: 18px;
     margin-bottom: 16px;
 }
 .period-kilometers-summary h2,
