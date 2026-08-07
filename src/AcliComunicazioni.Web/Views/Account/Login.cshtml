@@ -8,54 +8,114 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#117b8d" />
     <title>Accesso - AcliComunicazioni</title>
+    <link rel="manifest" href="~/manifest.webmanifest" />
+    <link rel="icon" type="image/png" sizes="192x192" href="~/icons/app-icon-192.png" />
+    <link rel="apple-touch-icon" href="~/icons/app-icon-192.png" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body class="login-page">
     <main class="login-shell">
-        <section class="login-panel" aria-labelledby="login-title">
-            <div class="login-brand">
-                <span class="brand-mark">AC</span>
-                <div>
+        <section class="login-experience" aria-labelledby="login-title">
+            <aside class="login-story" aria-label="AcliComunicazioni">
+                <div class="login-story-brand">
+                    <span class="login-logo">AC</span>
+                    <div>
+                        <strong>AcliComunicazioni</strong>
+                        <span>Servizi digitali interni</span>
+                    </div>
+                </div>
+
+                <div class="login-story-copy">
+                    <span class="login-story-kicker">Persone e servizi connessi</span>
+                    <h2>Comunicare.<br />Collaborare.<br />Semplificare.</h2>
+                    <p>Un unico spazio sicuro per accedere agli strumenti di lavoro ACLI.</p>
+                </div>
+
+                <div class="login-network" aria-hidden="true">
+                    <span class="network-node network-node-main">
+                        <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </span>
+                    <span class="network-line"></span>
+                    <span class="network-node"><svg viewBox="0 0 24 24"><path d="M4 4h16v12H5.17L4 17.17V4zM8 20h8"/></svg></span>
+                    <span class="network-line"></span>
+                    <span class="network-node"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4"/></svg></span>
+                </div>
+            </aside>
+
+            <section class="login-panel">
+                <div class="login-mobile-brand">
+                    <span class="login-logo">AC</span>
                     <strong>AcliComunicazioni</strong>
-                    <span>Piattaforma interna</span>
-                </div>
-            </div>
-
-            <div class="login-heading">
-                <span class="eyebrow">Area riservata</span>
-                <h1 id="login-title">Bentornato</h1>
-                <p>Accedi per utilizzare i servizi interni.</p>
-            </div>
-
-            <form asp-action="Login" method="post" class="login-form">
-                @Html.AntiForgeryToken()
-                <input asp-for="ReturnUrl" type="hidden" />
-
-                <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
-
-                <div class="form-field">
-                    <label asp-for="Username"></label>
-                    <input asp-for="Username" autocomplete="username" autofocus />
-                    <span asp-validation-for="Username" class="field-error"></span>
                 </div>
 
-                <div class="form-field">
-                    <label asp-for="Password"></label>
-                    <input asp-for="Password" autocomplete="current-password" />
-                    <span asp-validation-for="Password" class="field-error"></span>
+                <div class="login-heading">
+                    <span class="eyebrow">Area riservata</span>
+                    <h1 id="login-title">Accedi</h1>
+                    <p>Inserisci le tue credenziali aziendali.</p>
                 </div>
 
-                <label class="remember-row">
-                    <input asp-for="RememberMe" />
-                    <span>Resta connesso su questo dispositivo</span>
-                </label>
+                <form asp-action="Login" method="post" class="login-form">
+                    @Html.AntiForgeryToken()
+                    <input asp-for="ReturnUrl" type="hidden" />
 
-                <button type="submit" class="primary-button">Accedi</button>
-            </form>
+                    <div asp-validation-summary="ModelOnly" class="validation-summary login-validation"></div>
 
-            <p class="login-note">Accesso riservato al personale autorizzato.</p>
+                    <div class="form-field login-field">
+                        <label asp-for="Username"></label>
+                        <div class="login-input-wrap">
+                            <svg class="login-input-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+                            <input asp-for="Username" autocomplete="username" placeholder="nome.cognome" autofocus />
+                        </div>
+                        <span asp-validation-for="Username" class="field-error"></span>
+                    </div>
+
+                    <div class="form-field login-field">
+                        <label asp-for="Password"></label>
+                        <div class="login-input-wrap">
+                            <svg class="login-input-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                            <input asp-for="Password" autocomplete="current-password" placeholder="Inserisci la password" />
+                            <button type="button" class="password-toggle" aria-label="Mostra password" aria-pressed="false">
+                                <svg class="password-show-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="2.5"/></svg>
+                            </button>
+                        </div>
+                        <span asp-validation-for="Password" class="field-error"></span>
+                    </div>
+
+                    <label class="remember-row">
+                        <input asp-for="RememberMe" />
+                        <span>Resta connesso su questo dispositivo</span>
+                    </label>
+
+                    <button type="submit" class="primary-button login-submit">
+                        <span>Accedi</span>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
+                    </button>
+                </form>
+
+                <div class="login-security-note">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                    <span>Accesso protetto e riservato al personale autorizzato.</span>
+                </div>
+            </section>
         </section>
     </main>
+    <script>
+        (() => {
+            const button = document.querySelector('.password-toggle');
+            const password = document.getElementById('Password');
+            if (!button || !password) return;
+
+            button.addEventListener('click', () => {
+                const show = password.type === 'password';
+                password.type = show ? 'text' : 'password';
+                button.setAttribute('aria-pressed', show.toString());
+                button.setAttribute('aria-label', show ? 'Nascondi password' : 'Mostra password');
+                password.focus();
+            });
+        })();
+    </script>
+    <script src="~/js/pwa.js" asp-append-version="true"></script>
 </body>
 </html>
