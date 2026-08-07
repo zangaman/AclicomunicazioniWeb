@@ -451,7 +451,7 @@
             </button>
         </div>
 
-        <form asp-controller="Home" asp-action="AddMileage" method="post" class="quick-entry-form" id="mileage-form">
+        <form asp-controller="Home" asp-action="AddMileage" method="post" class="quick-entry-form" id="mileage-form" data-requires-online-form>
             @Html.AntiForgeryToken()
             <div class="form-row">
                 <div class="form-field">
@@ -490,7 +490,7 @@
                 <small>Assegnato automaticamente in base all’utente collegato.</small>
             </div>
 
-            <button class="primary-button" type="submit">Salva percorrenza</button>
+            <button class="primary-button" type="submit" data-requires-online>Salva percorrenza</button>
         </form>
     </article>
 </section>

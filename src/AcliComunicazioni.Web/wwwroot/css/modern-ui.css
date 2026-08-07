@@ -35,6 +35,69 @@
     height: 1.1rem;
 }
 
+.connection-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 30px;
+    padding: 0 10px;
+    border: 1px solid #d5e6dd;
+    border-radius: 999px;
+    background: #f4faf6;
+    color: #2f6d48;
+    font-size: .72rem;
+    font-weight: 750;
+}
+
+.connection-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #35a268;
+    box-shadow: 0 0 0 3px rgba(53, 162, 104, .12);
+}
+
+.connection-status.is-offline {
+    border-color: #efd09d;
+    background: #fff8eb;
+    color: #8b5607;
+}
+
+.connection-status.is-offline .connection-status-dot {
+    background: #d58a16;
+    box-shadow: 0 0 0 3px rgba(213, 138, 22, .14);
+}
+
+.offline-notice {
+    position: fixed;
+    z-index: 1000;
+    right: 24px;
+    bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: min(390px, calc(100% - 32px));
+    padding: 14px 16px;
+    border: 1px solid #e9bc73;
+    border-radius: 13px;
+    background: #fff9ef;
+    color: #754700;
+    box-shadow: 0 16px 40px rgba(70, 47, 11, .18);
+}
+
+.offline-notice[hidden] { display: none; }
+.offline-notice > svg { width: 25px; height: 25px; flex: 0 0 auto; fill: none; stroke: #c67808; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.offline-notice > span { display: grid; gap: 2px; }
+.offline-notice strong { font-size: .88rem; }
+.offline-notice small { color: #866737; font-size: .75rem; line-height: 1.35; }
+
+[data-requires-online]:disabled {
+    cursor: not-allowed !important;
+    opacity: .55 !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
 .desktop-modern-dashboard { display: none; }
 
 .environment-banner {
@@ -465,6 +528,21 @@
         color: var(--mobile-navy) !important;
     }
     .mobile-account-menu summary .app-icon { width: 26px !important; height: 26px !important; }
+    .connection-status {
+        min-width: 30px;
+        min-height: 30px;
+        padding: 0;
+        justify-content: center;
+        border: 0;
+        background: transparent;
+    }
+    .connection-status [data-connection-label] { display: none; }
+    .offline-notice {
+        right: 16px;
+        bottom: calc(82px + env(safe-area-inset-bottom));
+        width: calc(100% - 32px);
+        padding: 13px 14px;
+    }
 
     .main-content {
         width: 100% !important;

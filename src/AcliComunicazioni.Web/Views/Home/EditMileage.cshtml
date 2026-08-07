@@ -15,7 +15,7 @@
 </section>
 
 <section class="dashboard-card edit-card">
-    <form asp-action="EditMileage" method="post" class="edit-form" id="edit-mileage-form">
+    <form asp-action="EditMileage" method="post" class="edit-form" id="edit-mileage-form" data-requires-online-form>
         @Html.AntiForgeryToken()
         <input type="hidden" name="id" value="@Model.Id" />
 
@@ -62,15 +62,15 @@
 
         <div class="form-actions">
             <a class="secondary-button cancel-button" asp-action="Index" asp-fragment="latest-trips">Annulla</a>
-            <button class="primary-button save-button" type="submit">Salva modifiche</button>
+            <button class="primary-button save-button" type="submit" data-requires-online>Salva modifiche</button>
         </div>
     </form>
 
     <div class="delete-section">
-        <form asp-action="DeleteMileage" method="post" id="delete-mileage-form">
+        <form asp-action="DeleteMileage" method="post" id="delete-mileage-form" data-requires-online-form>
             @Html.AntiForgeryToken()
             <input type="hidden" name="id" value="@Model.Id" />
-            <button class="delete-text-button" type="submit">Elimina questa percorrenza</button>
+            <button class="delete-text-button" type="submit" data-requires-online>Elimina questa percorrenza</button>
         </form>
         <small>La percorrenza verrà rimossa dalla vista, ma resterà conservata nello storico del database.</small>
     </div>

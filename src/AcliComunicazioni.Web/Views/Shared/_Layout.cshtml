@@ -79,6 +79,10 @@
                     @if (User.Identity?.IsAuthenticated == true)
                     {
                         <div class="user-area">
+                            <div class="connection-status is-online" data-connection-status role="status" aria-live="polite">
+                                <span class="connection-status-dot" aria-hidden="true"></span>
+                                <span data-connection-label>Online</span>
+                            </div>
                             <button type="button" class="desktop-notification-button" aria-label="Notifiche">
                                 <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
                             </button>
