@@ -100,7 +100,7 @@ public sealed class DatabaseMileageService : IMileageService
         string? description,
         CancellationToken cancellationToken = default)
     {
-        var values = Validate(
+        var values = MileageRules.ValidateInput(
             startKilometers,
             endKilometers,
             tripDate,
@@ -157,7 +157,7 @@ public sealed class DatabaseMileageService : IMileageService
         string? description,
         CancellationToken cancellationToken = default)
     {
-        var values = Validate(
+        var values = MileageRules.ValidateInput(
             startKilometers,
             endKilometers,
             tripDate,
@@ -311,10 +311,9 @@ public sealed class DatabaseMileageService : IMileageService
         var startKilometers = reader.GetInt32(reader.GetOrdinal("KmPartenza"));
         var previousEndKilometers = GetNullableInt32(reader, "KmArrivoPrecedente");
 
-        var gapKilometers = previousEndKilometers.HasValue &&
-                            startKilometers > previousEndKilometers.Value
-            ? startKilometers - previousEndKilometers.Value
-            : 0;
+        var gapKilometers = MileageRules.CalculateGap(
+            previousEndKilometers,
+            startKilometers);
 
         return new MileageEntry(
             reader.GetInt32(reader.GetOrdinal("Id")),
@@ -340,58 +339,6 @@ public sealed class DatabaseMileageService : IMileageService
     {
         var ordinal = reader.GetOrdinal(columnName);
         return reader.IsDBNull(ordinal) ? null : reader.GetString(ordinal);
-    }
-
-    private static (string Route, string? Description) Validate(
-        int startKilometers,
-        int endKilometers,
-        DateTime tripDate,
-        string route,
-        string? description)
-    {
-        if (startKilometers < 0)
-        {
-            throw new ArgumentOutOfRangeException(
-                nameof(startKilometers),
-                "I chilometri iniziali non possono essere negativi.");
-        }
-
-        if (endKilometers < startKilometers)
-        {
-            throw new InvalidOperationException(
-                "I chilometri finali non possono essere inferiori a quelli iniziali.");
-        }
-
-        if (tripDate.Date > DateTime.Today)
-        {
-            throw new InvalidOperationException(
-                "La data della percorrenza non può essere futura.");
-        }
-
-        var normalizedRoute = route?.Trim() ?? string.Empty;
-
-        if (normalizedRoute.Length == 0)
-        {
-            throw new InvalidOperationException("Inserisci il tragitto.");
-        }
-
-        if (normalizedRoute.Length > 200)
-        {
-            throw new InvalidOperationException(
-                "Il tragitto non può superare 200 caratteri.");
-        }
-
-        var normalizedDescription = string.IsNullOrWhiteSpace(description)
-            ? null
-            : description.Trim();
-
-        if (normalizedDescription?.Length > 500)
-        {
-            throw new InvalidOperationException(
-                "Il dettaglio non può superare 500 caratteri.");
-        }
-
-        return (normalizedRoute, normalizedDescription);
     }
 
     private static async Task EnsureDateWithinNeighboringTripsAsync(
@@ -435,23 +382,12 @@ public sealed class DatabaseMileageService : IMileageService
 
         var previousDate = reader.IsDBNull(reader.GetOrdinal("PreviousTripDate"))
             ? (DateTime?)null
-            : reader.GetDateTime(reader.GetOrdinal("PreviousTripDate")).Date;
+            : reader.GetDateTime(reader.GetOrdinal("PreviousTripDate"));
         var nextDate = reader.IsDBNull(reader.GetOrdinal("NextTripDate"))
             ? (DateTime?)null
-            : reader.GetDateTime(reader.GetOrdinal("NextTripDate")).Date;
-        var normalizedDate = tripDate.Date;
+            : reader.GetDateTime(reader.GetOrdinal("NextTripDate"));
 
-        if (previousDate.HasValue && normalizedDate < previousDate.Value)
-        {
-            throw new InvalidOperationException(
-                $"La data deve essere uguale o successiva al {previousDate:dd/MM/yyyy}.");
-        }
-
-        if (nextDate.HasValue && normalizedDate > nextDate.Value)
-        {
-            throw new InvalidOperationException(
-                $"La data deve essere uguale o precedente al {nextDate:dd/MM/yyyy}.");
-        }
+        MileageRules.EnsureDateWithinNeighbors(tripDate, previousDate, nextDate);
     }
 
     private static async Task EnsureNoOverlapAsync(
@@ -488,10 +424,10 @@ public sealed class DatabaseMileageService : IMileageService
             var existingStart = reader.GetInt32(reader.GetOrdinal("KmPartenza"));
             var existingEnd = reader.GetInt32(reader.GetOrdinal("KmArrivo"));
 
-            throw new InvalidOperationException(
-                $"La percorrenza {startKilometers:N0} → {endKilometers:N0} si sovrappone " +
-                $"alla registrazione {existingStart:N0} → {existingEnd:N0}. " +
-                "Correggi i chilometri prima di salvare.");
+            MileageRules.EnsureNoOverlap(
+                startKilometers,
+                endKilometers,
+                [new MileageInterval(existingStart, existingEnd)]);
         }
     }
 
