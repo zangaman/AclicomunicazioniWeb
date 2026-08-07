@@ -3,7 +3,15 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#117b8d" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="AcliComunicazioni" />
     <title>@ViewData["Title"] - AcliComunicazioni</title>
+    <link rel="manifest" href="~/manifest.webmanifest" />
+    <link rel="icon" type="image/png" sizes="192x192" href="~/icons/app-icon-192.png" />
+    <link rel="apple-touch-icon" href="~/icons/app-icon-192.png" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/mileage.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/modern-ui.css" asp-append-version="true" />
@@ -82,6 +90,10 @@
                                 <div class="desktop-account-popover">
                                     <span>Utente collegato</span>
                                     <strong>@displayName</strong>
+                                    <button type="button" class="pwa-install-button" hidden>
+                                        <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2"/></svg>
+                                        Installa app
+                                    </button>
                                     <form asp-controller="Account" asp-action="Logout" method="post">
                                         @Html.AntiForgeryToken()
                                         <button type="submit">
@@ -99,6 +111,7 @@
                                 <div class="mobile-account-popover">
                                     <span>Utente collegato</span>
                                     <strong>@displayName</strong>
+                                    <button type="button" class="pwa-install-button" hidden>Installa app</button>
                                     <form asp-controller="Account" asp-action="Logout" method="post">
                                         @Html.AntiForgeryToken()
                                         <button type="submit">Esci</button>
@@ -116,6 +129,7 @@
     </div>
 
     @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/js/pwa.js" asp-append-version="true"></script>
     @if (currentAction == "Index")
     {
         <script>

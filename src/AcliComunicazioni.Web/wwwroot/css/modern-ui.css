@@ -10,6 +10,31 @@
     stroke-width: 1.8;
 }
 
+.pwa-install-button {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    width: 100%;
+    margin-top: .75rem;
+    padding: .7rem .8rem;
+    border: 1px solid #cfe1e6;
+    border-radius: .65rem;
+    background: #edf7f8;
+    color: #0b6f80;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.pwa-install-button[hidden] {
+    display: none;
+}
+
+.pwa-install-button .app-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
 .desktop-modern-dashboard { display: none; }
 
 .environment-banner {
