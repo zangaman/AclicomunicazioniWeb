@@ -31,6 +31,45 @@ public sealed class DatabaseUserAuthenticationService
             return null;
         }
 
+        var userRecord =
+            await FindUserRecordAsync(username, cancellationToken);
+
+        if (userRecord is null ||
+            !string.Equals(
+                userRecord.Password,
+                password,
+                StringComparison.Ordinal))
+        {
+            return null;
+        }
+
+        return ToAuthenticatedUser(userRecord);
+    }
+
+    public async Task<AuthenticatedUser?> FindByUsernameAsync(
+        string username,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            return null;
+        }
+
+        var userRecord =
+            await FindUserRecordAsync(username, cancellationToken);
+
+        return userRecord is null
+            ? null
+            : ToAuthenticatedUser(userRecord);
+    }
+
+    private async Task<UserRecord?> FindUserRecordAsync(
+        string username,
+        CancellationToken cancellationToken)
+    {
+        var suppliedUsername = username.Trim();
+        var shortUsername = GetShortUsername(suppliedUsername);
+
         const string sql = """
             SELECT TOP (1)
                 ID_utente,
@@ -41,7 +80,10 @@ public sealed class DatabaseUserAuthenticationService
                 Permessi_CE,
                 Bloccato
             FROM dbo.Utenti
-            WHERE Utente = @Username;
+            WHERE Utente = @SuppliedUsername
+               OR Utente = @ShortUsername
+            ORDER BY
+                CASE WHEN Utente = @SuppliedUsername THEN 0 ELSE 1 END;
             """;
 
         await using var connection = new SqlConnection(_connectionString);
@@ -49,9 +91,14 @@ public sealed class DatabaseUserAuthenticationService
 
         await using var command = new SqlCommand(sql, connection);
         command.Parameters.Add(
-            new SqlParameter("@Username", SqlDbType.NVarChar, 255)
+            new SqlParameter("@SuppliedUsername", SqlDbType.NVarChar, 255)
             {
-                Value = username.Trim()
+                Value = suppliedUsername
+            });
+        command.Parameters.Add(
+            new SqlParameter("@ShortUsername", SqlDbType.NVarChar, 255)
+            {
+                Value = shortUsername
             });
 
         await using var reader =
@@ -59,56 +106,74 @@ public sealed class DatabaseUserAuthenticationService
                 CommandBehavior.SingleRow,
                 cancellationToken);
 
-        if (!await reader.ReadAsync(cancellationToken))
+        if (!await reader.ReadAsync(cancellationToken) ||
+            ReadBoolean(reader, "Bloccato"))
         {
             return null;
         }
 
-        var isBlocked = ReadBoolean(reader, "Bloccato");
+        return new UserRecord(
+            Id: Convert.ToInt32(reader["ID_utente"]),
+            Username:
+                Convert.ToString(reader["Utente"])
+                ?? shortUsername,
+            Password:
+                reader["Password"] as string
+                ?? string.Empty,
+            FirstName:
+                reader["Nome"] as string
+                ?? string.Empty,
+            LastName:
+                reader["Cognome"] as string
+                ?? string.Empty,
+            PermissionLevel:
+                reader["Permessi_CE"] is DBNull
+                    ? 0
+                    : Convert.ToInt32(reader["Permessi_CE"]));
+    }
 
-        if (isBlocked)
-        {
-            return null;
-        }
-
-        var storedPassword =
-            reader["Password"] as string ?? string.Empty;
-
-        // Prima versione richiesta: confronto diretto con il valore esistente
-        // nella tabella dbo.Utenti. In seguito potrà essere sostituito con
-        // hashing o con l'algoritmo usato dal vecchio gestionale.
-        if (!string.Equals(
-                storedPassword,
-                password,
-                StringComparison.Ordinal))
-        {
-            return null;
-        }
-
-        var firstName =
-            reader["Nome"] as string ?? string.Empty;
-
-        var lastName =
-            reader["Cognome"] as string ?? string.Empty;
-
+    private static AuthenticatedUser ToAuthenticatedUser(
+        UserRecord userRecord)
+    {
         var displayName =
             string.Join(
                 " ",
-                new[] { firstName.Trim(), lastName.Trim() }
-                    .Where(value => !string.IsNullOrWhiteSpace(value)));
-
-        var permissionLevel =
-            reader["Permessi_CE"] is DBNull
-                ? 0
-                : Convert.ToInt32(reader["Permessi_CE"]);
+                new[]
+                {
+                    userRecord.FirstName.Trim(),
+                    userRecord.LastName.Trim()
+                }.Where(value =>
+                    !string.IsNullOrWhiteSpace(value)));
 
         return new AuthenticatedUser(
-            Id: Convert.ToInt32(reader["ID_utente"]),
-            Username: Convert.ToString(reader["Utente"]) ?? username.Trim(),
-            DisplayName: string.IsNullOrWhiteSpace(displayName)
-                ? username.Trim()
-                : displayName,
-            Role: $"PermissionLevel:{permissionLevel}");
+            Id: userRecord.Id,
+            Username: userRecord.Username,
+            DisplayName:
+                string.IsNullOrWhiteSpace(displayName)
+                    ? userRecord.Username
+                    : displayName,
+            Role:
+                $"PermissionLevel:{userRecord.PermissionLevel}");
+    }
+
+    private static string GetShortUsername(string username)
+    {
+        var slashPosition =
+            Math.Max(
+                username.LastIndexOf('\\'),
+                username.LastIndexOf('/'));
+
+        if (slashPosition >= 0 &&
+            slashPosition < username.Length - 1)
+        {
+            return username[(slashPosition + 1)..];
+        }
+
+        var atPosition = username.IndexOf('@');
+
+        return atPosition > 0
+            ? username[..atPosition]
+            : username;
     }
 
     private static bool ReadBoolean(
@@ -138,4 +203,12 @@ public sealed class DatabaseUserAuthenticationService
             _ => Convert.ToBoolean(value)
         };
     }
+
+    private sealed record UserRecord(
+        int Id,
+        string Username,
+        string Password,
+        string FirstName,
+        string LastName,
+        int PermissionLevel);
 }
