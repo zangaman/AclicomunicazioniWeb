@@ -1,13 +1,72 @@
-# Autenticazione di dominio
+# Autenticazione configurabile
 
-In **Development** e **Test** AcliComunicazioni mantiene il login applicativo
-basato su `dbo.Utenti`.
+AcliComunicazioni supporta due modalità alternative:
 
-In **Production** l'applicazione usa Windows Authentication:
+- `Local`: form con nome utente e password di `dbo.Utenti`.
+- `Domain`: Windows Authentication e associazione a `dbo.Utenti`.
 
-1. IIS autentica l'identità Active Directory.
+La modalità si imposta con:
+
+```json
+"Authentication": {
+  "Mode": "Local"
+}
+```
+
+Valori ammessi: `Local` e `Domain`. L'applicazione interrompe l'avvio se
+il valore manca o non è valido.
+
+Configurazione predefinita:
+
+| Ambiente | Modalità |
+|---|---|
+| Development | Local |
+| Test | Local |
+| Production | Domain |
+
+Le due modalità non vengono esposte contemporaneamente. In questo modo
+il login locale non diventa un accesso alternativo involontario quando è
+attivo il dominio.
+
+## Provare l'autenticazione di dominio sul PC locale
+
+Il PC deve appartenere al dominio e l'account Windows deve essere
+presente in `dbo.Utenti`.
+
+Da PowerShell, nella cartella del progetto Web:
+
+```powershell
+$env:Authentication__Mode = "Domain"
+dotnet run --launch-profile "AcliComunicazioni.Web - Sviluppo"
+```
+
+Aprire l'indirizzo HTTPS con il nome host, per esempio:
+
+```text
+https://localhost:61528
+```
+
+Evitare l'indirizzo IP durante la prova: Kerberos/Negotiate lavora meglio
+con un nome host e il browser deve riconoscere l'indirizzo come intranet.
+
+Per tornare al login locale:
+
+```powershell
+Remove-Item Env:Authentication__Mode
+dotnet run --launch-profile "AcliComunicazioni.Web - Sviluppo"
+```
+
+In alternativa si può modificare temporaneamente
+`appsettings.Development.json`, impostando `Mode` a `Domain`.
+
+La prova continua a usare `AcliComunicazioni_Sviluppo`: cambia soltanto
+il metodo di autenticazione.
+
+## Funzionamento della modalità Domain
+
+1. Windows autentica l'identità Active Directory.
 2. L'applicazione riceve un nome come `DOMINIO\nome.cognome`.
-3. Il nome breve `nome.cognome` viene cercato nella colonna
+3. Il nome breve `nome.cognome` viene cercato in
    `dbo.Utenti.Utente`.
 4. ID, nome visualizzato e permessi vengono caricati da `dbo.Utenti`.
 5. Un account assente o con `Bloccato = 1` non può accedere.
@@ -15,32 +74,27 @@ In **Production** l'applicazione usa Windows Authentication:
 La password di dominio non viene acquisita, salvata o confrontata
 dall'applicazione.
 
-## Configurazione IIS per Production
+## Configurazione IIS
 
-Sul server IIS:
+Quando `Authentication:Mode` è `Domain`:
 
-1. Installare il servizio ruolo **Windows Authentication**.
-2. Verificare che il server appartenga al dominio.
-3. Nel sito o nell'applicazione AcliComunicazioni aprire
-   **Autenticazione**.
-4. Impostare:
-   - **Autenticazione Windows: Abilitata**
-   - **Autenticazione anonima: Disabilitata**
-5. Nei provider di Windows Authentication mantenere:
-   - `Negotiate`
-   - `NTLM`
-6. Configurare l'ambiente:
-   `ASPNETCORE_ENVIRONMENT=Production`.
-7. Verificare che la connection string punti esclusivamente a
-   `AcliComunicazioni_Produzione`.
+- **Autenticazione Windows: Abilitata**
+- **Autenticazione anonima: Disabilitata**
+- provider: `Negotiate`, poi `NTLM`
 
-Non è necessario abilitare l'impersonificazione dell'utente. L'accesso a
-SQL Server continua a usare l'identità configurata per l'applicazione o
-la connection string di produzione.
+Quando `Authentication:Mode` è `Local`:
+
+- **Autenticazione Windows: Disabilitata**
+- **Autenticazione anonima: Abilitata**
+
+La configurazione dell'applicazione e quella di IIS devono quindi
+corrispondere.
+
+Non è necessario abilitare l'impersonificazione. L'accesso a SQL Server
+continua a usare l'identità dell'applicazione o la connection string
+configurata.
 
 ## Preparazione degli account
-
-Ogni persona autorizzata deve avere una riga attiva in `dbo.Utenti`.
 
 Esempio:
 
@@ -48,18 +102,11 @@ Esempio:
 - `dbo.Utenti.Utente`: `mario.rossi`
 - `dbo.Utenti.Bloccato`: `0`
 
-Il confronto del nome utente non usa la password presente in
-`dbo.Utenti`.
-
 ## Verifiche
 
-1. Persona del dominio presente in `dbo.Utenti`: accesso consentito.
-2. Persona del dominio assente da `dbo.Utenti`: accesso negato.
-3. Persona con `Bloccato = 1`: accesso negato.
-4. Ambiente Development/Test: il form di login continua a funzionare.
-5. Ambiente Production: il form password non è utilizzato.
-6. Le pagine protette richiedono sia l'identità di dominio sia
-   l'associazione a `dbo.Utenti`.
-
-Per l'accesso automatico dai PC aziendali, l'indirizzo del sito deve
-essere riconosciuto dal browser come sito intranet.
+1. Modalità Local: il form di login viene visualizzato.
+2. Modalità Domain: il form non viene utilizzato.
+3. Account di dominio presente in `dbo.Utenti`: accesso consentito.
+4. Account assente: accesso negato.
+5. Account con `Bloccato = 1`: accesso negato.
+6. Le pagine protette richiedono l'associazione a `dbo.Utenti`.
