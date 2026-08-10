@@ -75,7 +75,7 @@ public sealed class AccountController(
         {
             new(ClaimTypes.NameIdentifier, authenticatedUser.Id.ToString()),
             new(ClaimTypes.Name, authenticatedUser.Username),
-            new("display_name", authenticatedUser.DisplayName),
+            new(ApplicationClaimTypes.DisplayName, authenticatedUser.DisplayName),
             new(ClaimTypes.Role, authenticatedUser.Role)
         };
 
@@ -108,7 +108,14 @@ public sealed class AccountController(
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        if (environment.IsProduction())
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
+        await HttpContext.SignOutAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme);
+
         return RedirectToAction(nameof(Login));
     }
 
