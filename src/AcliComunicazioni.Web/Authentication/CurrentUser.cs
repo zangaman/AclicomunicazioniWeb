@@ -1,3 +1,4 @@
+using AcliComunicazioni.Application.Authentication;
 using AcliComunicazioni.Application.Common.Interfaces;
 using System.Security.Claims;
 
@@ -23,7 +24,11 @@ public sealed class CurrentUser : ICurrentUser
     {
         get
         {
-            var value = Principal?.FindFirstValue(ClaimTypes.NameIdentifier);
+            var value =
+                Principal?.FindFirstValue(
+                    ApplicationClaimTypes.UserId)
+                ?? Principal?.FindFirstValue(
+                    ClaimTypes.NameIdentifier);
 
             return int.TryParse(value, out var userId)
                 ? userId
@@ -36,9 +41,13 @@ public sealed class CurrentUser : ICurrentUser
         ?? Principal?.Identity?.Name;
 
     public string? DisplayName =>
-        Principal?.FindFirstValue("display_name")
+        Principal?.FindFirstValue(
+            ApplicationClaimTypes.DisplayName)
         ?? UserName;
 
     public string? Role =>
-        Principal?.FindFirstValue(ClaimTypes.Role);
+        Principal?.FindFirstValue(
+            ApplicationClaimTypes.Role)
+        ?? Principal?.FindFirstValue(
+            ClaimTypes.Role);
 }
