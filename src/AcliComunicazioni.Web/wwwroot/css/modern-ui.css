@@ -142,7 +142,7 @@
         --modern-border: #dfe7ec;
         --modern-text: #142f50;
         --modern-muted: #6d7f8e;
-        --modern-teal: #117b8d;
+        --modern-teal: #1786b4;
         --modern-teal-soft: #e8f5f7;
         --modern-amber: #d88608;
     }
@@ -459,7 +459,7 @@
         --mobile-surface: #fff;
         --mobile-border: #dfe7eb;
         --mobile-navy: #112d50;
-        --mobile-teal: #117b8d;
+        --mobile-teal: #1786b4;
         --mobile-teal-soft: #e7f4f6;
         --mobile-muted: #687c8b;
     }
@@ -1009,7 +1009,7 @@
         height: 34px;
         border-radius: 50%;
         color: #fff;
-        background: #176b7a;
+        background: #1786b4;
         font-size: .78rem;
         font-weight: 800;
     }
