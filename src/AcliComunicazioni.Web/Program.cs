@@ -13,7 +13,12 @@ using System.Data.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
-ValidateEnvironmentConfiguration(builder.Environment, builder.Configuration);
+ValidateEnvironmentConfiguration(
+    builder.Environment,
+    builder.Configuration);
+
+var useDomainAuthentication =
+    UsesDomainAuthentication(builder.Configuration);
 
 if (OperatingSystem.IsWindows())
 {
@@ -23,7 +28,7 @@ if (OperatingSystem.IsWindows())
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 
-if (builder.Environment.IsProduction())
+if (useDomainAuthentication)
 {
     builder.Services
         .AddAuthentication(
@@ -61,7 +66,7 @@ else
 
 builder.Services.AddAuthorization(options =>
 {
-    if (builder.Environment.IsProduction())
+    if (useDomainAuthentication)
     {
         var domainUserPolicy =
             new AuthorizationPolicyBuilder()
@@ -103,6 +108,22 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+static bool UsesDomainAuthentication(
+    IConfiguration configuration)
+{
+    var mode =
+        configuration["Authentication:Mode"]?.Trim();
+
+    return mode?.ToUpperInvariant() switch
+    {
+        "DOMAIN" => true,
+        "LOCAL" => false,
+        _ => throw new InvalidOperationException(
+            "Authentication:Mode deve essere configurato " +
+            "come 'Local' oppure 'Domain'.")
+    };
+}
 
 static void ValidateEnvironmentConfiguration(
     IWebHostEnvironment environment,
