@@ -4,7 +4,10 @@ using AcliComunicazioni.Application.Mileage;
 using AcliComunicazioni.Infrastructure.Authentication;
 using AcliComunicazioni.Infrastructure.Mileage;
 using AcliComunicazioni.Web.Authentication;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Negotiate;
+using Microsoft.AspNetCore.Authorization;
 using PdfSharp.Fonts;
 using System.Data.Common;
 
@@ -20,25 +23,54 @@ if (OperatingSystem.IsWindows())
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 
-builder.Services
-    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
+if (builder.Environment.IsProduction())
+{
+    builder.Services
+        .AddAuthentication(
+            NegotiateDefaults.AuthenticationScheme)
+        .AddNegotiate();
+
+    builder.Services.AddMemoryCache();
+    builder.Services.AddScoped<
+        IClaimsTransformation,
+        DomainUserClaimsTransformation>();
+}
+else
+{
+    builder.Services
+        .AddAuthentication(
+            CookieAuthenticationDefaults.AuthenticationScheme)
+        .AddCookie(options =>
+        {
+            options.LoginPath = "/Account/Login";
+            options.LogoutPath = "/Account/Logout";
+            options.AccessDeniedPath = "/Account/AccessDenied";
+
+            options.Cookie.Name = "AcliComunicazioni.Auth";
+            options.Cookie.HttpOnly = true;
+            options.Cookie.IsEssential = true;
+            options.Cookie.SameSite = SameSiteMode.Lax;
+            options.Cookie.SecurePolicy =
+                CookieSecurePolicy.SameAsRequest;
+
+            options.SlidingExpiration = true;
+            options.ExpireTimeSpan =
+                TimeSpan.FromHours(2);
+        });
+}
+
+builder.Services.AddAuthorization(options =>
+{
+    if (builder.Environment.IsProduction())
     {
-        options.LoginPath = "/Account/Login";
-        options.LogoutPath = "/Account/Logout";
-        options.AccessDeniedPath = "/Account/AccessDenied";
-
-        options.Cookie.Name = "AcliComunicazioni.Auth";
-        options.Cookie.HttpOnly = true;
-        options.Cookie.IsEssential = true;
-        options.Cookie.SameSite = SameSiteMode.Lax;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
-
-        options.SlidingExpiration = true;
-        options.ExpireTimeSpan = TimeSpan.FromHours(2);
-    });
-
-builder.Services.AddAuthorization();
+        options.FallbackPolicy =
+            new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .RequireClaim(
+                    ApplicationClaimTypes.UserId)
+                .Build();
+    }
+});
 
 builder.Services.AddScoped<
     IUserAuthenticationService,
