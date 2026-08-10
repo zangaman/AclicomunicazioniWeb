@@ -6,4 +6,8 @@ public interface IUserAuthenticationService
         string username,
         string password,
         CancellationToken cancellationToken = default);
+
+    Task<AuthenticatedUser?> FindByUsernameAsync(
+        string username,
+        CancellationToken cancellationToken = default);
 }
