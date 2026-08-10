@@ -7,8 +7,8 @@
     --line: #dce5ec;
     --surface: #ffffff;
     --surface-soft: #f7f9fb;
-    --accent: #176b87;
-    --accent-dark: #0f536b;
+    --accent: #1786b4;
+    --accent-dark: #126f96;
     --success: #21663d;
     --warning: #a35c00;
     --danger: #9a2525;
@@ -149,7 +149,7 @@ h2 { letter-spacing: -.025em; }
 .login-page { min-height: 100vh; background: #edf3f6; }
 .login-shell { min-height: 100vh; display: grid; place-items: center; padding: 34px; }
 .login-experience { display: grid; grid-template-columns: minmax(430px, 1.04fr) minmax(390px, .96fr); width: min(1040px, 100%); min-height: 620px; overflow: hidden; border: 1px solid rgba(196, 211, 220, .9); border-radius: 28px; background: white; box-shadow: 0 30px 80px rgba(12, 45, 62, .14); }
-.login-story { position: relative; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; padding: 48px 52px; background: linear-gradient(145deg, #082c4d 0%, #075369 55%, #0c7d8c 100%); color: white; }
+.login-story { position: relative; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; padding: 48px 52px; background: linear-gradient(145deg, #082c4d 0%, #075369 55%, #1786b4 100%); color: white; }
 .login-story::before, .login-story::after { content: ""; position: absolute; border: 1px solid rgba(255, 255, 255, .13); border-radius: 50%; }
 .login-story::before { width: 430px; height: 430px; right: -245px; top: -215px; box-shadow: 0 0 0 70px rgba(255,255,255,.025), 0 0 0 140px rgba(255,255,255,.018); }
 .login-story::after { width: 280px; height: 280px; left: -185px; bottom: -150px; box-shadow: 0 0 0 55px rgba(255,255,255,.025); }
@@ -158,7 +158,7 @@ h2 { letter-spacing: -.025em; }
 .login-official-logo img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .login-mobile-official-logo { display: grid; width: 44px; height: 50px; flex: 0 0 auto; place-items: center; padding: 3px; border: 1px solid #e0e7eb; border-radius: 10px; background: #fff; box-shadow: 0 5px 14px rgba(16, 40, 72, .09); }
 .login-mobile-official-logo img { display: block; width: 100%; height: 100%; object-fit: contain; }
-.login-logo { display: grid; width: 48px; height: 48px; flex: 0 0 auto; place-items: center; border-radius: 13px; background: linear-gradient(145deg, #19a1af, #087183); color: white; font-weight: 850; letter-spacing: -.04em; box-shadow: 0 10px 26px rgba(0, 20, 35, .22); }
+.login-logo { display: grid; width: 48px; height: 48px; flex: 0 0 auto; place-items: center; border-radius: 13px; background: linear-gradient(145deg, #1786b4, #126f96); color: white; font-weight: 850; letter-spacing: -.04em; box-shadow: 0 10px 26px rgba(0, 20, 35, .22); }
 .login-story-brand > div { display: grid; gap: 2px; }
 .login-story-brand strong { font-size: 1.12rem; }
 .login-story-brand span { color: rgba(255,255,255,.66); font-size: .78rem; }
@@ -168,7 +168,7 @@ h2 { letter-spacing: -.025em; }
 .login-story-copy p { max-width: 370px; margin: 20px 0 0; color: rgba(255,255,255,.76); font-size: 1.05rem; line-height: 1.65; }
 .login-panel { display: flex; flex-direction: column; justify-content: center; padding: 58px clamp(38px, 5vw, 64px); background: #fff; }
 .login-mobile-brand { display: none; }
-.login-heading .eyebrow { color: #0b7b8c; }
+.login-heading .eyebrow { color: #1786b4; }
 .login-heading h1 { margin: 10px 0 9px; color: #102848; font-size: clamp(2.25rem, 4vw, 3.1rem); }
 .login-heading p { margin: 0 0 34px; color: #66788a; font-size: 1rem; }
 .login-form { display: grid; gap: 20px; }
@@ -179,15 +179,15 @@ h2 { letter-spacing: -.025em; }
 .login-field .login-input-wrap input { min-height: 52px; padding: 13px 48px 13px 46px; border-radius: 11px; background: #fbfcfd; }
 .login-input-icon { position: absolute; z-index: 1; left: 16px; top: 50%; width: 19px; height: 19px; transform: translateY(-50%); fill: none; stroke: #718496; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
 .password-toggle { position: absolute; right: 7px; top: 50%; display: grid; width: 38px; height: 38px; padding: 0; place-items: center; transform: translateY(-50%); border: 0; border-radius: 8px; background: transparent; color: #65798a; cursor: pointer; }
-.password-toggle:hover { background: #edf4f6; color: #08788a; }
+.password-toggle:hover { background: #edf4f6; color: #126f96; }
 .password-toggle svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .remember-row { display: flex; align-items: center; gap: 10px; color: #566b7d; font-size: .87rem; cursor: pointer; }
-.remember-row input { width: 17px; height: 17px; accent-color: #117b8d; }
+.remember-row input { width: 17px; height: 17px; accent-color: #1786b4; }
 .login-submit { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; margin-top: 2px; border-radius: 11px; }
 .login-submit svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .15s ease; }
 .login-submit:hover svg { transform: translateX(3px); }
 .login-security-note { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 27px; color: #778796; font-size: .76rem; text-align: center; }
-.login-security-note svg { width: 17px; height: 17px; flex: 0 0 auto; fill: none; stroke: #278497; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.login-security-note svg { width: 17px; height: 17px; flex: 0 0 auto; fill: none; stroke: #1786b4; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 
 @media (max-width: 1000px) {
     .page-heading, .dashboard-heading { align-items: flex-start; }
@@ -359,7 +359,7 @@ h2 { letter-spacing: -.025em; }
         padding: 0;
         border: 0;
         border-radius: 50%;
-        background: #15b9db;
+        background: #1786b4;
         color: white;
         box-shadow: 0 5px 15px rgba(0, 137, 177, .35);
         font-size: 0;
@@ -592,7 +592,7 @@ h2 { letter-spacing: -.025em; }
         min-height: 132px;
         padding: 16px 18px;
         border-radius: 7px;
-        background: linear-gradient(135deg, #2999aa 0%, #48b7c4 62%, #65c5cd 100%);
+        background: linear-gradient(135deg, #1786b4 0%, #48b7c4 62%, #65c5cd 100%);
         color: white;
         box-shadow: 0 8px 20px rgba(37, 145, 160, .22);
     }
@@ -733,7 +733,7 @@ h2 { letter-spacing: -.025em; }
         height: 32px;
         border-radius: 50%;
         background: #e8f5f6;
-        color: #248493 !important;
+        color: #1786b4 !important;
         font-size: .75rem !important;
         font-weight: 800;
     }
@@ -774,7 +774,7 @@ h2 { letter-spacing: -.025em; }
         min-height: 132px;
         padding: 18px;
         border-radius: 7px;
-        background: linear-gradient(135deg, #2398a9, #50b9c5 70%, #68c8cf);
+        background: linear-gradient(135deg, #1786b4, #50b9c5 70%, #68c8cf);
         color: white;
         box-shadow: 0 8px 20px rgba(37,145,160,.22);
     }
@@ -945,7 +945,7 @@ h2 { letter-spacing: -.025em; }
         border-radius: 13px;
         background:
             radial-gradient(circle at 88% 16%, rgba(255,255,255,.16), transparent 28%),
-            linear-gradient(135deg, #1e8fa2 0%, #42afbd 58%, #69c9d0 100%);
+            linear-gradient(135deg, #1786b4 0%, #42afbd 58%, #69c9d0 100%);
         box-shadow: 0 12px 26px rgba(31,139,154,.24);
     }
     .mobile-odometer-hero > strong { font-size: 2.02rem; }
@@ -2099,7 +2099,7 @@ h2 { letter-spacing: -.025em; }
     .main-content > .alert-success::before,
     .mobile-home-register,
     .mobile-trip-filters button.active {
-        background: #176b7a;
+        background: #1786b4;
     }
     .topbar-brand .brand-mark {
         box-shadow: 0 3px 9px rgba(23,107,122,.18);
@@ -2113,14 +2113,14 @@ h2 { letter-spacing: -.025em; }
     .mobile-operation-heading > div > span,
     .mobile-operation-status,
     .mobile-trips-summary span {
-        color: #176b7a;
+        color: #1786b4;
     }
     .mobile-operation-status {
         border-color: #c7e0e4;
         background: #eef7f8;
     }
     .mobile-operation-status i {
-        background: #258496;
+        background: #1786b4;
         box-shadow: 0 0 0 3px rgba(37,132,150,.12);
     }
 
@@ -2133,7 +2133,7 @@ h2 { letter-spacing: -.025em; }
         background: #ffffff;
     }
     .mobile-hero-ring {
-        color: #176b7a;
+        color: #1786b4;
     }
     .mobile-home-register {
         box-shadow: 0 5px 13px rgba(23,107,122,.2);
@@ -2147,26 +2147,26 @@ h2 { letter-spacing: -.025em; }
     .mobile-trip-filters button.active,
     .mobile-bottom-nav button.active,
     .mobile-bottom-nav button.active .nav-trips-icon {
-        color: #176b7a;
+        color: #1786b4;
     }
     .mobile-trip-filters button.active {
-        border-color: #176b7a;
+        border-color: #1786b4;
         box-shadow: 0 3px 8px rgba(23,107,122,.16);
     }
     .mobile-trip-search:focus-within {
-        border-color: #176b7a;
+        border-color: #1786b4;
         box-shadow: 0 0 0 3px rgba(23,107,122,.12);
     }
     .mobile-gap-complete {
-        border-color: #176b7a;
-        color: #176b7a;
+        border-color: #1786b4;
+        color: #1786b4;
     }
     .mobile-bottom-nav button.active::after {
-        background: #176b7a;
+        background: #1786b4;
     }
     .mobile-bottom-nav button.active .nav-home-icon {
-        fill: #176b7a;
-        stroke: #176b7a;
+        fill: #1786b4;
+        stroke: #1786b4;
     }
     .mobile-vehicle-symbol,
     .mobile-trip-icon {
@@ -2344,7 +2344,7 @@ h2 { letter-spacing: -.025em; }
     padding: 0 12px;
     border: 1px solid #d5e0e6;
     border-radius: 9px;
-    background: #176b7a;
+    background: #1786b4;
     color: #fff;
     font: inherit;
     font-size: .8rem;
@@ -2389,7 +2389,7 @@ h2 { letter-spacing: -.025em; }
     .mobile-history-all {
         display: inline-flex;
         margin: -4px 0 10px;
-        color: #176b7a;
+        color: #1786b4;
         font-size: .73rem;
         font-weight: 720;
         text-decoration: none;
@@ -2421,7 +2421,7 @@ h2 { letter-spacing: -.025em; }
     padding: 6px 9px;
     border-radius: 999px;
     background: #eef6f7;
-    color: #176b7a;
+    color: #1786b4;
     font-size: .76rem;
     font-weight: 750;
 }
@@ -2458,7 +2458,7 @@ h2 { letter-spacing: -.025em; }
 .period-kilometers-row:first-of-type { border-top: 0; }
 .period-kilometers-row span { color: #263f53; font-size: .88rem; font-weight: 680; text-transform: capitalize; }
 .period-kilometers-row small { color: #75838c; font-size: .73rem; }
-.period-kilometers-row strong { color: #176b7a; font-size: .87rem; font-variant-numeric: tabular-nums; }
+.period-kilometers-row strong { color: #1786b4; font-size: .87rem; font-variant-numeric: tabular-nums; }
 
 @media (max-width: 680px) {
     .desktop-period-kilometers { display: none; }
@@ -2542,7 +2542,7 @@ h2 { letter-spacing: -.025em; }
 @media (min-width: 681px) {
     :root {
         --workspace-navy: #123448;
-        --workspace-petrol: #176b7a;
+        --workspace-petrol: #1786b4;
         --workspace-soft: #f3f7f8;
         --workspace-line: #dce6e9;
     }
@@ -2711,7 +2711,7 @@ h2 { letter-spacing: -.025em; }
         gap: 6px;
         padding: 26px 30px;
         color: #fff;
-        background: linear-gradient(135deg, #123448, #176b7a);
+        background: linear-gradient(135deg, #123448, #1786b4);
     }
 
     .mileage-status-main .card-kicker { color: #b8e5e5; }
@@ -2779,22 +2779,22 @@ h2 { letter-spacing: -.025em; }
     .app-sidebar-brand .brand-mark {
         color: #fff;
         border: 0;
-        background: #176b7a;
+        background: #1786b4;
         box-shadow: 0 5px 12px rgba(23,107,122,.14);
     }
     .app-sidebar-brand small { color: #778993; }
 
     .app-sidebar-nav a { color: #637983; }
     .app-sidebar-nav a:hover {
-        color: #176b7a;
+        color: #1786b4;
         background: #f1f7f7;
         transform: none;
     }
     .app-sidebar-nav a.active {
-        color: #176b7a;
+        color: #1786b4;
         border-color: transparent;
         background: #eaf6f6;
-        box-shadow: inset 3px 0 0 #176b7a;
+        box-shadow: inset 3px 0 0 #1786b4;
     }
 
     .app-sidebar-footer { border-color: #e5ecee; }
@@ -2818,7 +2818,7 @@ h2 { letter-spacing: -.025em; }
     }
     .mileage-status-main {
         padding: 23px 28px;
-        background: #176b7a;
+        background: #1786b4;
     }
     .mileage-status-detail { padding: 26px 31px; }
 
@@ -2882,7 +2882,7 @@ h2 { letter-spacing: -.025em; }
     }
     .app-sidebar-nav a.active {
         color: #fff;
-        background: #13798a;
+        background: #1786b4;
         box-shadow: none;
     }
 
@@ -2944,7 +2944,7 @@ h2 { letter-spacing: -.025em; }
         padding: 0 18px;
         border-radius: 10px;
         color: #fff;
-        background: #13798a;
+        background: #1786b4;
         font-size: .88rem;
         font-weight: 750;
         text-decoration: none;
@@ -2976,14 +2976,14 @@ h2 { letter-spacing: -.025em; }
         width: 54px;
         height: 54px;
         border-radius: 50%;
-        color: #176b7a;
+        color: #1786b4;
         background: #e9f5f6;
     }
     .modern-kpi-icon .app-icon { width: 28px; height: 28px; }
     .modern-kpi-card > span:last-child { display: grid; gap: 3px; min-width: 0; }
     .modern-kpi-card small { color: #4f6170; font-size: .78rem; }
     .modern-kpi-card strong {
-        color: #13798a;
+        color: #1786b4;
         font-size: 1.85rem;
         line-height: 1;
         letter-spacing: -.04em;
@@ -3017,7 +3017,7 @@ h2 { letter-spacing: -.025em; }
     .modern-panel > header > div { display: flex; align-items: center; gap: 9px; }
     .modern-panel h2 { margin: 0; color: #17324d; font-size: .98rem; }
     .modern-panel header .app-icon { width: 20px; color: #17324d; }
-    .modern-panel header a { color: #13798a; font-size: .78rem; font-weight: 700; text-decoration: none; }
+    .modern-panel header a { color: #1786b4; font-size: .78rem; font-weight: 700; text-decoration: none; }
     .modern-panel header > span {
         padding: 7px 10px;
         border: 1px solid #dce5e9;
@@ -3040,7 +3040,7 @@ h2 { letter-spacing: -.025em; }
     .modern-trip-list a:last-child { border-bottom: 0; }
     .modern-trip-list time { color: #60727e; font-size: .76rem; }
     .modern-trip-list strong { overflow: hidden; font-size: .84rem; text-overflow: ellipsis; white-space: nowrap; }
-    .modern-trip-list span { color: #13798a; font-size: .82rem; font-weight: 800; }
+    .modern-trip-list span { color: #1786b4; font-size: .82rem; font-weight: 800; }
 
     .modern-chart-panel { min-height: 288px; }
     .modern-bar-chart {
@@ -3066,7 +3066,7 @@ h2 { letter-spacing: -.025em; }
         width: 15px;
         min-height: 8px;
         border-radius: 4px 4px 1px 1px;
-        background: #13798a;
+        background: #1786b4;
     }
     .modern-bar-item small { color: #6c7c86; font-size: .64rem; text-transform: capitalize; }
 
@@ -3138,7 +3138,7 @@ h2 { letter-spacing: -.025em; }
 .login-page .login-story {
     justify-content: space-between;
     padding: 42px 44px 48px;
-    background: linear-gradient(145deg, #123a5a 0%, #0e5570 58%, #0b6f7a 100%);
+    background: linear-gradient(145deg, #123a5a 0%, #126f96 58%, #1786b4 100%);
 }
 
 .login-page .login-story::before,
@@ -3206,7 +3206,7 @@ h2 { letter-spacing: -.025em; }
 }
 
 .login-page .login-heading .eyebrow {
-    color: #0b6f7a;
+    color: #1786b4;
 }
 
 .login-page .login-heading h1 {
@@ -3228,7 +3228,7 @@ h2 { letter-spacing: -.025em; }
 }
 
 .login-page .login-field .login-input-wrap input:focus {
-    border-color: #1d70b8;
+    border-color: #1786b4;
     box-shadow: 0 0 0 4px rgba(29, 112, 184, .18);
 }
 
@@ -3243,7 +3243,7 @@ h2 { letter-spacing: -.025em; }
 }
 
 .login-page .remember-row input {
-    accent-color: #0b6f7a;
+    accent-color: #1786b4;
 }
 
 .login-page .login-submit {
@@ -3266,7 +3266,7 @@ h2 { letter-spacing: -.025em; }
 }
 
 .login-page .login-security-note svg {
-    stroke: #285ea8;
+    stroke: #1786b4;
 }
 
 .login-page .login-mobile-brand > span:last-child {
