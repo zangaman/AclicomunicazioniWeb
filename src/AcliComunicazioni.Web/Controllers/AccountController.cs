@@ -8,18 +8,39 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AcliComunicazioni.Web.Controllers;
 
-public sealed class AccountController(IUserAuthenticationService authenticationService) : Controller
+public sealed class AccountController(
+    IUserAuthenticationService authenticationService,
+    IWebHostEnvironment environment) : Controller
 {
     [AllowAnonymous]
     [HttpGet]
     public IActionResult Login(string? returnUrl = null)
     {
+        if (environment.IsProduction())
+        {
+            if (User.Identity?.IsAuthenticated != true)
+            {
+                return Challenge();
+            }
+
+            return User.HasClaim(
+                    claim =>
+                        claim.Type ==
+                        ApplicationClaimTypes.UserId)
+                ? RedirectToAction("Index", "Home")
+                : RedirectToAction(nameof(AccessDenied));
+        }
+
         if (User.Identity?.IsAuthenticated == true)
         {
             return RedirectToAction("Index", "Home");
         }
 
-        return View(new LoginViewModel { ReturnUrl = returnUrl });
+        return View(
+            new LoginViewModel
+            {
+                ReturnUrl = returnUrl
+            });
     }
 
     [AllowAnonymous]
@@ -29,6 +50,11 @@ public sealed class AccountController(IUserAuthenticationService authenticationS
         LoginViewModel model,
         CancellationToken cancellationToken)
     {
+        if (environment.IsProduction())
+        {
+            return RedirectToAction(nameof(Login));
+        }
+
         if (!ModelState.IsValid)
         {
             return View(model);
