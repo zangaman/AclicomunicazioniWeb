@@ -10,13 +10,19 @@ namespace AcliComunicazioni.Web.Controllers;
 
 public sealed class AccountController(
     IUserAuthenticationService authenticationService,
-    IWebHostEnvironment environment) : Controller
+    IConfiguration configuration) : Controller
 {
+    private bool UsesDomainAuthentication() =>
+        string.Equals(
+            configuration["Authentication:Mode"],
+            "Domain",
+            StringComparison.OrdinalIgnoreCase);
+
     [AllowAnonymous]
     [HttpGet]
     public IActionResult Login(string? returnUrl = null)
     {
-        if (environment.IsProduction())
+        if (UsesDomainAuthentication())
         {
             if (User.Identity?.IsAuthenticated != true)
             {
@@ -50,7 +56,7 @@ public sealed class AccountController(
         LoginViewModel model,
         CancellationToken cancellationToken)
     {
-        if (environment.IsProduction())
+        if (UsesDomainAuthentication())
         {
             return RedirectToAction(nameof(Login));
         }
@@ -108,7 +114,7 @@ public sealed class AccountController(
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {
-        if (environment.IsProduction())
+        if (UsesDomainAuthentication())
         {
             return RedirectToAction("Index", "Home");
         }
