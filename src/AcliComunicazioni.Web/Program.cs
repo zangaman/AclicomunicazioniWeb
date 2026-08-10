@@ -63,12 +63,15 @@ builder.Services.AddAuthorization(options =>
 {
     if (builder.Environment.IsProduction())
     {
-        options.FallbackPolicy =
+        var domainUserPolicy =
             new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
                 .RequireClaim(
                     ApplicationClaimTypes.UserId)
                 .Build();
+
+        options.DefaultPolicy = domainUserPolicy;
+        options.FallbackPolicy = domainUserPolicy;
     }
 });
 
