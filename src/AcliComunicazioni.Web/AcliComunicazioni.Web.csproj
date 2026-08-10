@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Negotiate" Version="10.0.0" />
     <PackageReference Include="PDFsharp" Version="6.2.4" />
     <ProjectReference Include="..\AcliComunicazioni.Application\AcliComunicazioni.Application.csproj" />
     <ProjectReference Include="..\AcliComunicazioni.Infrastructure\AcliComunicazioni.Infrastructure.csproj" />
