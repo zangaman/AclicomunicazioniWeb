@@ -27,6 +27,7 @@
         var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
         var environmentLabel = Context.RequestServices.GetRequiredService<IConfiguration>()["ApplicationEnvironment:Label"];
         var showEnvironmentBanner = Context.RequestServices.GetRequiredService<IConfiguration>().GetValue<bool>("ApplicationEnvironment:ShowBanner");
+        var isProduction = Context.RequestServices.GetRequiredService<IWebHostEnvironment>().IsProduction();
     }
     <div class="app-shell">
         <aside class="app-sidebar" aria-label="Navigazione principale">
@@ -106,6 +107,8 @@
                                         <svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2"/></svg>
                                         Installa app
                                     </button>
+                                    @if (!isProduction)
+                                    {
                                     <form asp-controller="Account" asp-action="Logout" method="post">
                                         @Html.AntiForgeryToken()
                                         <button type="submit">
@@ -113,6 +116,7 @@
                                             Esci
                                         </button>
                                     </form>
+                                    }
                                 </div>
                             </details>
 
@@ -124,10 +128,13 @@
                                     <span>Utente collegato</span>
                                     <strong>@displayName</strong>
                                     <button type="button" class="pwa-install-button" hidden>Installa app</button>
+                                    @if (!isProduction)
+                                    {
                                     <form asp-controller="Account" asp-action="Logout" method="post">
                                         @Html.AntiForgeryToken()
                                         <button type="submit">Esci</button>
                                     </form>
+                                    }
                                 </div>
                             </details>
                         </div>
