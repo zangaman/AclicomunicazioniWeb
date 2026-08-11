@@ -96,40 +96,19 @@ public sealed class AccountController(
         return RedirectAfterLogin(model.ReturnUrl);
     }
 
-    [AllowAnonymous]
+    [Authorize(
+        AuthenticationSchemes =
+            NegotiateDefaults.AuthenticationScheme)]
     [HttpGet]
-    public IActionResult WindowsLogin(string? returnUrl = null)
+    public async Task<IActionResult> WindowsLogin(
+        string? returnUrl,
+        CancellationToken cancellationToken)
     {
         if (!UsesDomainAuthentication())
         {
             return RedirectToAction(
                 nameof(Login),
                 new { returnUrl });
-        }
-
-        var callbackUrl = Url.Action(
-            nameof(WindowsCallback),
-            values: new { returnUrl });
-
-        return Challenge(
-            new AuthenticationProperties
-            {
-                RedirectUri = callbackUrl
-            },
-            NegotiateDefaults.AuthenticationScheme);
-    }
-
-    [Authorize(
-        AuthenticationSchemes =
-            NegotiateDefaults.AuthenticationScheme)]
-    [HttpGet]
-    public async Task<IActionResult> WindowsCallback(
-        string? returnUrl,
-        CancellationToken cancellationToken)
-    {
-        if (!UsesDomainAuthentication())
-        {
-            return RedirectToAction(nameof(Login));
         }
 
         var windowsUsername = User.Identity?.Name;
