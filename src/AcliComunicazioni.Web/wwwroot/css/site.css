@@ -3351,3 +3351,23 @@ h2 { letter-spacing: -.025em; }
         margin-bottom: clamp(50px, 11vh, 84px);
     }
 }
+
+
+.login-method-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1rem 0;
+    color: #64748b;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.login-method-divider::before,
+.login-method-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #dbe4ea;
+}

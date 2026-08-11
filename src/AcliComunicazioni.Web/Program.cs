@@ -4,10 +4,8 @@ using AcliComunicazioni.Application.Mileage;
 using AcliComunicazioni.Infrastructure.Authentication;
 using AcliComunicazioni.Infrastructure.Mileage;
 using AcliComunicazioni.Web.Authentication;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Negotiate;
-using Microsoft.AspNetCore.Authorization;
 using PdfSharp.Fonts;
 using System.Data.Common;
 
@@ -28,61 +26,47 @@ if (OperatingSystem.IsWindows())
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 
+var authenticationBuilder = builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme =
+            CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme =
+            CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultSignInScheme =
+            CookieAuthenticationDefaults.AuthenticationScheme;
+    })
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.LogoutPath = "/Account/Logout";
+        options.AccessDeniedPath = "/Account/AccessDenied";
+
+        options.Cookie.Name = "AcliComunicazioni.Auth";
+        options.Cookie.HttpOnly = true;
+        options.Cookie.IsEssential = true;
+        options.Cookie.SameSite = SameSiteMode.Lax;
+        options.Cookie.SecurePolicy =
+            CookieSecurePolicy.SameAsRequest;
+
+        options.SlidingExpiration = true;
+        options.ExpireTimeSpan = TimeSpan.FromHours(2);
+    });
+
 if (useDomainAuthentication)
 {
-    builder.Services
-        .AddAuthentication(
-            NegotiateDefaults.AuthenticationScheme)
-        .AddNegotiate();
-
-    builder.Services.AddMemoryCache();
-    builder.Services.AddScoped<
-        IClaimsTransformation,
-        DomainUserClaimsTransformation>();
-}
-else
-{
-    builder.Services
-        .AddAuthentication(
-            CookieAuthenticationDefaults.AuthenticationScheme)
-        .AddCookie(options =>
-        {
-            options.LoginPath = "/Account/Login";
-            options.LogoutPath = "/Account/Logout";
-            options.AccessDeniedPath = "/Account/AccessDenied";
-
-            options.Cookie.Name = "AcliComunicazioni.Auth";
-            options.Cookie.HttpOnly = true;
-            options.Cookie.IsEssential = true;
-            options.Cookie.SameSite = SameSiteMode.Lax;
-            options.Cookie.SecurePolicy =
-                CookieSecurePolicy.SameAsRequest;
-
-            options.SlidingExpiration = true;
-            options.ExpireTimeSpan =
-                TimeSpan.FromHours(2);
-        });
+    authenticationBuilder.AddNegotiate(
+        NegotiateDefaults.AuthenticationScheme);
 }
 
-builder.Services.AddAuthorization(options =>
-{
-    if (useDomainAuthentication)
-    {
-        var domainUserPolicy =
-            new AuthorizationPolicyBuilder()
-                .RequireAuthenticatedUser()
-                .RequireClaim(
-                    ApplicationClaimTypes.UserId)
-                .Build();
-
-        options.DefaultPolicy = domainUserPolicy;
-        options.FallbackPolicy = domainUserPolicy;
-    }
-});
+builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<
     IUserAuthenticationService,
     DatabaseUserAuthenticationService>();
+builder.Services.AddScoped<
+    IDomainCredentialValidator,
+    ActiveDirectoryCredentialValidator>();
 
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 builder.Services.AddScoped<IMileageService, DatabaseMileageService>();
