@@ -55,8 +55,7 @@ var authenticationBuilder = builder.Services
 
 if (useDomainAuthentication)
 {
-    authenticationBuilder.AddNegotiate(
-        NegotiateDefaults.AuthenticationScheme);
+    authenticationBuilder.AddNegotiate();
 }
 
 builder.Services.AddAuthorization();
