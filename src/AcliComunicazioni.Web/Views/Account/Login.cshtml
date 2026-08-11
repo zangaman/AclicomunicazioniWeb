@@ -52,46 +52,66 @@
                 <div class="login-heading">
                     <span class="eyebrow">Area riservata</span>
                     <h1 id="login-title">Accedi al portale</h1>
-                    <p>Accedi con le tue credenziali aziendali.</p>
+                    <p>Scegli il metodo di accesso aziendale disponibile.</p>
                 </div>
 
-                <form asp-action="Login" method="post" class="login-form">
-                    @Html.AntiForgeryToken()
-                    <input asp-for="ReturnUrl" type="hidden" />
-
-                    <div asp-validation-summary="ModelOnly" class="validation-summary login-validation"></div>
-
-                    <div class="form-field login-field">
-                        <label asp-for="Username"></label>
-                        <div class="login-input-wrap">
-                            <svg class="login-input-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
-                            <input asp-for="Username" autocomplete="username" placeholder="nome.cognome" autofocus />
-                        </div>
-                        <span asp-validation-for="Username" class="field-error"></span>
-                    </div>
-
-                    <div class="form-field login-field">
-                        <label asp-for="Password"></label>
-                        <div class="login-input-wrap">
-                            <svg class="login-input-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-                            <input asp-for="Password" autocomplete="current-password" placeholder="Inserisci la password" />
-                            <button type="button" class="password-toggle" aria-label="Mostra password" aria-pressed="false">
-                                <svg class="password-show-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="2.5"/></svg>
-                            </button>
-                        </div>
-                        <span asp-validation-for="Password" class="field-error"></span>
-                    </div>
-
-                    <label class="remember-row">
-                        <input asp-for="RememberMe" />
-                        <span>Mantieni l’accesso su questo dispositivo</span>
-                    </label>
-
-                    <button type="submit" class="primary-button login-submit">
-                        <span>Accedi</span>
+                @if (Model.ShowWindowsLogin)
+                {
+                    <a asp-action="WindowsLogin"
+                       asp-route-returnUrl="@Model.ReturnUrl"
+                       class="primary-button login-submit">
+                        <span>Accedi con Windows</span>
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
-                    </button>
-                </form>
+                    </a>
+                }
+
+                @if (!Model.ShowWindowsLogin || Model.UsesDomainCredentials)
+                {
+                    @if (Model.ShowWindowsLogin)
+                    {
+                        <div class="login-method-divider" role="separator">
+                            <span>oppure</span>
+                        </div>
+                    }
+
+                    <form asp-action="Login" method="post" class="login-form">
+                        @Html.AntiForgeryToken()
+                        <input asp-for="ReturnUrl" type="hidden" />
+
+                        <div asp-validation-summary="ModelOnly" class="validation-summary login-validation"></div>
+
+                        <div class="form-field login-field">
+                            <label asp-for="Username"></label>
+                            <div class="login-input-wrap">
+                                <svg class="login-input-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+                                <input asp-for="Username" autocomplete="username" placeholder="nome.cognome" autofocus="@(!Model.ShowWindowsLogin)" />
+                            </div>
+                            <span asp-validation-for="Username" class="field-error"></span>
+                        </div>
+
+                        <div class="form-field login-field">
+                            <label asp-for="Password"></label>
+                            <div class="login-input-wrap">
+                                <svg class="login-input-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                                <input asp-for="Password" autocomplete="current-password" placeholder="Inserisci la password" />
+                                <button type="button" class="password-toggle" aria-label="Mostra password" aria-pressed="false">
+                                    <svg class="password-show-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="2.5"/></svg>
+                                </button>
+                            </div>
+                            <span asp-validation-for="Password" class="field-error"></span>
+                        </div>
+
+                        <label class="remember-row">
+                            <input asp-for="RememberMe" />
+                            <span>Mantieni l’accesso su questo dispositivo</span>
+                        </label>
+
+                        <button type="submit" class="primary-button login-submit">
+                            <span>@(Model.UsesDomainCredentials ? "Accedi con le credenziali aziendali" : "Accedi")</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
+                        </button>
+                    </form>
+                }
 
                 <div class="login-security-note">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
