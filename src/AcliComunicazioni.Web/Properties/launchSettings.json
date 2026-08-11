@@ -4,23 +4,28 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "Authentication__Mode": "Domain"
       },
       "applicationUrl": "https://localhost:61528;http://0.0.0.0:61529"
     },
+
     "AcliComunicazioni.Web - Test": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Test"
+        "ASPNETCORE_ENVIRONMENT": "Test",
+        "Authentication__Mode": "Local"
       },
       "applicationUrl": "https://localhost:62528;http://0.0.0.0:62529"
     },
+
     "AcliComunicazioni.Web - Produzione": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Production"
+        "ASPNETCORE_ENVIRONMENT": "Production",
+        "Authentication__Mode": "Domain"
       },
       "applicationUrl": "https://localhost:63528;http://0.0.0.0:63529"
     }
