@@ -3,6 +3,7 @@ using AcliComunicazioni.Application.Authentication;
 using AcliComunicazioni.Web.Models.Account;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +11,7 @@ namespace AcliComunicazioni.Web.Controllers;
 
 public sealed class AccountController(
     IUserAuthenticationService authenticationService,
+    IDomainCredentialValidator domainCredentialValidator,
     IConfiguration configuration) : Controller
 {
     private bool UsesDomainAuthentication() =>
@@ -18,35 +20,21 @@ public sealed class AccountController(
             "Domain",
             StringComparison.OrdinalIgnoreCase);
 
+    private bool UsesDomainCredentialLogin() =>
+        UsesDomainAuthentication() &&
+        configuration.GetValue<bool>(
+            "Authentication:ActiveDirectory:Enabled");
+
     [AllowAnonymous]
     [HttpGet]
     public IActionResult Login(string? returnUrl = null)
     {
-        if (UsesDomainAuthentication())
-        {
-            if (User.Identity?.IsAuthenticated != true)
-            {
-                return Challenge();
-            }
-
-            return User.HasClaim(
-                    claim =>
-                        claim.Type ==
-                        ApplicationClaimTypes.UserId)
-                ? RedirectToAction("Index", "Home")
-                : RedirectToAction(nameof(AccessDenied));
-        }
-
         if (User.Identity?.IsAuthenticated == true)
         {
             return RedirectToAction("Index", "Home");
         }
 
-        return View(
-            new LoginViewModel
-            {
-                ReturnUrl = returnUrl
-            });
+        return View(CreateLoginModel(returnUrl));
     }
 
     [AllowAnonymous]
@@ -56,57 +44,115 @@ public sealed class AccountController(
         LoginViewModel model,
         CancellationToken cancellationToken)
     {
-        if (UsesDomainAuthentication())
-        {
-            return RedirectToAction(nameof(Login));
-        }
+        ApplyLoginOptions(model);
 
         if (!ModelState.IsValid)
         {
             return View(model);
         }
 
-        var authenticatedUser = await authenticationService.AuthenticateAsync(
-            model.Username,
-            model.Password,
-            cancellationToken);
+        AuthenticatedUser? authenticatedUser;
+
+        if (UsesDomainAuthentication())
+        {
+            if (!UsesDomainCredentialLogin() ||
+                !await domainCredentialValidator.ValidateAsync(
+                    model.Username,
+                    model.Password,
+                    cancellationToken))
+            {
+                ModelState.AddModelError(
+                    string.Empty,
+                    "Nome utente o password non validi.");
+                return View(model);
+            }
+
+            authenticatedUser =
+                await authenticationService.FindByUsernameAsync(
+                    model.Username,
+                    cancellationToken);
+        }
+        else
+        {
+            authenticatedUser =
+                await authenticationService.AuthenticateAsync(
+                    model.Username,
+                    model.Password,
+                    cancellationToken);
+        }
 
         if (authenticatedUser is null)
         {
-            ModelState.AddModelError(string.Empty, "Nome utente o password non validi.");
+            ModelState.AddModelError(
+                string.Empty,
+                "Accesso non autorizzato.");
             return View(model);
         }
 
-        var claims = new List<Claim>
+        await SignInApplicationUserAsync(
+            authenticatedUser,
+            model.RememberMe);
+
+        return RedirectAfterLogin(model.ReturnUrl);
+    }
+
+    [AllowAnonymous]
+    [HttpGet]
+    public IActionResult WindowsLogin(string? returnUrl = null)
+    {
+        if (!UsesDomainAuthentication())
         {
-            new(ClaimTypes.NameIdentifier, authenticatedUser.Id.ToString()),
-            new(ClaimTypes.Name, authenticatedUser.Username),
-            new(ApplicationClaimTypes.DisplayName, authenticatedUser.DisplayName),
-            new(ClaimTypes.Role, authenticatedUser.Role)
-        };
-
-        var identity = new ClaimsIdentity(
-            claims,
-            CookieAuthenticationDefaults.AuthenticationScheme);
-
-        var principal = new ClaimsPrincipal(identity);
-
-        await HttpContext.SignInAsync(
-            CookieAuthenticationDefaults.AuthenticationScheme,
-            principal,
-            new AuthenticationProperties
-            {
-                IsPersistent = model.RememberMe,
-                AllowRefresh = true,
-                ExpiresUtc = DateTimeOffset.UtcNow.AddHours(model.RememberMe ? 12 : 2)
-            });
-
-        if (!string.IsNullOrWhiteSpace(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
-        {
-            return LocalRedirect(model.ReturnUrl);
+            return RedirectToAction(
+                nameof(Login),
+                new { returnUrl });
         }
 
-        return RedirectToAction("Index", "Home");
+        var callbackUrl = Url.Action(
+            nameof(WindowsCallback),
+            values: new { returnUrl });
+
+        return Challenge(
+            new AuthenticationProperties
+            {
+                RedirectUri = callbackUrl
+            },
+            NegotiateDefaults.AuthenticationScheme);
+    }
+
+    [Authorize(
+        AuthenticationSchemes =
+            NegotiateDefaults.AuthenticationScheme)]
+    [HttpGet]
+    public async Task<IActionResult> WindowsCallback(
+        string? returnUrl,
+        CancellationToken cancellationToken)
+    {
+        if (!UsesDomainAuthentication())
+        {
+            return RedirectToAction(nameof(Login));
+        }
+
+        var windowsUsername = User.Identity?.Name;
+        if (string.IsNullOrWhiteSpace(windowsUsername))
+        {
+            return RedirectToAction(nameof(AccessDenied));
+        }
+
+        var authenticatedUser =
+            await authenticationService.FindByUsernameAsync(
+                windowsUsername,
+                cancellationToken);
+
+        if (authenticatedUser is null)
+        {
+            return RedirectToAction(nameof(AccessDenied));
+        }
+
+        await SignInApplicationUserAsync(
+            authenticatedUser,
+            isPersistent: false);
+
+        return RedirectAfterLogin(returnUrl);
     }
 
     [Authorize]
@@ -114,11 +160,6 @@ public sealed class AccountController(
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {
-        if (UsesDomainAuthentication())
-        {
-            return RedirectToAction("Index", "Home");
-        }
-
         await HttpContext.SignOutAsync(
             CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -128,4 +169,75 @@ public sealed class AccountController(
     [AllowAnonymous]
     [HttpGet]
     public IActionResult AccessDenied() => View();
+
+    private LoginViewModel CreateLoginModel(string? returnUrl)
+    {
+        var model = new LoginViewModel
+        {
+            ReturnUrl = returnUrl
+        };
+
+        ApplyLoginOptions(model);
+        return model;
+    }
+
+    private void ApplyLoginOptions(LoginViewModel model)
+    {
+        model.ShowWindowsLogin = UsesDomainAuthentication();
+        model.UsesDomainCredentials = UsesDomainCredentialLogin();
+    }
+
+    private async Task SignInApplicationUserAsync(
+        AuthenticatedUser authenticatedUser,
+        bool isPersistent)
+    {
+        var claims = new List<Claim>
+        {
+            new(
+                ClaimTypes.NameIdentifier,
+                authenticatedUser.Id.ToString()),
+            new(
+                ApplicationClaimTypes.UserId,
+                authenticatedUser.Id.ToString()),
+            new(
+                ClaimTypes.Name,
+                authenticatedUser.Username),
+            new(
+                ApplicationClaimTypes.DisplayName,
+                authenticatedUser.DisplayName),
+            new(
+                ApplicationClaimTypes.Role,
+                authenticatedUser.Role),
+            new(
+                ClaimTypes.Role,
+                authenticatedUser.Role)
+        };
+
+        var principal = new ClaimsPrincipal(
+            new ClaimsIdentity(
+                claims,
+                CookieAuthenticationDefaults.AuthenticationScheme));
+
+        await HttpContext.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            principal,
+            new AuthenticationProperties
+            {
+                IsPersistent = isPersistent,
+                AllowRefresh = true,
+                ExpiresUtc = DateTimeOffset.UtcNow.AddHours(
+                    isPersistent ? 12 : 2)
+            });
+    }
+
+    private IActionResult RedirectAfterLogin(string? returnUrl)
+    {
+        if (!string.IsNullOrWhiteSpace(returnUrl) &&
+            Url.IsLocalUrl(returnUrl))
+        {
+            return LocalRedirect(returnUrl);
+        }
+
+        return RedirectToAction("Index", "Home");
+    }
 }
