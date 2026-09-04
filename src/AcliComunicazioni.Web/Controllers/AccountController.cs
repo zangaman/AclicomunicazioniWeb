@@ -12,7 +12,8 @@ namespace AcliComunicazioni.Web.Controllers;
 public sealed class AccountController(
     IUserAuthenticationService authenticationService,
     IDomainCredentialValidator domainCredentialValidator,
-    IConfiguration configuration) : Controller
+    IConfiguration configuration,
+    IWebHostEnvironment environment) : Controller
 {
     private bool UsesDomainAuthentication() =>
         string.Equals(
@@ -24,6 +25,9 @@ public sealed class AccountController(
         UsesDomainAuthentication() &&
         configuration.GetValue<bool>(
             "Authentication:ActiveDirectory:Enabled");
+
+    private bool UsesDevelopmentDualLogin() =>
+        environment.IsDevelopment();
 
     [AllowAnonymous]
     [HttpGet]
@@ -53,9 +57,10 @@ public sealed class AccountController(
 
         AuthenticatedUser? authenticatedUser;
 
-        if (UsesDomainAuthentication())
+        if (UsesDomainAuthentication() || UsesDevelopmentDualLogin())
         {
-            if (!UsesDomainCredentialLogin() ||
+            if (!configuration.GetValue<bool>(
+                    "Authentication:ActiveDirectory:Enabled") ||
                 !await domainCredentialValidator.ValidateAsync(
                     model.Username,
                     model.Password,
@@ -63,7 +68,7 @@ public sealed class AccountController(
             {
                 ModelState.AddModelError(
                     string.Empty,
-                    "Nome utente o password non validi.");
+                    "Nome utente o password di dominio non validi.");
                 return View(model);
             }
 
@@ -104,7 +109,7 @@ public sealed class AccountController(
         string? returnUrl,
         CancellationToken cancellationToken)
     {
-        if (!UsesDomainAuthentication())
+        if (!UsesDomainAuthentication() && !UsesDevelopmentDualLogin())
         {
             return RedirectToAction(
                 nameof(Login),
@@ -162,8 +167,11 @@ public sealed class AccountController(
 
     private void ApplyLoginOptions(LoginViewModel model)
     {
-        model.ShowWindowsLogin = UsesDomainAuthentication();
-        model.UsesDomainCredentials = UsesDomainCredentialLogin();
+        model.ShowDualLoginButtons = UsesDevelopmentDualLogin();
+        model.ShowWindowsLogin =
+            UsesDevelopmentDualLogin() || UsesDomainAuthentication();
+        model.UsesDomainCredentials =
+            UsesDevelopmentDualLogin() || UsesDomainCredentialLogin();
     }
 
     private async Task SignInApplicationUserAsync(
