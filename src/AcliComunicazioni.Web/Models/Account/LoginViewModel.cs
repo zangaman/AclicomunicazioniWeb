@@ -21,4 +21,6 @@ public sealed class LoginViewModel
     public bool ShowWindowsLogin { get; set; }
 
     public bool UsesDomainCredentials { get; set; }
+
+    public bool ShowDualLoginButtons { get; set; }
 }
