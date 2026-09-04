@@ -95,7 +95,7 @@
                           method="post"
                           class="login-form"
                           id="domain-login-form"
-                          style="@(showDomainForm ? null : "display:none;")">
+                          style="@(showDomainForm ? "margin-top:16px;" : "display:none; margin-top:16px;")">
                         @Html.AntiForgeryToken()
                         <input asp-for="ReturnUrl" type="hidden" />
 
