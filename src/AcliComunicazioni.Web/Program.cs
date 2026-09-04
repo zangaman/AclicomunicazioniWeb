@@ -53,7 +53,7 @@ var authenticationBuilder = builder.Services
         options.ExpireTimeSpan = TimeSpan.FromHours(2);
     });
 
-if (useDomainAuthentication)
+if (useDomainAuthentication || builder.Environment.IsDevelopment())
 {
     authenticationBuilder.AddNegotiate();
 }
