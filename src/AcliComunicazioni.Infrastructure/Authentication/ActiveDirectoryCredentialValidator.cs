@@ -29,18 +29,17 @@ public sealed class ActiveDirectoryCredentialValidator(
         var suffix = configuration[
             "Authentication:ActiveDirectory:UserPrincipalSuffix"]?.Trim();
         var port = configuration.GetValue<int?>(
-            "Authentication:ActiveDirectory:Port") ?? 636;
+            "Authentication:ActiveDirectory:Port") ?? 389;
         var useSsl = configuration.GetValue<bool>(
             "Authentication:ActiveDirectory:UseSsl");
 
         if (string.IsNullOrWhiteSpace(server) ||
             string.IsNullOrWhiteSpace(suffix) ||
-            !useSsl ||
             port <= 0)
         {
             logger.LogError(
-                "Configurazione Active Directory incompleta o non sicura. " +
-                "Sono obbligatori Server, UserPrincipalSuffix e UseSsl=true.");
+                "Configurazione Active Directory incompleta. " +
+                "Sono obbligatori Server, UserPrincipalSuffix e una porta valida.");
             return false;
         }
 
@@ -56,17 +55,28 @@ public sealed class ActiveDirectoryCredentialValidator(
                     var identifier =
                         new LdapDirectoryIdentifier(server, port);
 
+                    var authType = useSsl
+                        ? AuthType.Basic
+                        : AuthType.Negotiate;
+
                     using var connection =
                         new LdapConnection(
                             identifier,
                             new NetworkCredential(bindUsername, password),
-                            AuthType.Basic)
+                            authType)
                         {
                             Timeout = TimeSpan.FromSeconds(10)
                         };
 
                     connection.SessionOptions.ProtocolVersion = 3;
-                    connection.SessionOptions.SecureSocketLayer = true;
+                    connection.SessionOptions.SecureSocketLayer = useSsl;
+
+                    if (!useSsl)
+                    {
+                        connection.SessionOptions.Signing = true;
+                        connection.SessionOptions.Sealing = true;
+                    }
+
                     connection.Bind();
 
                     return true;
