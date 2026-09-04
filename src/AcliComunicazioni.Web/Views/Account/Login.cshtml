@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Accesso";
     Layout = null;
+    var showDomainForm = !Model.ShowDualLoginButtons || !ViewData.ModelState.IsValid;
 }
 <!DOCTYPE html>
 <html lang="it">
@@ -65,16 +66,36 @@
                     </a>
                 }
 
+                @if (Model.ShowDualLoginButtons)
+                {
+                    <div class="login-method-divider" role="separator">
+                        <span>oppure</span>
+                    </div>
+
+                    <button type="button"
+                            id="domain-login-toggle"
+                            class="primary-button login-submit"
+                            aria-controls="domain-login-form"
+                            aria-expanded="@(showDomainForm ? "true" : "false")">
+                        <span>Accedi con credenziali dominio</span>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
+                    </button>
+                }
+
                 @if (!Model.ShowWindowsLogin || Model.UsesDomainCredentials)
                 {
-                    @if (Model.ShowWindowsLogin)
+                    @if (Model.ShowWindowsLogin && !Model.ShowDualLoginButtons)
                     {
                         <div class="login-method-divider" role="separator">
                             <span>oppure</span>
                         </div>
                     }
 
-                    <form asp-action="Login" method="post" class="login-form">
+                    <form asp-action="Login"
+                          method="post"
+                          class="login-form"
+                          id="domain-login-form"
+                          style="@(showDomainForm ? null : "display:none;")">
                         @Html.AntiForgeryToken()
                         <input asp-for="ReturnUrl" type="hidden" />
 
@@ -122,6 +143,22 @@
     </main>
     <script>
         (() => {
+            const domainButton = document.getElementById('domain-login-toggle');
+            const domainForm = document.getElementById('domain-login-form');
+
+            if (domainButton && domainForm) {
+                domainButton.addEventListener('click', () => {
+                    const isHidden = domainForm.style.display === 'none';
+                    domainForm.style.display = isHidden ? '' : 'none';
+                    domainButton.setAttribute('aria-expanded', isHidden.toString());
+
+                    if (isHidden) {
+                        const username = document.getElementById('Username');
+                        if (username) username.focus();
+                    }
+                });
+            }
+
             const button = document.querySelector('.password-toggle');
             const password = document.getElementById('Password');
             if (!button || !password) return;
